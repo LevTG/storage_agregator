@@ -1,0 +1,23 @@
+{
+  "name": "storage_project",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "core-js": "^3.9.1",
+    "node-sass": "^6.0.0",
+    "nuxt": "^2.15.3",
+    "scss": "^0.2.4",
+    "vue-datepicker-ui": "^1.0.0",
+    "vue-hotel-datepicker": "^4.4.0",
+    "vue-inline-svg": "^2.0.0"
+  },
+  "devDependencies": {
+    "sass-loader": "^10.2.0"
+  }
+}
