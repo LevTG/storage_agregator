@@ -1,21 +1,39 @@
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
 
-from .models import Profile
+Profile = get_user_model()
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-
-    password = serializers.CharField(
-        max_length=128,
-        min_length=8,
-        write_only=True
-    )
-
-    token = serializers.CharField(max_length=255, read_only=True)
+    password = serializers.CharField(write_only=True, required=True, style={
+        "input_type": "password"})
+    password2 = serializers.CharField(
+        style={"input_type": "password"}, write_only=True, label="Confirm password")
 
     class Meta:
         model = Profile
-        fields = ['email', 'username', 'password', 'token']
+        fields = [
+            "username",
+            # "first_name",
+            # "last_name",
+            # "phone_number",
+            "password",
+            "password2"
+        ]
+        extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
-        return Profile.objects.create_user(**validated_data)
+        username = validated_data["username"]
+        # email = validated_data["email"]
+        password = validated_data["password"]
+        password2 = validated_data["password2"]
+        # if (email and Profile.objects.filter(email=email).exclude(username=username).exists()):
+        #     raise serializers.ValidationError(
+        #         {"email": "Email addresses must be unique."})
+        if password != password2:
+            raise serializers.ValidationError(
+                {"password": "The two passwords differ."})
+        user = Profile(username=username) #, email=email)
+        user.set_password(password)
+        user.save()
+        return user
