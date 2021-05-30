@@ -31,4 +31,5 @@ social-auth-app-django
 social-auth-core
 sqlparse
 urllib3
-Django~=3.2.3
+Django~=3.2.3python-dotenv
+djangorestframework-simplejwt
