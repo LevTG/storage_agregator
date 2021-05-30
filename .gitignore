@@ -130,3 +130,6 @@ dmypy.json
 .idea/modules.xml
 .idea/storage_aggregator.iml
 .idea/vcs.xml
+
+static/
+
