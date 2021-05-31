@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Partners",
+    "path": "/Partners",
+    "component": "/Users/mac/Documents/storfront/storage_agregator/pages/Partners.vue",
+    "chunkName": "pages/Partners",
+    "_name": "_46b75784"
+  },
+  {
+    "name": "Storage",
+    "path": "/Storage",
+    "component": "/Users/mac/Documents/storfront/storage_agregator/pages/Storage.vue",
+    "chunkName": "pages/Storage",
+    "_name": "_4a7a51b8"
+  },
+  {
+    "name": "partners-CreateAdd",
+    "path": "/partners/CreateAdd",
+    "component": "/Users/mac/Documents/storfront/storage_agregator/pages/partners/CreateAdd.vue",
+    "chunkName": "pages/partners/CreateAdd",
+    "_name": "_6a72e834"
+  },
+  {
+    "name": "partners-Lk",
+    "path": "/partners/Lk",
+    "component": "/Users/mac/Documents/storfront/storage_agregator/pages/partners/Lk.vue",
+    "chunkName": "pages/partners/Lk",
+    "_name": "_7f2b3260"
+  },
+  {
+    "name": "partners-Reg",
+    "path": "/partners/Reg",
+    "component": "/Users/mac/Documents/storfront/storage_agregator/pages/partners/Reg.vue",
+    "chunkName": "pages/partners/Reg",
+    "_name": "_c7341efa"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "/Users/mac/Documents/storfront/storage_agregator/pages/index.vue",
+    "chunkName": "pages/index",
+    "_name": "_0a9b4c22"
+  }
+]

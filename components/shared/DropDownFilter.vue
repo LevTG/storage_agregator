@@ -5,6 +5,9 @@
   </div>
   <div class="dropdown-filter" :class="{visible: !state.isFilterOpen}">
     <div class="close" @click="openFilter()">
+      <inline-svg
+        :src="require('@/assets/icons/exitsmall.svg')"
+      />
     </div>
     <div class="dropdown-title">
       Владелец
@@ -43,10 +46,12 @@
 <script>
 
 import Checkbox from '@/components/shared/Checkbox'
+import InlineSvg from 'vue-inline-svg'
 export default {
   name: 'DropDownFilter',
   components: {
-    Checkbox
+    Checkbox,
+    InlineSvg
   },
   props: {
     outlined: Boolean
@@ -103,11 +108,11 @@ export default {
 }
 .close{
   position: absolute;
-  width: 25px;
-  height: 25px;
-  right: 0px;
-  top: 0px;
-  background: red;
+    width: 17px;
+    height: 17px;
+    right: 12px;
+    top: 12px;
+    cursor: pointer;
 }
 .dropdown-title{
   font-family: Roboto;

@@ -22,7 +22,7 @@ export default {
 .core-button {
   font-family: inherit;
   color: #121212;
-  background-color: gray;
+  background-color: #30339B;
   padding: 0;
   margin: 0;
   border: none;

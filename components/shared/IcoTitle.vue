@@ -4,7 +4,7 @@
       class="core-checkbox__indicator__icon"
       :src="require('@/assets/icons/trash.svg')"
     />
-    <span class="">{{title}}</span>
+    <span class="text">{{title}}</span>
   </div>
 </template>
 
@@ -29,6 +29,13 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.icotitle{
+  display: flex;
+  line-height: 24px;
+}
+.text{
+  margin-left: 12px;
+}
 .core-button {
   font-family: inherit;
   color: #121212;

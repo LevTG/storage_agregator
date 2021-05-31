@@ -1,7 +1,7 @@
 <template>
   <core-input
     class="default-input"
-    :class="{ 'default-input_invalid': invalid }"
+    :class="{ 'default-input_invalid': invalid, 'white-style': white }"
     v-bind="$attrs"
     v-on="$listeners"
   />
@@ -14,7 +14,8 @@ export default {
   name: 'DefaultInput',
   components: { CoreInput },
   props: {
-    invalid: Boolean
+    invalid: Boolean,
+    white: Boolean
   }
 }
 </script>
@@ -26,12 +27,15 @@ export default {
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.005em;
-  border: 1px solid #C6C8C9;
   border-radius: 8px;
   color: #121212;
+  background-color: #F8F9FB;
 
   &_invalid {
     border-color: #FF0000;
   }
+}
+.white-style{
+  background-color: white;
 }
 </style>

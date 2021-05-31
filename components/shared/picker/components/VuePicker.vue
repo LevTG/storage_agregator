@@ -1,0 +1,262 @@
+<template>
+  <div
+    class="vue-picker"
+    :class="{
+      'vue-picker--open': isDropdownShown,
+      'vue-picker--disabled': isDisabled,
+      'vue-picker--has-val': curOptVal,
+    }"
+  >
+    <button
+      class="vue-picker__opener"
+      type="button"
+      ref="opener"
+      @click="toggleDropdown()"
+      @keydown.up.alt.stop.prevent="toggleDropdown()"
+      @keydown.up.exact.stop.prevent="selectPrev()"
+      @keydown.down.alt.stop.prevent="toggleDropdown()"
+      @keydown.down.exact.stop.prevent="selectNext()"
+      @keydown.home.stop.prevent="selectFirst()"
+      @keydown.end.stop.prevent="selectLast()"
+      :disabled="isDisabled"
+    >
+      <slot
+        name="opener"
+        :opener="{ value, text: openerTxt, opt: curOpt }"
+      >
+        <span
+          class="vue-picker__opener-txt"
+          v-html="openerHtml"
+        />
+      </slot>
+
+      <slot name="openerIco">
+        <i class="vue-picker__opener-ico" v-bind:class="{ active: isDropdownShown }" />
+      </slot>
+    </button>
+
+    <div
+      class="vue-picker__dropdown"
+      v-show="isDropdownShown"
+    >
+      <slot name="dropdownInner">
+        <slot />
+      </slot>
+    </div>
+
+  </div>
+</template>
+
+<script>
+import dropdownControls from '../mixins/dropdown-controls'
+import keyControls from '../mixins/key-controls'
+import { attrs } from '../mixins/attrs'
+
+const attrsMixin = attrs('disabled', 'autofocus')
+
+export default {
+  name: 'VuePicker',
+
+  mixins: [attrsMixin, dropdownControls, keyControls],
+
+  props: {
+    value: { type: String, default: '' },
+    placeholder: { type: String, default: '' },
+  },
+
+  provide () {
+    return { 'pickerContext': this }
+  },
+
+  data () {
+    return {
+      curOptIdx: -1,
+      opts: [],
+    }
+  },
+
+  computed: {
+    curOpt () { return this.opts[this.curOptIdx] },
+    curOptVal () { return (this.curOpt || {}).value },
+    ph () { return !this.value && this.placeholder },
+    openerTxt () { return this.ph || (this.curOpt || {}).optTxt },
+    openerHtml () { return this.ph || (this.curOpt || {}).optHtml },
+  },
+
+  watch: {
+    value (nV, oV) { (nV !== oV) && this.selectByValue(this.value) },
+  },
+
+  mounted () {
+    this.onDropdownShow(() => {
+      if (this.curOpt) this.$nextTick(() => this.curOpt.$el.focus())
+      else this.$refs.opener.blur()
+      this.$emit('open')
+    })
+
+    this.onDropdownHide(isOuterClick => {
+      if (!isOuterClick) this.$refs.opener.focus()
+      this.emitCurOptVal()
+      this.$emit('close', isOuterClick)
+    })
+
+    if (this.isAutofocus) { this.$refs.opener.focus() }
+    if (this.value) { this.selectByValue(this.value) }
+  },
+
+  methods: {
+    selectByIdx (idx) {
+      if (this.curOpt) this.curOpt.isSelected = false
+
+      this.curOptIdx = idx
+
+      if (this.curOpt) {
+        this.curOpt.$el.focus()
+        this.curOpt.isSelected = true
+      }
+
+      if (this.isDropdownShown) return
+      this.emitCurOptVal(this.curOpt ? this.curOpt.value : this.value)
+    },
+
+    selectByValue (value = '') {
+      const idx = this.opts.findIndex(el => el.value === value)
+      if (this.curOptIdx === idx) return
+
+      const opt = this.opts[idx]
+      if (!opt) return this.selectByIdx(-1)
+      this.selectByIdx(idx)
+    },
+
+    selectNext (offset = 1, startIdx = this.curOptIdx) {
+      const nextIdx = startIdx + offset
+      const nextOpt = this.opts[nextIdx]
+      if (!nextOpt) return
+      if (nextOpt.isDisabled) return this.selectNext(offset, nextIdx)
+      this.selectByIdx(nextIdx)
+    },
+
+    selectPrev () {
+      if (this.curOptIdx < 0) return this.selectLast()
+      this.selectNext(-1)
+    },
+
+    selectFirst () {
+      this.selectNext(1, -1)
+    },
+
+    selectLast () {
+      this.selectNext(-1, this.opts.length)
+    },
+
+    emitCurOptVal (val = this.curOptVal) {
+      if (typeof val !== 'string') return
+      this.$emit('input', val)
+    },
+
+    regOpt (opt) {
+      this.opts.push(opt)
+    },
+  },
+}
+</script>
+
+<style lang="scss" scoped>
+.vue-picker {
+  --col: black;
+  --col-dd-bg: white;
+  --col-disabled: lightgray;
+  --col-placeholder: lightgray;
+  --col-border: gray;
+
+  display: inline-block;
+  position: relative;
+
+  &--disabled {
+    --col-border: var(--col-disabled);
+  }
+}
+
+
+.vue-picker__opener {
+  background: none;
+  text-align: start;
+  width: inherit;
+  border: 0px;
+  color: var(--col);
+  padding: 11px;
+  padding-right: 12px;
+  border-radius: 8px;
+  display: grid;
+  grid: '. ico' / 1fr auto;
+  gap: 10px;
+  align-items: center;
+  display: inline-flex;
+  padding: 11px 16px;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.005em;
+  border-radius: 8px;
+  color: #121212;
+  background-color: #F8F9FB;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled {
+    color: var(--col-disabled);
+    cursor: not-allowed;
+  }
+
+  .vue-picker:not(.vue-picker--has-val) > & {
+    color: var(--col-placeholder);
+  }
+}
+
+.vue-picker__opener-ico {
+  grid-area: ico;
+  pointer-events: none;
+  margin-left: auto;
+
+  &:after {
+    content: '';
+    display: block;
+    width: 0.5em;
+    height: 0.5em;
+    border: solid var(--col-border);
+    border-width: 0 2px 2px 0;
+    transform: translate(0, -25%) rotate(45deg);
+  }
+}
+
+.active{
+  transform: translate(0, -25%) rotate(180deg);
+}
+
+.vue-picker__opener-txt{
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #121212;
+}
+
+
+
+.vue-picker__dropdown {
+  background: var(--col-dd-bg);
+  border: 1px solid var(--col-border);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  max-height: 240px;
+  padding: 8px 0;
+  overflow-y: auto;
+  display: inline-block;
+}
+</style>

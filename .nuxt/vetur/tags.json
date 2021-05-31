@@ -1,0 +1,95 @@
+{
+  "Footer": {
+    "description": "Auto imported from components/Footer.vue"
+  },
+  "Navbar": {
+    "description": "Auto imported from components/Navbar.vue"
+  },
+  "PartnersHowItWork": {
+    "description": "Auto imported from components/partners/HowItWork.vue"
+  },
+  "SharedAddingFile": {
+    "description": "Auto imported from components/shared/AddingFile.vue"
+  },
+  "SharedCheckbox": {
+    "description": "Auto imported from components/shared/Checkbox.vue"
+  },
+  "SharedCoreArea": {
+    "description": "Auto imported from components/shared/CoreArea.vue"
+  },
+  "SharedCoreButton": {
+    "description": "Auto imported from components/shared/CoreButton.vue"
+  },
+  "SharedCoreCheckbox": {
+    "description": "Auto imported from components/shared/CoreCheckbox.vue"
+  },
+  "SharedCoreInput": {
+    "description": "Auto imported from components/shared/CoreInput.vue"
+  },
+  "SharedDefaultArea": {
+    "description": "Auto imported from components/shared/DefaultArea.vue"
+  },
+  "SharedDefaultButton": {
+    "description": "Auto imported from components/shared/DefaultButton.vue"
+  },
+  "SharedDefaultInput": {
+    "description": "Auto imported from components/shared/DefaultInput.vue"
+  },
+  "SharedDropDownFilter": {
+    "description": "Auto imported from components/shared/DropDownFilter.vue"
+  },
+  "SharedIcoTitle": {
+    "description": "Auto imported from components/shared/IcoTitle.vue"
+  },
+  "SharedModal": {
+    "description": "Auto imported from components/shared/Modal.vue"
+  },
+  "SharedSelecter": {
+    "description": "Auto imported from components/shared/Selecter.vue"
+  },
+  "SharedTag": {
+    "description": "Auto imported from components/shared/Tag.vue"
+  },
+  "SharedTitleBig": {
+    "description": "Auto imported from components/shared/TitleBig.vue"
+  },
+  "SharedTitleMedium": {
+    "description": "Auto imported from components/shared/TitleMedium.vue"
+  },
+  "SharedTitleSmall": {
+    "description": "Auto imported from components/shared/TitleSmall.vue"
+  },
+  "StoragesCardEdit": {
+    "description": "Auto imported from components/storages/CardEdit.vue"
+  },
+  "StoragesCardOrder": {
+    "description": "Auto imported from components/storages/CardOrder.vue"
+  },
+  "StoragesSearchResultItem": {
+    "description": "Auto imported from components/storages/SearchResultItem.vue"
+  },
+  "SharedPicker": {
+    "description": "Auto imported from components/shared/picker/index.js"
+  },
+  "SharedPickerWrapper": {
+    "description": "Auto imported from components/shared/picker/wrapper.js"
+  },
+  "SharedPickerComponentsVuePicker": {
+    "description": "Auto imported from components/shared/picker/components/VuePicker.vue"
+  },
+  "SharedPickerComponentsVuePickerOption": {
+    "description": "Auto imported from components/shared/picker/components/VuePickerOption.vue"
+  },
+  "SharedPickerHelpersOuterClick": {
+    "description": "Auto imported from components/shared/picker/helpers/outer-click.js"
+  },
+  "SharedPickerMixinsAttrs": {
+    "description": "Auto imported from components/shared/picker/mixins/attrs.js"
+  },
+  "SharedPickerMixinsDropdownControls": {
+    "description": "Auto imported from components/shared/picker/mixins/dropdown-controls.js"
+  },
+  "SharedPickerMixinsKeyControls": {
+    "description": "Auto imported from components/shared/picker/mixins/key-controls.js"
+  }
+}

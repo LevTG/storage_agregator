@@ -5,7 +5,7 @@
         <span> </span>
         <div class="modal-window-content_close-button" v-on:click='onClose'>
           <inline-svg
-            :src="require('@/assets/icons/add.svg')"
+            :src="require('@/assets/icons/x.svg')"
           />
         </div>
       </div>
@@ -66,12 +66,12 @@ export default {
   &-content {
     position: relative;
     background: #FFFFFF;
-    box-shadow: 5px 5px 20px 1px;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     overflow-x: auto;
     display: flex;
     flex-direction: column;
-    width: 500px;
+    width: 637px;
     overflow: hidden;
     //height: 200px;
     left: 50%;
@@ -96,7 +96,6 @@ export default {
       padding: 20px 32px;
     }
     &_footer {
-      border-top: 1px solid #eeeeee;
       display: flex;
       justify-content: center;
       padding: 16px 32px;
@@ -107,7 +106,7 @@ export default {
       cursor: pointer;
 
       svg {
-        transform: rotate(45deg) scale(2);
+        transform: rotate(0) scale(1);
       }
     }
   }

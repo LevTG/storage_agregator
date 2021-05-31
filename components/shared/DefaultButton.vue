@@ -1,7 +1,7 @@
 <template>
   <core-button
     class="default-button"
-    :class="{ 'default-button_rounded': rounded }"
+    :class="{ 'default-button_rounded': rounded, 'red-style': red }"
     v-bind="$attrs"
     v-on="$listeners"
   >
@@ -18,7 +18,8 @@ export default {
     CoreButton
   },
   props: {
-    rounded: Boolean
+    rounded: Boolean,
+    red: Boolean
   }
 }
 </script>
@@ -27,20 +28,26 @@ export default {
 .default-button {
   display: inline-flex;
   align-items: center;
-  padding: 6px 14px;
+  justify-content: center;
+  padding: 10px 14px;
   font-size: 13px;
   line-height: 20px;
   letter-spacing: .005em;
-  background: #C4C4C4;
+  background: #30339B;
   border-radius: 8px;
   font-family: Roboto;
 font-style: normal;
-font-weight: 500;
+font-weight: 400;
 font-size: 18px;
 line-height: 25px;
 /* or 25px */
 
 
-color: #000000;
+color: #fff;
+}
+
+.red-style{
+  background: #FB4A71;
+  color: #fff;
 }
 </style>
