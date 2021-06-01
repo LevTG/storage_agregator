@@ -62,7 +62,7 @@ class Profile(AbstractUser):
 # Info
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    phone_regex = RegexValidator(regex=r'^\+?\d{9-16}$',
+    phone_regex = RegexValidator(regex=r'^\+?\d{9,16}$',
                                  message="Phone number must be entered in the format: '+999999999'. Up to 16 digits allowed.")
     phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True, null=True)
     # city = None

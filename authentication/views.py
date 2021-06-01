@@ -18,7 +18,7 @@ def registration(request):
     if request.method == 'POST':
         serializer = RegistrationSerializer(data=request.data)
         if not serializer.is_valid():
-            return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status.HTTP_200_OK)
         user = serializer.save()
         refresh = RefreshToken.for_user(user)
         res = {
