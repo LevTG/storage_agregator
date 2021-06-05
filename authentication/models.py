@@ -7,6 +7,7 @@ import jwt
 from datetime import datetime, timedelta
 
 from storage_aggregator import settings
+from company.models import Company
 
 
 class ProfileManager(BaseUserManager):
@@ -65,7 +66,9 @@ class Profile(AbstractUser):
     phone_regex = RegexValidator(regex=r'^\+?\d{9,16}$',
                                  message="Phone number must be entered in the format: '+999999999'. Up to 16 digits allowed.")
     phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True, null=True)
-    # city = None
+    # city = models.CharField(max_length=50)
+
+    companies = models.ManyToManyField(Company)
 
     def get_full_name(self):
         return self.username
