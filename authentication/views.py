@@ -40,7 +40,7 @@ def registration(req):
             user.save()
             if not company.is_valid():
                 return Response(company.errors, status=status.HTTP_400_BAD_REQUEST)
-            company.save()
+            company = company.save()
             res['company_id'] = company.id
         except Exception as e:
             user.delete()

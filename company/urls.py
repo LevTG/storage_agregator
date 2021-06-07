@@ -3,5 +3,7 @@ from . import views
 
 
 urlpatterns = [
-    path('companies', views.companies)
+    path('my_company', views.companies),
+    path('<int:pk>', views.CompanyView.as_view()),
+
 ]

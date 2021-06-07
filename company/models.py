@@ -3,6 +3,7 @@ from storages.models import Storage
 
 
 class Company(models.Model):
+
     name = models.CharField(max_length=50, blank=True, null=True)
 
     owner = models.OneToOneField('authentication.Profile', on_delete=models.CASCADE)

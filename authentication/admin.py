@@ -9,10 +9,11 @@ from .models import Profile
 class ProfileAdmin(DjangoUserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'email',  'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'phone_number')}),
+        (_('Permissions'), {'fields': ('is_private', 'is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        (_('Companies'), {'fields': ('companies', )}),
     )
     add_fieldsets = (
         (None, {

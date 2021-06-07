@@ -14,17 +14,6 @@ from .serializers import StorageRegistrationSerializer, StorageSerializer
 @decorators.permission_classes([AllowAny])
 def storage(req):
     if req.method == 'POST':
-        if 'storage_id' in req.data.keys() and 'changes' in req.data.keys():
-            storages = Storage.objects.filter(id='storage_id')
-            if storages.exists():
-                data = req.data
-                storage_id = data['storage_id']
-                storages.update(**data['changes'])
-                storages.save()
-                return Response(storage_id, status=status.HTTP_200_OK)
-            else:
-                return Response("Storage with this id does\'t exist", status.HTTP_404_NOT_FOUND)
-
         serializer = StorageRegistrationSerializer(data=req.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_200_OK)

@@ -3,5 +3,5 @@ from . import views
 
 
 urlpatterns = [
-    path('storages', views.storage)
+    path('my_storages', views.storage)
 ]
