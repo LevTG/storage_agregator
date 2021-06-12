@@ -20,13 +20,15 @@ class SingleCompanySerializer(serializers.ModelSerializer):
         model = Company
         fields = [
             'id',
+            'owner',
             "name",
             "city",
         ]
 
     def create(self, validated_data):
-        user = self.context['request'].user
-        validated_data['owner'] = user
+        if 'owner' not in validated_data.keys():
+            user = self.context['request'].user
+            validated_data['owner'] = user.id
         company = Company.objects.create(**validated_data)
         company.save()
         return company

@@ -12,7 +12,7 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'address',
-            'owner',
+            'company_owner',
             'description',
             'square',
             'price',
@@ -35,7 +35,7 @@ class StorageSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'address',
-            'owner',
+            'company_owner',
             'description',
             'square',
             'price',
@@ -53,7 +53,7 @@ class SingleStorageSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'address',
-            'owner',
+            'company_owner',
             'description',
             'square',
             'price',
@@ -72,6 +72,6 @@ class SingleStorageSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         user = self.context['request'].user
-        if instance.owner.owner.username != user.username:
+        if instance.company_owner.owner.username != user.username:
             raise serializers.ValidationError({"authorize": "You dont have permission for this company."})
         return super(self).update(instance, validated_data)

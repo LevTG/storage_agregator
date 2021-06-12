@@ -47,7 +47,7 @@ class ProfileManager(BaseUserManager):
 
 
 class Profile(AbstractUser):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(db_index=True, primary_key=True, default=uuid.uuid4, editable=False)
     username = models.CharField(db_index=True, max_length=255, unique=True)
     email = models.EmailField(_('email address'), db_index=True, null=True)
 
@@ -77,5 +77,8 @@ class Profile(AbstractUser):
     def companies(self):
         return self.company_set.all()
 
-    def __str__(self):
-        return self.username
+    # def __str__(self):
+    #     return self.username
+
+    # def __repr__(self):
+    #     return self.id

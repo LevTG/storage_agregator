@@ -1,5 +1,5 @@
 # from django.http import HttpResponse
-from rest_framework import status, generics
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView
@@ -34,11 +34,11 @@ class UserRegistrationView(CreateAPIView):
         }
         try:
             if 'company' in req.data.keys():
-                company = SingleCompanySerializer(data={'name': req.data['company_name'], 'owner_id': user}, context={'request': req})
+                company = SingleCompanySerializer(data={'name': req.data['company_name'], 'owner': user.id})
                 user.is_private = False
-                user.is_owner = False
+                user.is_owner = True
             else:
-                company = SingleCompanySerializer(data={'name': user.username, 'is_private': True,  'owner_id': user}, context={'request': req})
+                company = SingleCompanySerializer(data={'name': user.username, 'is_private': True, 'owner': user.id})
                 user.is_owner = True
                 user.save()
                 if not company.is_valid():

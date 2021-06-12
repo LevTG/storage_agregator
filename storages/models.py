@@ -12,7 +12,7 @@ TEMPERATURE_TYPE = (('c', 'cold'), ('w', 'warm'))
 class Storage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     address = models.TextField()
-    owner = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company_owner = models.ForeignKey(Company, on_delete=models.CASCADE)
 
     description = models.TextField(blank=True, null=True)
 
