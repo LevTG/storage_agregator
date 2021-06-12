@@ -36,8 +36,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'storage.pythonanywhere.com']
 # Application definition
 
 INSTALLED_APPS = [
-    'authentication',
-    'core',
+    'profile',
     'django.contrib.admin',
     'django.contrib.sessions',
     'django.contrib.auth',
@@ -45,11 +44,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    'rest_framework_simplejwt.token_blacklist',
-    'applications',
+    'rest_framework_jwt',
+    'rest_framework_jwt.blacklist',
+    'images',
     'company',
-    'faq',
-    'storages'
+    'storages',
+    # 'applications',
+    # 'faq',
 ]
 
 MIDDLEWARE = [
@@ -102,24 +103,20 @@ WSGI_APPLICATION = 'storage_aggregator.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        # 'OPTIONS': {
+                    # 'read_default_file': '/home/incredible/.my.cnf',
+                    # },
+        'OPTIONS': {
+                    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
+        'NAME': 'storage$default',
+        'USER': 'storage',
+        # 'PASSWORD': os.environ.get('BASE_PASSWORD'),
+        'PASSWORD': 'WYUf7nd5',
+        'HOST': 'storage.mysql.pythonanywhere-services.com',
+        'PORT': '3306',
     }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     # 'OPTIONS': {
-    #                 # 'read_default_file': '/home/incredible/.my.cnf',
-    #                 # },
-    #     'OPTIONS': {
-    #                 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-    #     },
-    #     'NAME': 'storage$default',
-    #     'USER': 'storage',
-    #     # 'PASSWORD': os.environ.get('BASE_PASSWORD'),
-    #     'PASSWORD': 'WYUf7nd5',
-    #     'HOST': 'storage.mysql.pythonanywhere-services.com',
-    #     'PORT': '3306',
-    # }
 }
 
 
@@ -158,33 +155,37 @@ USE_TZ = True
 
 # Authorization
 
-AUTH_USER_MODEL = 'authentication.Profile'
+AUTH_USER_MODEL = 'profile.Profile'
 
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'profile/registration'
 LOGOUT_REDIRECT_URL = 'home'
 
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'USER_ID_CLAIM': 'user_id',
-
-    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+REST_FRAMEWORK = {
+     'DEFAULT_PERMISSION_CLASSES': [
+         'rest_framework.permissions.IsAuthenticated',
+         'rest_framework.permissions.IsAdminUser',
+         ],
+     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+     )
 }
 
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+JWT_AUTH = {
+    'JWT_SECRET_KEY': 'SECRET_KEY',
+    'JWT_GET_USER_SECRET_KEY': None,
+    'JWT_PUBLIC_KEY': None,
+    'JWT_PRIVATE_KEY': None,
+    'JWT_ALGORITHM': 'HS256',
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_LEEWAY': 0,
+    'JWT_EXPIRATION_DELTA': timedelta(days=30),
+    'JWT_AUDIENCE': None,
+    'JWT_ISSUER': None,
+    'JWT_ALLOW_REFRESH': False,
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=30),
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_AUTH_COOKIE': None,
 }
 
 # Static files (CSS, JavaScript, Images)

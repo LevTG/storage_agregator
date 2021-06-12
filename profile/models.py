@@ -3,11 +3,12 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import RegexValidator
 
+import uuid
+
 import jwt
 from datetime import datetime, timedelta
 
 from storage_aggregator import settings
-from company.models import Company
 
 
 class ProfileManager(BaseUserManager):
@@ -46,6 +47,7 @@ class ProfileManager(BaseUserManager):
 
 
 class Profile(AbstractUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.CharField(db_index=True, max_length=255, unique=True)
     email = models.EmailField(_('email address'), db_index=True, null=True)
 
@@ -68,7 +70,12 @@ class Profile(AbstractUser):
     phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True, null=True)
     # city = models.CharField(max_length=50)
 
-    companies = models.ManyToManyField(Company)
-
     def get_full_name(self):
+        return self.username
+
+    @property
+    def companies(self):
+        return self.company_set.all()
+
+    def __str__(self):
         return self.username

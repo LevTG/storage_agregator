@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class CustomUserConfig(AppConfig):
+class ImagesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'authentication'
+    name = 'images'

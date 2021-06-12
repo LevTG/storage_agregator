@@ -13,14 +13,17 @@ class ProfileAdmin(DjangoUserAdmin):
         (_('Permissions'), {'fields': ('is_private', 'is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
-        (_('Companies'), {'fields': ('companies', )}),
+        # (_('Companies'), {'fields': ('_companies', )}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2'),
+            'fields': ('username', 'password', 'company_set'),
         }),
     )
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
     search_fields = ('username', 'email', 'first_name', 'last_name')
     ordering = ('username', 'email')
+
+    def _companies(self, obj):
+        return obj.company_set.all().count()
