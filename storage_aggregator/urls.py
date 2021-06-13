@@ -23,6 +23,6 @@ urlpatterns = [
     # path('faq/', include('faq.urls')),
     path('storage/', include('storages.urls')),
     path('company/', include('company.urls')),
-    # path('applications/', include('applications.urls')),
+    path('application/', include('applications.urls')),
     # path('images/', include('images.urls'))
 ]

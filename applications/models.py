@@ -2,7 +2,7 @@ from django.db import models
 from django.core.validators import RegexValidator
 
 from storages.models import Storage
-
+from profile.models import Profile
 
 APPLICATION_STATUS = (('a', 'accepted'), ('d', 'declined'), ('p', 'in process'), ('m', 'on moderation'))
 
@@ -21,3 +21,4 @@ class Application(models.Model):
 
     status = models.CharField(max_length=20, choices=APPLICATION_STATUS, default='on moderation')
     storage = models.ForeignKey(Storage, on_delete=models.CASCADE)
+    recipient = models.ForeignKey(Profile, on_delete=models.CASCADE)

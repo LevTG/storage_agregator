@@ -77,8 +77,5 @@ class Profile(AbstractUser):
     def companies(self):
         return self.company_set.all()
 
-    # def __str__(self):
-    #     return self.username
-
-    # def __repr__(self):
-    #     return self.id
+    def __str__(self):
+        return self.username

@@ -1,5 +1,5 @@
 # from django.http import HttpResponse
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView
@@ -11,9 +11,10 @@ from django.contrib.auth import get_user_model
 # from rest_framework_jwt.utils import jwt_create_payload as jwt_payload_handler
 # from rest_framework_jwt.utils import jwt_encode_payload as jwt_encode_handler
 # from rest_framework_jwt.utils import jwt_encode_payload as jwt_decode_handler
-
+from rest_framework_jwt.views import VerifyJSONWebTokenView, RefreshJSONWebTokenView
 from .serializers import ProfileRegistrationSerializer, ProfileLoginSerializer, ProfileSerializer, ChangePasswordSerializer, ProfileUpdateSerializer
 from company.serializers import SingleCompanySerializer, CompanySerializer
+from applications.serializers import ApplicationSerializer
 
 
 User = get_user_model()
@@ -33,8 +34,9 @@ class UserRegistrationView(CreateAPIView):
             'username': user.username
         }
         try:
-            if 'company' in req.data.keys():
-                company = SingleCompanySerializer(data={'name': req.data['company_name'], 'owner': user.id})
+            if 'company_name' in req.data.keys():
+                data = {'name': req.data['company_name'], 'owner': user.id}
+                company = SingleCompanySerializer(data=data)
                 user.is_private = False
                 user.is_owner = True
             else:
@@ -100,6 +102,24 @@ class ChangePasswordView(UpdateAPIView):
     lookup_field = 'username'
 
 
+class RefreshTokenView(RefreshJSONWebTokenView):
+    def post(self, req):
+        serializer = RefreshJSONWebTokenView.serializer_class(data=req.data)
+        if serializer.is_valid():
+            res = Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            res = Response(serializer.errors, status=status.HTTP_200_OK)
+        return res
+
+
+class VerifyTokenView(VerifyJSONWebTokenView):
+    def post(self, req):
+        serializer = VerifyJSONWebTokenView.serializer_class(data=req.data)
+        if serializer.is_valid():
+            res = Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            res = Response('Error: decoding token', status=status.HTTP_200_OK)
+        return res
 
 # class ProfileLogoutView(RetrieveAPIView):
 #     permission_classes = (IsAuthenticated,)
@@ -123,3 +143,21 @@ class ChangePasswordView(UpdateAPIView):
 #             t, _ = BlacklistedToken.objects.get_or_create(token=token)
 #         return Response(status=status.HTTP_205_RESET_CONTENT)
 
+class GetAllApplicationsView(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, req):
+        user = req.user
+        applications = user.application_set
+        data = ApplicationSerializer(applications, many=True).data
+        return Response(data, status=status.HTTP_200_OK)
+
+
+class GetAllStoragesView(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, req):
+        user = req.user
+        applications = user.storages
+        data = ApplicationSerializer(applications, many=True).data
+        return Response(data, status=status.HTTP_200_OK)
