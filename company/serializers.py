@@ -23,6 +23,8 @@ class SingleCompanySerializer(serializers.ModelSerializer):
             'owner',
             "name",
             "city",
+            'owner',
+            'is_private'
         ]
 
     def create(self, validated_data):
