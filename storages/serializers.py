@@ -5,8 +5,6 @@ from .models import Storage
 
 
 class StorageRegistrationSerializer(serializers.ModelSerializer):
-    # album = ImageAlbumSerializer()
-
     class Meta:
         model = Storage
         fields = [
@@ -20,11 +18,10 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
             'work_hours_start',
             'work_hours_end',
             'surveillance',
-            'climate'
-
+            'climate',
         ]
         extra_kwargs = {
-            'owner': {'required': True},
+            'company_owner': {'required': True},
             'address': {'required': True},
         }
 
@@ -48,6 +45,8 @@ class StorageSerializer(serializers.ModelSerializer):
 
 
 class SingleStorageSerializer(serializers.ModelSerializer):
+    album = ImageAlbumSerializer()
+
     class Meta:
         model = Storage
         fields = [
@@ -61,7 +60,8 @@ class SingleStorageSerializer(serializers.ModelSerializer):
             'work_hours_start',
             'work_hours_end',
             'surveillance',
-            'climate'
+            'climate',
+            'album'
         ]
 
     def create(self, validated_data):

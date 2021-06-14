@@ -197,6 +197,10 @@ JWT_AUTH = {
 
 STATIC_URL = '/static/'
 
+# MEDIA
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # STATIC_ROOT = '/home/storage/storage_aggregator/static/'
 
 # Default primary key field type

@@ -8,13 +8,17 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = [
-            'image',
             'name',
+            'image',
+            'album'
         ]
 
 
-class ImageAlbumSerializer:
-    images = ImageSerializer(source='images', many=True)
+class ImageAlbumSerializer(serializers.ModelSerializer):
+    images = ImageSerializer(many=True)
 
     class Meta:
         model = ImageAlbum
+        fields = [
+            'images'
+        ]

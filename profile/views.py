@@ -28,7 +28,7 @@ class UserRegistrationView(CreateAPIView):
         # return Response(req.data['profile'])
         serializer = ProfileRegistrationSerializer(data=req.data)
         if not serializer.is_valid():
-            return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status.HTTP_200_OK)
         user = serializer.save()
         res = {
             'username': user.username
@@ -44,7 +44,7 @@ class UserRegistrationView(CreateAPIView):
                 user.is_owner = True
                 user.save()
                 if not company.is_valid():
-                    return Response(company.errors, status=status.HTTP_400_BAD_REQUEST)
+                    return Response(company.errors, status=status.HTTP_200_OK)
             company = company.save()
             res['company_id'] = company.id
         except Exception as e:
