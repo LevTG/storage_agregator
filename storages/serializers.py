@@ -24,7 +24,7 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
 
         ]
         extra_kwargs = {
-            'owner': {'required': True},
+            'company_owner': {'required': True},
             'address': {'required': True},
         }
 
