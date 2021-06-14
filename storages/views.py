@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.parsers import FormParser, FileUploadParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.renderers import JSONRenderer
 from .serializers import StorageRegistrationSerializer, SingleStorageSerializer
 from images.serializers import ImageSerializer
 from images.models import ImageAlbum
@@ -13,6 +13,7 @@ from images.models import ImageAlbum
 class StorageRegisterView(CreateAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = StorageRegistrationSerializer
+    renderer_classes = [JSONRenderer]
     parser_classes = (MultiPartParser,)
 
     def post(self, req):
