@@ -39,6 +39,8 @@ class UserRegistrationView(CreateAPIView):
                 company = SingleCompanySerializer(data=data)
                 user.is_private = False
                 user.is_owner = True
+                if not company.is_valid():
+                    return Response(company.errors, status=status.HTTP_200_OK)
             else:
                 company = SingleCompanySerializer(data={'name': user.username, 'is_private': True, 'owner': user.id})
                 user.is_owner = True

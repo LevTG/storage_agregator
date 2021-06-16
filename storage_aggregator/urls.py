@@ -17,7 +17,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-import local_settings
+from storage_aggregator import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,7 +27,6 @@ urlpatterns = [
     path('company/', include('company.urls')),
     path('application/', include('applications.urls')),
     path('images/', include('images.urls'))
-    # path('test_images/', include('test_model.urls'))
 ]
 
-urlpatterns += static(local_settings.MEDIA_URL, document_root=local_settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,10 +1,8 @@
 from django.db import models
-from local_settings import MEDIA_ROOT
-
 
 def get_upload_path(instance, filename):
     name = instance.name
-    return f'{MEDIA_ROOT}/{name}/images/{filename}'
+    return f'{name}/images/{filename}'
 
 
 class ImageAlbum(models.Model):
