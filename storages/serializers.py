@@ -60,8 +60,7 @@ class SingleStorageSerializer(serializers.ModelSerializer):
             'work_hours_start',
             'work_hours_end',
             'surveillance',
-            'climate',
-            'album'
+            'climate'
         ]
 
     def create(self, validated_data):
@@ -75,3 +74,24 @@ class SingleStorageSerializer(serializers.ModelSerializer):
         if instance.company_owner.owner.username != user.username:
             raise serializers.ValidationError({"authorize": "You dont have permission for this company."})
         return super(self).update(instance, validated_data)
+
+
+class StorageSerializer(serializers.ModelSerializer):
+    album = ImageAlbumSerializer()
+
+    class Meta:
+        model = Storage
+        fields = [
+            'id',
+            'address',
+            'company_owner',
+            'description',
+            'square',
+            'price',
+            'access',
+            'work_hours_start',
+            'work_hours_end',
+            'surveillance',
+            'climate',
+            'album'
+        ]
