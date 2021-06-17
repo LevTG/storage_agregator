@@ -21,6 +21,7 @@ class SingleCompanySerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'owner',
+            'description',
             "name",
             "city",
             'owner',

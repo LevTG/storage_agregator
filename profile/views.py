@@ -15,6 +15,7 @@ from rest_framework_jwt.views import VerifyJSONWebTokenView, RefreshJSONWebToken
 from .serializers import ProfileRegistrationSerializer, ProfileLoginSerializer, ProfileSerializer, ChangePasswordSerializer, ProfileUpdateSerializer
 from company.serializers import SingleCompanySerializer, CompanySerializer
 from applications.serializers import ApplicationSerializer
+from images.serializers import ImageSerializer
 
 
 User = get_user_model()
@@ -34,20 +35,37 @@ class UserRegistrationView(CreateAPIView):
             'username': user.username
         }
         try:
-            if 'company_name' in req.data.keys():
-                data = {'name': req.data['company_name'], 'owner': user.id}
+            if 'name' in req.data['company'].keys():
+                data = req.data['company'].copy()
+                data['owner'] = user.id
                 company = SingleCompanySerializer(data=data)
                 user.is_private = False
                 user.is_owner = True
                 if not company.is_valid():
                     return Response(company.errors, status=status.HTTP_200_OK)
             else:
-                company = SingleCompanySerializer(data={'name': user.username, 'is_private': True, 'owner': user.id})
+                data = req.data['company'].copy()
+                data['owner'] = user.id
+                data['name'] = user.username
+                data['is_private'] = True
+                company = SingleCompanySerializer(data=data)
                 user.is_owner = True
                 user.save()
                 if not company.is_valid():
                     return Response(company.errors, status=status.HTTP_200_OK)
             company = company.save()
+            image = req.FILES.get('logo', None)
+            if image is not None:
+                form_data = {}
+                form_data['image'] = image
+                form_data['name'] = 'company'
+
+                image_serializer = ImageSerializer(data=form_data)
+
+                if not image_serializer.is_valid():
+                    return Response(image_serializer.errors, status=status.HTTP_200_OK)
+                image = image_serializer.save()
+                company.logo = image.id
             res['company_id'] = company.id
         except Exception as e:
             user.delete()
