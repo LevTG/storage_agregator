@@ -1,4 +1,5 @@
 # from django.http import HttpResponse
+import json
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -35,20 +36,20 @@ class UserRegistrationView(CreateAPIView):
             'username': user.username
         }
         try:
-            if 'name' in req.data['company'].keys():
-                data = req.data['company'].copy()
-                data['owner'] = user.id
-                company = SingleCompanySerializer(data=data)
+            company_data = req.data['company'].copy()
+            company_data = json.loads(company_data)
+            if 'name' in company_data['company'].keys():
+                company_data['owner'] = user.id
+                company = SingleCompanySerializer(data=company_data)
                 user.is_private = False
                 user.is_owner = True
                 if not company.is_valid():
                     return Response(company.errors, status=status.HTTP_200_OK)
             else:
-                data = req.data['company'].copy()
-                data['owner'] = user.id
-                data['name'] = user.username
-                data['is_private'] = True
-                company = SingleCompanySerializer(data=data)
+                company_data['owner'] = user.id
+                company_data['name'] = user.username
+                company_data['is_private'] = True
+                company = SingleCompanySerializer(data=company_data)
                 user.is_owner = True
                 user.save()
                 if not company.is_valid():

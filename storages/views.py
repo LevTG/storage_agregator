@@ -37,8 +37,8 @@ class StorageRegisterView(CreateAPIView):
 
                 form_data = {}
 
-                for image in req.FILES.getlist('images'):
-
+                # for image in req.FILES.getlist('images'):
+                for image_name, image in req.FILES.iteritems():
                     form_data['album'] = album.id
                     form_data['image'] = image
                     form_data['name'] = 'storage'
