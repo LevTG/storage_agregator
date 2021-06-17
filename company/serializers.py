@@ -2,20 +2,25 @@ from rest_framework import serializers
 from .models import Company
 
 from storages.serializers import StorageSerializer
+from images.serializers import ImageSerializer
 
 
 class CompanySerializer(serializers.ModelSerializer):
+    logo = ImageSerializer()
 
     class Meta:
         model = Company
         fields = [
             'id',
             "name",
-            "city"
+            "city",
+            'description'
         ]
 
 
 class SingleCompanySerializer(serializers.ModelSerializer):
+    logo = ImageSerializer()
+
     class Meta:
         model = Company
         fields = [
@@ -25,7 +30,7 @@ class SingleCompanySerializer(serializers.ModelSerializer):
             "name",
             "city",
             'owner',
-            'is_private'
+            'is_private',
         ]
 
     def create(self, validated_data):

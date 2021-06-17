@@ -36,9 +36,8 @@ class UserRegistrationView(CreateAPIView):
             'username': user.username
         }
         try:
-            company_data = req.data['company'].copy()
-            company_data = json.loads(company_data)
-            if 'name' in company_data['company'].keys():
+            company_data = json.loads(req.data['company'])
+            if 'name' in company_data.keys():
                 company_data['owner'] = user.id
                 company = SingleCompanySerializer(data=company_data)
                 user.is_private = False
