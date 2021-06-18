@@ -21,6 +21,15 @@ class SingleCompanyView(RetrieveUpdateDestroyAPIView):
     queryset = Company.objects.all()
     serializer_class = SingleCompanySerializer
 
+    def get(self, req, **kwargs):
+        try:
+            company_id = self.kwargs['id']
+            company = self.queryset.get(id=company_id)
+            data = SingleCompanySerializer(company).data
+            return Response(data, status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 class GetAllStorages(APIView):
     permission_classes = (IsAuthenticated, AllowAny)

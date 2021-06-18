@@ -58,10 +58,7 @@ class UserRegistrationView(CreateAPIView):
             company = company.save()
             image = req.FILES.get('logo', None)
             if image is not None:
-                form_data = {}
-                form_data['image'] = image
-                form_data['name'] = 'company'
-
+                form_data = {'image': image, 'name': 'company'}
                 image_serializer = ImageSerializer(data=form_data)
 
                 if not image_serializer.is_valid():
@@ -70,6 +67,8 @@ class UserRegistrationView(CreateAPIView):
                     return Response(image_serializer.errors, status=status.HTTP_200_OK)
                 image = image_serializer.save()
                 company.logo = image.id
+            else:
+                res['logo'] = 'No logo'
             res['company_id'] = company.id
         except Exception as e:
             user.delete()
