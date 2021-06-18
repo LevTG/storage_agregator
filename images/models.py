@@ -19,5 +19,5 @@ class Image(models.Model):
     default = models.BooleanField(default=False)
     width = models.FloatField(default=100)
     length = models.FloatField(default=100)
-    album = models.ForeignKey(ImageAlbum, related_name='images', on_delete=models.CASCADE)
+    album = models.ForeignKey(ImageAlbum, related_name='images', on_delete=models.CASCADE, null=True, blank=True)
 

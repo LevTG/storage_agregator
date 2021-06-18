@@ -11,13 +11,19 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('company', '0001_initial'),
+        ('applications', '0001_initial'),
+        ('storages', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='company',
-            name='owner',
+            model_name='application',
+            name='recipient',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+        ),
+        migrations.AddField(
+            model_name='application',
+            name='storage',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='storages.storage'),
         ),
     ]

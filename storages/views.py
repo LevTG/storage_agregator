@@ -1,3 +1,4 @@
+import re
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -5,8 +6,6 @@ from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.renderers import JSONRenderer
-from .serializers import StorageRegistrationSerializer, SingleStorageSerializer
-from .models import Storage
 
 from .models import Storage, ACCESS_TYPE, SURVEILLANCE_TYPE, TEMPERATURE_TYPE
 from .serializers import StorageRegistrationSerializer, StorageSerializer
@@ -14,6 +13,8 @@ from images.serializers import ImageSerializer
 from images.models import ImageAlbum
 
 from django.db.models import Q
+
+image_re = re.compile('image\d+')
 
 
 class StorageRegisterView(CreateAPIView):
@@ -33,14 +34,11 @@ class StorageRegisterView(CreateAPIView):
         album.save()
         storage.album = album
         try:
-            if 'images' in req.data.keys():
-
-                form_data = {}
-
-                # for image in req.FILES.getlist('images'):
-                for image_name, image in req.FILES.iteritems():
+            for key, value in req.data.iteritems():
+                if image_re.search(key):
+                    form_data = {}
                     form_data['album'] = album.id
-                    form_data['image'] = image
+                    form_data['image'] = value
                     form_data['name'] = 'storage'
 
                     image_serializer = ImageSerializer(data=form_data)
@@ -48,7 +46,8 @@ class StorageRegisterView(CreateAPIView):
                     if not image_serializer.is_valid():
                         return Response(image_serializer.errors, status=status.HTTP_200_OK)
                     image = image_serializer.save()
-                storage.save()
+
+            storage.save()
         except Exception as e:
             storage.delete()
             album.delete()

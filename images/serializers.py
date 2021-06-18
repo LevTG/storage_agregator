@@ -10,9 +10,10 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = [
             'name',
             'image',
-            'album',
-            'url'
+            'url',
+            'album'
         ]
+
 
 
 class ImageUrlSerializer(serializers.ModelSerializer):
