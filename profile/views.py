@@ -43,6 +43,7 @@ class UserRegistrationView(CreateAPIView):
                 user.is_private = False
                 user.is_owner = True
                 if not company.is_valid():
+                    user.delete()
                     return Response(company.errors, status=status.HTTP_200_OK)
             else:
                 company_data['owner'] = user.id
@@ -52,6 +53,7 @@ class UserRegistrationView(CreateAPIView):
                 user.is_owner = True
                 user.save()
                 if not company.is_valid():
+                    user.delete()
                     return Response(company.errors, status=status.HTTP_200_OK)
             company = company.save()
             image = req.FILES.get('logo', None)
@@ -63,6 +65,8 @@ class UserRegistrationView(CreateAPIView):
                 image_serializer = ImageSerializer(data=form_data)
 
                 if not image_serializer.is_valid():
+                    company.delete()
+                    user.delete()
                     return Response(image_serializer.errors, status=status.HTTP_200_OK)
                 image = image_serializer.save()
                 company.logo = image.id
