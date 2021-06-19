@@ -30,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'storage.pythonanywhere.com', 'findsklad.ru', '10.244.31.112']
+ALLOWED_HOSTS = ['127.0.0.1', 'storage.pythonanywhere.com', 'findsklad-ur6c4.ondigitalocean.app', '10.244.31.112']
 
 
 # Application definition
