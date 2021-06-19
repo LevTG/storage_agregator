@@ -5,26 +5,30 @@
         :src="require('@/assets/icons/x.svg')"
       />
     </div>
-    <div class="img">
-    </div>
-    <div class="middle-line">
-      {{info.address}}
-    </div>
-    <div class="info">
-      <div class="line">
-        <span>Тип: </span> <span class="rigth-text">{{info.type}} </span>
+    <div class="main">
+      <div class="img">
       </div>
-      <div class="line">
-        <span>Свободного места: </span> <span class="rigth-text">{{info.available}} </span>
+      <div class="rigth-part">
+      <div class="middle-line">
+        {{info.address}}
       </div>
-      <div class="line">
-        <span>Владелец: </span> <span class="rigth-text">{{info.type}} </span>
-      </div>
-      <div class="line">
-        <span>Услуги: </span> <span class="rigth-text">{{info.type}} </span>
-      </div>
-      <div class="line">
-        <span>Цена: </span> <span class="rigth-text">{{info.price}} </span>
+        <div class="info">
+          <div class="line">
+            <span>Тип: </span> <span class="rigth-text">{{info.type}} </span>
+          </div>
+          <div class="line">
+            <span>Свободного места: </span> <span class="rigth-text">{{info.available}} </span>
+          </div>
+          <div class="line">
+            <span>Владелец: </span> <span class="rigth-text">{{info.type}} </span>
+          </div>
+          <div class="line">
+            <span>Услуги: </span> <span class="rigth-text">{{info.type}} </span>
+          </div>
+          <div class="line">
+            <span>Цена: </span> <span class="rigth-text">{{info.price}} </span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="footer">
@@ -33,11 +37,12 @@
   </div>
 </template>
 <script>
-
+  import InlineSvg from 'vue-inline-svg'
   import DefaultButton from '@/components/shared/DefaultButton'
   export default{
     components: {
-      DefaultButton
+      DefaultButton,
+      InlineSvg
     },
     props: {
       info: {
@@ -55,14 +60,23 @@
 
 <style scoped>
 .card{
-  width: calc(100% - 100px);
   display: flex;
   flex-direction: column;
-  padding: 45px;
+  padding: 28px;
   padding-bottom: 40px;
   background: #FFFFFF;
   box-shadow: 6px 4px 16px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
+}
+
+.main{
+  display: flex;
+  flex-direction: row;
+}
+
+.rigth-part{
+  display: flex;
+  flex-direction: column;
 }
 
 .middle-line{
@@ -93,6 +107,11 @@ line-height: 140.62%;
 color: #000000;
 }
 
+
+.top-line{
+  position: absolute;
+}
+
 .rigth-text{
   display: flex;
   margin-left: auto;
@@ -105,7 +124,7 @@ color: #000000;
 .img{
   border-radius: 8px;
   background: grey;
-  width: 100%;
+  width: 45%;
   min-height: 300px;
 }
 

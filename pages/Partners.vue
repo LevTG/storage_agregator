@@ -59,7 +59,11 @@
             <title-small style="font-weight: 400; margin-bottom: 50px">
               Откройте для своего бизнеса новый канал привлечения аудитории
             </title-small>
-            <default-Button style="width: 160px"> Подать заявку</default-button>
+            <nuxt-link no-prefetch class="nav-link" to="/partners/reg">
+              <default-Button style="width: 160px">
+                Подать заявку
+              </default-button>
+            </nuxt-link>
           </div>
         </div>
       </div>

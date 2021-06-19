@@ -15,9 +15,13 @@
         <default-input @input="setCompanyName($event)" style="width: 520px; margin-bottom: 12px" placeholder="Компания" />
         <default-input @input="setCompanyUrl($event)" style="width: 520px; margin-bottom: 12px" placeholder="Ссылка на сайт компании" />
         <default-input @input="setCity($event)" style="width: 520px; margin-bottom: 12px" placeholder="Город*" />
+        <adding-file id="aggregatoin"
+          :isFileWasUploaded="isFileWasUploaded"
+          @load-file="loadFileAggregation"
+          @isFileWasUploadedStatusChanged="isFileWasUploadedStatusChanged()"></adding-file>
         <default-input @input="setPassword($event)" style="width: 520px; margin-bottom: 12px" placeholder="Пароль*" />
         <default-input @input="setPassword($event)" style="width: 520px; margin-bottom: 50px" placeholder="Подтверждение пароля*" />
-        <default-button @click="regPost()"style="width: 220px">Зарегистрироваться</default-button>
+        <default-button @click="reg()"style="width: 220px">Зарегистрироваться</default-button>
       </div>
     </section>
   </div>
@@ -30,6 +34,8 @@ import TitleBig from '@/components/shared/TitleBig'
 import DefaultButton from '@/components/shared/DefaultButton'
 import HowItWork from '@/components/partners/HowItWork'
 import DefaultInput from '@/components/shared/DefaultInput'
+import AddingFile from '@/components/shared/AddingFile'
+import Api from '@/api/'
 import axios from 'axios'
 import {URL} from '@/const/url'
 export default {
@@ -39,17 +45,24 @@ export default {
     TitleBig,
     DefaultButton,
     HowItWork,
-    DefaultInput
+    DefaultInput,
+    AddingFile
   },
   data() {
     return {
       reginfo: {
+        company: {
 
+        }
       },
       user: {
 
-      }
+      },
+      isFileWasUploaded: false
     }
+  },
+  mounted () {
+    this.test()
   },
   methods:{
     setMail (event) {
@@ -62,16 +75,19 @@ export default {
       this.reginfo.lastname = event;
     },
     setCity (event){
-      this.reginfo.city = event;
+      this.reginfo.company.city = event;
     },
     setPhone (event){
       this.reginfo.phone = event;
     },
     setCompanyName (event){
-      this.reginfo.companyname = event;
+      this.reginfo.company.name= event;
     },
     setLogin (event){
       this.reginfo.login = event;
+    },
+    setCompanyDescription(event){
+      this.reginfo.company.description = event;
     },
     setCompanyUrl (event){
       this.reginfo.companyurl = event;
@@ -82,6 +98,32 @@ export default {
     put (){
       console.log(this)
       this.$router.push('/partners/createadd')
+    },
+    reg() {
+      console.log(this.reginfo)
+      const api = new Api
+      api.registration(this.reginfo)
+    },
+    isFileWasUploadedStatusChanged (value) {
+      this.isFileWasUploaded = false
+    },
+    loadFileAggregation (value) {
+      this.reginfo.logo = value
+      // this.submitFiles()
+    },
+    test () {
+      this.reginfo.firstname = 'Den6'
+      this.reginfo.lastname = 'Fedorov6'
+      this.reginfo.mail = 'fedorovdgap2341@gmail.com',
+      this.reginfo.phone = '723418596470',
+      this.reginfo.login = 'fedorovdgap2341',
+      this.reginfo.password = '12345'
+      this.reginfo.company = {
+        name: 'FedorovInc2341',
+        city: 'Ростов-на-Дону',
+        description : 'Мы лучший склад в мире'
+      }
+      //this.reginfo.company = null
     },
     regPost () {
       const formData = new FormData()
@@ -129,6 +171,7 @@ section{
   padding-right: 10%;
   align-items: center;
 }
+
 
 .form{
   display: flex;

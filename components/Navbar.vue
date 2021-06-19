@@ -1,5 +1,8 @@
 <template>
   <nav>
+    <div class="place_to_logo">
+      <title-medium style="color: #000"> StÖrage </title-medium>
+    </div>
     <ul>
       <li>
         <nuxt-link exact active-class="active" class="nav-link" to="/">
@@ -16,19 +19,24 @@
           Склад
         </nuxt-link>
       </li>
-      <default-button @click="showModal"> Войти</default-button>
-      <modal
-        :show='showPopup'
-        header-text='Вход'
-        :on-close='onRowClose'
-      >
-        <template #body>
-          <default-input @input="setLogin($event)" style="width: 300px; margin-bottom: 12px" placeholder="Логин" />
-          <default-input @input="setPassword($event)" style="width: 300px; margin-bottom: 12px" placeholder="Пароль" />
-          <default-button @click="LoginGet()" style="width: 300px; margin-bottom: 50px">Войти</default-button>
-        </template>
-      </modal>
+      <li>
+        <default-button @click="showModal" v-if="!isAuth"> Войти</default-button>
+        <Account @isAuth="logout()" v-if="isAuth"
+          :username="username"
+        />
+      </li>
     </ul>
+    <modal
+      :show='showPopup'
+      header-text='Вход'
+      :on-close='onRowClose'
+    >
+      <template #body>
+        <default-input @input="setLogin($event)" style="width: 300px; margin-bottom: 12px" placeholder="Логин" />
+        <default-input @input="setPassword($event)" style="width: 300px; margin-bottom: 50px" placeholder="Пароль" />
+        <default-button @click="login()" style="height 40px; width: 300px; margin-bottom: 50px">Войти</default-button>
+      </template>
+    </modal>
   </nav>
 </template>
 
@@ -41,10 +49,13 @@ import DefaultInput from '@/components/shared/DefaultInput'
 import HotelDatePicker from 'vue-hotel-datepicker'
 import DefaultButton from '@/components/shared/DefaultButton'
 import DefaultArea from '@/components/shared/DefaultArea'
+import TitleMedium from '@/components/shared/TitleMedium'
+import Account from '@/components/shared/Account'
 import { VuePicker, VuePickerOption } from '@/components/shared/picker/'
 import 'vue-hotel-datepicker/dist/vueHotelDatepicker.css';
 import axios from 'axios'
 import {URL} from '@/const/url'
+import Api from '@/api'
 
 export default {
   components: {
@@ -55,16 +66,44 @@ export default {
     DefaultInput,
     DefaultButton,
     DefaultArea,
+    TitleMedium,
     VuePicker,
-    VuePickerOption
+    VuePickerOption,
+    Account
   },
   data() {
     return {
       showPopup: false,
       enterinfo: {
 
+      },
+      isAuth: false,
+      username: '',
+      router: {
+
       }
     }
+  },
+  mounted () {
+    console.log('Авторизирован ли юзер?')
+    console.log(localStorage.access)
+    //localStorage.removeItem('access')
+    let self = this
+    if(localStorage.access != null){
+      console.log(localStorage.access)
+      this.isAuth = true
+      const api = new Api
+      api.getUser().then(
+        response => {
+          console.log('Вызвать говно')
+          self.username = response.data.first_name + ' ' + response.data.last_name
+          console.log(response)
+        }
+      )
+    }else{
+      this.isAuth = false
+    }
+    console.log(this.isAuth)
   },
   methods: {
     onRowClose () {
@@ -78,6 +117,33 @@ export default {
     },
     setPassword(event) {
       this.enterinfo.password = event
+    },
+    login() {
+      let self = this
+      const api = new Api
+      api.login(this.enterinfo.login , this.enterinfo.password).then(
+        response => {
+          if(response.access != null){
+            self.isAuth = true
+            self.onRowClose()
+            api.getUser().then(
+              response => {
+                console.log('Вызвать говно')
+                self.username = response.data.first_name + ' ' + response.data.last_name
+                console.log(response)
+              }
+            )
+          }
+          console.log('Вызвать говно')
+          console.log(response)
+        }
+      )
+    },
+    logout () {
+      this.isAuth = false
+    },
+    toLk(){
+      this.$router.push('/partners/lk')
     },
     LoginGet () {
       const formData = new FormData()
@@ -94,6 +160,7 @@ export default {
           }
       ).then( function(json) {
         console.log(json)
+
         //self.$router.push('/partners/createadd')
 
       }).catch(function (error) {
@@ -109,9 +176,21 @@ export default {
 </script>
 
 <style scoped>
-nav{
-  height: 50px;
+
+.place_to_logo{
+  display: flex;
   width: 100%;
+  align-items: center;
+}
+
+.toLk{
+  display: flex;
+  min-width: 150px;
+}
+nav{
+  z-index: 1;
+  height: 70px;
+  width: 80%;
   padding-left: 10%;
   padding-right: 10%;
   background: #dfdfdf;
@@ -122,15 +201,16 @@ nav{
 ul{
   display: flex;
   height: 100%;
-  margin-left: auto;
   flex-direction: row;
   list-style-type: disc;
+  margin-left: auto;
   margin-block-start: 0em;
   margin-block-end: 0em;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   padding-inline-start: 0px;
   align-items: center;
+  padding: 0px;
 }
 li{
   display: flex;

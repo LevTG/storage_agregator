@@ -1,32 +1,71 @@
 <template>
   <div>
-    <div class="tab">
-      <div class="col-hf" >
-        <div class="left-tab" @click="showMyAd()" :class="{'active-tab': isShowMyAd}">
-          Мои объявления
+    <div class="account" v-if="companyIsReadyData">
+        <img  class="logo":src="'http://storage.pythonanywhere.com' + company.logo.image" alt="logo" width="400">
+        <div class="company-info-top-line">
+          <title-medium> {{company.name}} </title-medium>
+          <div class="city"> {{company.city}} </div>
         </div>
+    </div>
+    <div class="">
+      <div class="NullAdd" v-if="isAddIsNull">
+        <section>
+          <div class="col-hf">
+            <div class="content-container">
+              <div class="center-el">
+                <title-big style="margin-bottom: 25px">
+                  У вас еще нет
+                  <span style="color:#24287D">объявлений</span>
+                </title-big>
+                <title-small style="font-weight: 400; margin-bottom: 50px">
+                  Создайте свое первое объявление прямо сейчас и начните получать больше клиентов
+                </title-small>
+                  <nuxt-link no-prefetch class="nav-link" to="/partners/createadd">
+                    <default-Button red style="width: 230px">
+                      + Создать объявление
+                    </default-button>
+                  </nuxt-link>
+              </div>
+            </div>
+          </div>
+          <div class="col-hf-r">
+            <img src="@/assets/icons/img/secondframe.svg" alt="альтернативный текст">
+          </div>
+        </section>
       </div>
-      <div class="col-hf" >
-        <div class="rigth-tab" @click="showMyFeedback()" :class="{'active-tab': isShowMyFeedback}">
-          Отклики
+      <div v-if="!isAddIsNull">
+        <div class="tab">
+          <div class="col-hf" >
+            <div class="left-tab" @click="showMyAd()" :class="{'active-tab': isShowMyAd}">
+              Мои объявления
+            </div>
+          </div>
+          <div class="col-hf" >
+            <div class="rigth-tab" @click="showMyFeedback()" :class="{'active-tab': isShowMyFeedback}">
+              Отклики
+            </div>
+          </div>
         </div>
+        <section v-if="isShowMyAd">
+          <div class="row">
+            <default-button style="width: 260px">+ Добавить объявление</default-button>
+          </div>
+          <div class="row">
+            <div v-for="item in myAdd" :key="item.id">
+              <card-edit :info="item"/>
+            </div>
+
+          </div>
+        </section>
+        <section v-if="isShowMyFeedback">
+          <div class="col-hf">
+            Отклики
+          </div>
+          <div class="col-hf">
+          </div>
+        </section>
       </div>
     </div>
-    <section v-if="isShowMyAd">
-      <div class="col-hf">
-        <card-edit :info="info"/>
-      </div>
-      <div class="col-hf">
-        <default-button style="width: 260px">+ Добавить объявление</default-button>
-      </div>
-    </section>
-    <section v-if="isShowMyFeedback">
-      <div class="col-hf">
-        Отклики
-      </div>
-      <div class="col-hf">
-      </div>
-    </section>
   </div>
 </template>
 
@@ -40,7 +79,7 @@ import DefaultButton from '@/components/shared/DefaultButton'
 import HowItWork from '@/components/partners/HowItWork'
 import CardEdit from '@/components/storages/CardEdit'
 import DefaultInput from '@/components/shared/DefaultInput'
-
+import Api from '@/api'
 
 export default {
   components: {
@@ -64,8 +103,58 @@ export default {
         available: 32
       },
       isShowMyAd: true,
-      isShowMyFeedback: false
+      isShowMyFeedback: false,
+      isAddIsNull: true,
+      myAdd: [],
+      company_id: null,
+      company: {
+
+      },
+      companyIsReadyData: false
     }
+  },
+  mounted () {
+    console.log('Авторизирован ли юзер?')
+    console.log(localStorage.access)
+    console.log(localStorage.refresh)
+    let self = this
+    if(localStorage.access != null){
+      this.isAuth = true
+      const api = new Api
+      api.getUser().then(
+        response => {
+          self.company_id = response.data.companies[0].id
+          api.getAllStorages().then( response => {
+              if(response.length > 0){
+                console.log('Данные пользователя')
+                self.myAdd = response
+                self.isAddIsNull = false
+              }
+            }
+          )
+          if(response.data.myadd != null){
+            self.isAddIsNull = true
+          }
+          self.username = response.data.first_name + ' ' + response.data.last_name
+          console.log(response)
+        }
+      ).then( () => {
+        api.getCompany(self.company_id).then( response =>
+        {
+          console.log('Data company')
+          console.log(response)
+          self.companyIsReadyData = true
+          self.company = response.data
+          console.log(self.company)
+          //self.company.logo.image = "http://storage.pythonanywhere.com" + self.company.logo.image
+          //api.getImg(self.company.logo.image)
+        })
+      })
+
+    }else{
+      this.isAuth = false
+    }
+    console.log(this.isAuth)
   },
   methods: {
     showMyAd() {
@@ -80,12 +169,45 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 section{
   display: flex;
+  flex-direction: row;
   padding-left: 10%;
   padding-right: 10%;
+}
+
+.account{
+  display: flex;
+  flex-direction: column;
+  background: #F8F9FB;
+  padding-left: 10%;
+  padding-right: 10%;
+  padding-top: 45px;
+  padding-bottom: 45px;
+  justify-content: center;
+  align-items: center;
+}
+
+.city{
+  color: gray;
+}
+
+.company-info-top-line{
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+
+.logo{
+  height: 200px;
+  width: 200px;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .left-tab{
@@ -166,13 +288,19 @@ section{
 
 .row{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .column{
   display: flex;
   flex-direction: column;
 }
+
+a{
+  text-decoration: none;
+  color: white;
+}
+
 
 
 </style>

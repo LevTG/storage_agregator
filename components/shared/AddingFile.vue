@@ -3,8 +3,8 @@
               <div class="file-drag-drop">
                     <form v-bind:ref="id">
                         <div class='file-load__area drop-files'>
-                            <div class="file-listing" v-if=' file != ""'>
-                                {{ file.name }}
+                            <div class="file-listing" v-if=' files != ""'>
+                                {{ files.name }}
                             </div>
                             <div class='file-load__area-background' v-else-if="dragAndDropCapable" >
                                 <div class='area-background__image-top'>
@@ -30,6 +30,21 @@
                         </div>
                     </form>
                 </div>
+                <div class="place-to-file-chosen">
+                  <div v-for="item in files" :key="item.name">
+                    <div class="load__img">
+                      <img  class="load__img_scr"  :id="item.name"> </img>
+                      <div class="delete" @click="FileRemove(item.name)">
+                        <inline-svg
+                            class="area-background__icon"
+                            :src="require('@/assets/icons/trash.svg')"
+                            width="24"
+                            height="24"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
   </div>
 </template>
 <script>
@@ -45,7 +60,7 @@ export default {
   data () {
     return {
       dragAndDropCapable: false,
-      file: '',
+      files: [],
       errorTypeFile: false,
       event: 'load-file'
     }
@@ -59,7 +74,7 @@ export default {
     isFileWasUploaded: function (val) {
       console.log(val)
       if (val === true) {
-        this.file = ''
+        this.files = ''
         this.$refs.file.value = ''
         console.log(this.$refs.file.value)
         this.$emit('isFileWasUploadedStatusChanged', false)
@@ -67,18 +82,70 @@ export default {
     }
   },
   methods: {
+    FileRemove(file_name){
+      console.log(file_name)
+      let self_file = this.files
+      let index = function(){
+        //console.log(self_file)
+        let index = 0;
+        self_file.forEach((item, i) => {
+          if(item.name == file_name){
+              console.log(i)
+              index = i
+            }
+        })
+        return index
+      }
+      console.log(index())
+      this.files.splice(index(), 1)
+      console.log(this.files)
+    },
+    addPreViewFile() {
+      console.log('Добавить пикчу')
+      console.log(this.files)
+      this.files.forEach((item, i) => {
+        console.log(item)
+        if (FileReader && item) {
+          console.log('Добавляем пикчу')
+          var fr = new FileReader();
+          fr.onload = function () {
+              document.getElementById(item.name).src = fr.result;
+          }
+          fr.readAsDataURL(item);
+        }
+      });
+    },
     handleFileClear () {
       console.log('yes')
     },
     handleFileUpload () {
-      if (/\.(xlsx)$/i.test(this.$refs.file.files[0].name)) {
-        console.log('ok')
-        this.file = this.$refs.file.files[0]
-        this.$emit('load-file', this.file)
-      } else {
-        console.log('Расширение файла должно быть .xlsx')
-        this.errorTypeFile = true
-      }
+      this.$refs.file.files.forEach((item, i) => {
+        console.log(item)
+        if (/\.(jpeg)$/i.test(item.name)) {
+          console.log('ok')
+          if(this.files.length <= 5){
+            this.files.push(item)
+            this.addPreViewFile()
+          } else {
+            this.isFull = true
+            console.log('Слишком много файлов')
+          }
+        } else if(/\.(png)$/i.test(item.name)) {
+          console.log('ok')
+          if(this.files.length <= 5){
+            this.files.push(item)
+            this.addPreViewFile()
+          } else {
+            this.isFull = true
+            console.log('Слишком много файлов')
+          }
+        } else {
+          console.log('Расширение файла должно быть .xlsx')
+          this.errorTypeFile = true
+        }
+      })
+      this.$emit('load-file', this.files)
+      console.log(this.files)
     },
     determineDragAndDropCapable () {
       const div = document.createElement('div')
@@ -109,6 +176,50 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+
+.delete{
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.delete:hover{
+  cursor: pointer;
+}
+
+.place-to-file-chosen{
+  display: flex;
+  flex-direction: row;
+  flex-wrap:  wrap;
+  width: calc(100% + 40px);
+}
+
+.load__img_scr{
+  height: 250px;
+  width: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  filter: brightness(50%);
+
+}
+
+.load__img_scr:hover{
+  //filter: brightness(100%);
+}
+
+
+.load__img{
+  position: relative;
+  display: flex;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+
+
+.place-to-file-chosen{
+
+}
 .input__wrapper {
   width: 100%;
   position: relative;

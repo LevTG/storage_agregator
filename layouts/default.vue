@@ -33,7 +33,7 @@ body{
 }
 main{
   min-height: 100vh;
-  margin-top: 50px;
+  margin-top: 70px;
 }
 
 </style>
