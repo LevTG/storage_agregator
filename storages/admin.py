@@ -5,9 +5,28 @@ from .models import Storage
 
 @admin.register(Storage)
 class StorageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'address', 'company_owner', 'description', 'square', 'price', 'access',
-                    'work_hours_start', 'work_hours_end', 'surveillance', 'climate')
-    fields = ['address', 'company_owner', 'description', 'square', 'price', 'access',
-              'work_hours_start', 'work_hours_end', 'surveillance', 'climate']
-    list_filter = ['access', 'surveillance', 'climate']
+    list_display = ('id', 'address', 'company_owner', 'description')
+    fieldsets = ((None, {'fields': ('company_owner',
+                                    'address',
+                                    'description',
+                                    'square',
+                                    'price',
+                                    'work_hours_start',
+                                    'work_hours_end',
+                                    'storage_type',
+                                    'warehouse_type')}),
+                ('Additions', {'fields': ('video_surveillance',
+                                            'access_24h',
+                                            'mobile_app',
+                                            'clever_lock',
+                                            'cleaning',
+                                            'online_contract',
+                                            'ventilation',
+                                            'shipping',
+                                            'wrapping',
+                                            'straight_way',
+                                            'any_rental_period',
+                                            'inventoty',
+                                            'inshurance')}))
+    list_filter = ['storage_type', 'warehouse_type']
     search_fields = ['address', 'company_owner', 'description']

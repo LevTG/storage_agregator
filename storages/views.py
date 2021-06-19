@@ -7,9 +7,9 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.renderers import JSONRenderer
 
-from .models import Storage, ACCESS_TYPE, SURVEILLANCE_TYPE, TEMPERATURE_TYPE
+from .models import Storage, WAREHOUSE_TYPE, STORAGE_TYPE
 from .serializers import StorageRegistrationSerializer, StorageSerializer
-from images.serializers import ImageSerializer
+from images.serializers import ImageSerializer, ImageRegisterSerializer
 from images.models import ImageAlbum
 
 from django.db.models import Q
@@ -34,14 +34,14 @@ class StorageRegisterView(CreateAPIView):
         album.save()
         storage.album = album
         try:
-            for key, value in req.data.iteritems():
+            for key, value in req.data.items():
                 if image_re.search(key):
                     form_data = {}
                     form_data['album'] = album.id
                     form_data['image'] = value
                     form_data['name'] = 'storage'
 
-                    image_serializer = ImageSerializer(data=form_data)
+                    image_serializer = ImageRegisterSerializer(data=form_data)
 
                     if not image_serializer.is_valid():
                         return Response(image_serializer.errors, status=status.HTTP_200_OK)
@@ -76,11 +76,11 @@ class FilterStoragesView(APIView):
         access = req.GET.get('access', ACCESS_TYPE)
         work_hours_start = req.GET.get('work_hours_start', '00:00:00')
         work_hours_end = req.GET.get('work_hours_end', '23:59:59')
-        surveillance = req.GET.get('surveillance', SURVEILLANCE_TYPE)
-        climate = req.GET.get('climate', TEMPERATURE_TYPE)
+        storage_type = req.GET.get('surveillance', STORAGE_TYPE)
+        warehouse_type = req.GET.get('climate', WAREHOUSE_TYPE)
         storages = self.queryset.filter(Q(square__gte=square_min) & Q(square__lte=square_max) &
-                                        Q(price__gte=price_min) & Q(price__lte=price_max) &
-                                        Q(climate__in=climate) & Q(access__in=access))
+                                        Q(price__gte=price_min) & Q(price__lte=price_max) )
+                                        # Q(climate__in=climate) & Q(access__in=access))
         # storages = self.queryset.filter(Q(square__gte=square_min) & Q(square__lte=square_max) &
         #                                 Q(price__gte=price_min) & Q(price__lte=price_max) &
         #                                 Q(access__in=access) & Q(climate__in=climate) &

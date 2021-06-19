@@ -2,11 +2,11 @@ from rest_framework import serializers
 from .models import Company
 
 from storages.serializers import StorageSerializer
-from images.serializers import ImageUrlSerializer
+from images.serializers import ImageSerializer
 
 
 class CompanySerializer(serializers.ModelSerializer):
-    logo = ImageUrlSerializer()
+    logo = ImageSerializer()
 
     class Meta:
         model = Company
@@ -15,7 +15,8 @@ class CompanySerializer(serializers.ModelSerializer):
             "name",
             "city",
             'description',
-            'logo'
+            'logo',
+            'owner'
         ]
 
 
@@ -29,7 +30,6 @@ class SingleCompanySerializer(serializers.ModelSerializer):
             'description',
             "name",
             "city",
-            'owner',
             'is_private'
         ]
 

@@ -16,7 +16,7 @@ from rest_framework_jwt.views import VerifyJSONWebTokenView, RefreshJSONWebToken
 from .serializers import ProfileRegistrationSerializer, ProfileLoginSerializer, ProfileSerializer, ChangePasswordSerializer, ProfileUpdateSerializer
 from company.serializers import SingleCompanySerializer, CompanySerializer
 from applications.serializers import ApplicationSerializer
-from images.serializers import ImageSerializer
+from images.serializers import ImageRegisterSerializer
 
 
 User = get_user_model()
@@ -59,7 +59,7 @@ class UserRegistrationView(CreateAPIView):
             image = req.data.get('logo', None)
             if image is not None:
                 form_data = {'image': image, 'name': 'company'}
-                image_serializer = ImageSerializer(data=form_data)
+                image_serializer = ImageRegisterSerializer(data=form_data)
 
                 if not image_serializer.is_valid():
                     company.delete()

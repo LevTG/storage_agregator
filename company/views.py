@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
-
+from rest_framework.renderers import JSONRenderer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from .models import Company
@@ -14,32 +14,42 @@ class CompanyRegisterView(CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Company.objects.all()
     serializer_class = SingleCompanySerializer
+    renderer_classes = [JSONRenderer]
 
 
 class SingleCompanyView(RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsAuthenticated, AllowAny)
+    permission_classes = (AllowAny, )
     queryset = Company.objects.all()
-    serializer_class = SingleCompanySerializer
+    serializer_class = CompanySerializer
+    renderer_classes = [JSONRenderer]
 
     def get(self, req, **kwargs):
         try:
             company_id = self.kwargs['id']
             company = self.queryset.get(id=company_id)
-            data = SingleCompanySerializer(company).data
+            data = self.serializer_class(company).data
             return Response(data, status=status.HTTP_200_OK)
-        except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response(str(e.__class__) + ' ' + str(e), status=status.HTTP_404_NOT_FOUND)
 
 
 class GetAllStorages(APIView):
-    permission_classes = (IsAuthenticated, AllowAny)
+    permission_classes = (AllowAny, )
+    renderer_classes = [JSONRenderer]
+    queryset = Company.objects.all()
+    serializer_class = StorageSerializer
 
     def get(self, req, **kwargs):
         try:
             company_id = self.kwargs['id']
-            company = Company.objects.get(id=company_id)
+            company = self.queryset.get(id=company_id)
             storages = company.storage_set
-            data = StorageSerializer(storages, many=True).data
+
+            serializer_context = {
+                'request': req,
+            }
+
+            data = self.serializer_class(storages, many=True, context=serializer_context).data
             return Response(data, status=status.HTTP_200_OK)
-        except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response(str(e.__class__) + ' ' + str(e), status=status.HTTP_404_NOT_FOUND)

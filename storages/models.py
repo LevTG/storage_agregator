@@ -4,9 +4,12 @@ import uuid
 from images.models import ImageAlbum
 from company.models import Company
 
-ACCESS_TYPE = (('24h', 'around clock'), ('ttt', 'from time to time'))
-SURVEILLANCE_TYPE = (('v', 'video'), ('h', 'human'), ('n', 'none'))
-TEMPERATURE_TYPE = (('c', 'cold'), ('w', 'warm'))
+WAREHOUSE_TYPE = (('warm', 'Теплый склад',), ('cold', 'Холодный склад'), ('sea', 'Морской контейнер'),
+                ('box', 'Индивидуальный бокс (умный замок)'), ('zshk', 'Кладовки в ЖК'),
+                ('free', 'Свободные помещения'))
+
+STORAGE_TYPE = (('cloud', 'Облачное хранение'),('individual', 'Индивидуальное хранение'),
+                ('responsibility', 'Ответственное хранение'), ('private', 'Частные кладовки'))
 
 
 class Storage(models.Model):
@@ -21,12 +24,22 @@ class Storage(models.Model):
 
     album = models.OneToOneField(ImageAlbum, related_name='model', on_delete=models.CASCADE, null=True, blank=True)
 
-    access = models.CharField(max_length=30, choices=ACCESS_TYPE, default='ttt')
     work_hours_start = models.TimeField(default='00:00:00')
     work_hours_end = models.TimeField(default='23:59:59')
 
-    surveillance = models.CharField(max_length=10, choices=SURVEILLANCE_TYPE, default='n')
+    warehouse_type = models.CharField(max_length=4, choices=WAREHOUSE_TYPE, default='warm')
+    storage_type = models.CharField(max_length=14, choices=STORAGE_TYPE, null=True, blank=True)
 
-    climate = models.CharField(max_length=4, choices=TEMPERATURE_TYPE, default='w')
-
-
+    video_surveillance = models.BooleanField(default=False)
+    access_24h = models.BooleanField(default=False)
+    mobile_app = models.BooleanField(default=False)
+    clever_lock = models.BooleanField(default=False)
+    cleaning = models.BooleanField(default=False)
+    online_contract = models.BooleanField(default=False)
+    ventilation = models.BooleanField(default=False)
+    shipping = models.BooleanField(default=False)
+    wrapping = models.BooleanField(default=False)
+    straight_way = models.BooleanField(default=False)
+    any_rental_period = models.BooleanField(default=False)
+    inventoty =  models.BooleanField(default=False)
+    inshurance = models.BooleanField(default=False)

@@ -14,11 +14,23 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
             'description',
             'square',
             'price',
-            'access',
             'work_hours_start',
             'work_hours_end',
-            'surveillance',
-            'climate',
+            'video_surveillance',
+            'storage_type',
+            'warehouse_type',
+            'access_24h',
+            'mobile_app',
+            'clever_lock',
+            'cleaning',
+            'online_contract',
+            'ventilation',
+            'shipping',
+            'wrapping',
+            'straight_way',
+            'any_rental_period',
+            'inventoty',
+            'inshurance'
         ]
         extra_kwargs = {
             'company_owner': {'required': True},
@@ -27,6 +39,8 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
 
 
 class StorageSerializer(serializers.ModelSerializer):
+    album = serializers.SerializerMethodField()
+
     class Meta:
         model = Storage
         fields = [
@@ -36,12 +50,28 @@ class StorageSerializer(serializers.ModelSerializer):
             'description',
             'square',
             'price',
-            'access',
             'work_hours_start',
             'work_hours_end',
-            'surveillance',
-            'climate'
+            'video_surveillance',
+            'storage_type',
+            'warehouse_type',
+            'access_24h',
+            'mobile_app',
+            'clever_lock',
+            'cleaning',
+            'online_contract',
+            'ventilation',
+            'shipping',
+            'wrapping',
+            'straight_way',
+            'any_rental_period',
+            'inventoty',
+            'inshurance',
+            'album'
         ]
+
+    def get_album(self, obj):
+        return ImageAlbumSerializer(obj.album, context=self.context).data
 
 
 class SingleStorageSerializer(serializers.ModelSerializer):
@@ -50,17 +80,28 @@ class SingleStorageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Storage
         fields = [
-            'id',
             'address',
             'company_owner',
             'description',
             'square',
             'price',
-            'access',
             'work_hours_start',
             'work_hours_end',
-            'surveillance',
-            'climate'
+            'video_surveillance',
+            'storage_type',
+            'warehouse_type',
+            'access_24h',
+            'mobile_app',
+            'clever_lock',
+            'cleaning',
+            'online_contract',
+            'ventilation',
+            'shipping',
+            'wrapping',
+            'straight_way',
+            'any_rental_period',
+            'inventoty',
+            'inshurance'
         ]
 
     def create(self, validated_data):
@@ -74,24 +115,3 @@ class SingleStorageSerializer(serializers.ModelSerializer):
         if instance.company_owner.owner.username != user.username:
             raise serializers.ValidationError({"authorize": "You dont have permission for this company."})
         return super(self).update(instance, validated_data)
-
-
-class StorageSerializer(serializers.ModelSerializer):
-    album = ImageAlbumSerializer()
-
-    class Meta:
-        model = Storage
-        fields = [
-            'id',
-            'address',
-            'company_owner',
-            'description',
-            'square',
-            'price',
-            'access',
-            'work_hours_start',
-            'work_hours_end',
-            'surveillance',
-            'climate',
-            'album'
-        ]

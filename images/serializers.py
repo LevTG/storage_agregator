@@ -2,21 +2,18 @@ from rest_framework import serializers
 from .models import ImageAlbum, Image
 
 
-class ImageSerializer(serializers.ModelSerializer):
+class ImageRegisterSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(use_url=True)
 
     class Meta:
         model = Image
         fields = [
-            'name',
             'image',
-            'url',
-            'album'
+            'album',
+            'name'
         ]
 
-
-
-class ImageUrlSerializer(serializers.ModelSerializer):
+class ImageSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(use_url=True)
 
     class Meta:
@@ -25,7 +22,8 @@ class ImageUrlSerializer(serializers.ModelSerializer):
             'image'
         ]
 
-class ImageAlbumSerializer(serializers.ModelSerializer):
+
+class ImageAlbumRegisterSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True)
 
     class Meta:
@@ -33,3 +31,17 @@ class ImageAlbumSerializer(serializers.ModelSerializer):
         fields = [
             'images'
         ]
+
+
+class ImageAlbumSerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ImageAlbum
+        fields = [
+            'images'
+        ]
+
+    def get_images(self, obj):
+        return ImageSerializer(obj.images, many=True, context=self.context).data
+
