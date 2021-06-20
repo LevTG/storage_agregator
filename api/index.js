@@ -244,6 +244,7 @@ export default class Api {
     formData.append('company_owner', self.username)
     formData.append('square', reginfo.square)
     formData.append('price', reginfo.price)
+    formData.append('description', reginfo.description)
     //formData.append('images', reginfo.images)
     for( var i = 0; i < reginfo.images.length; i++ ){
       let file = reginfo.images[i];

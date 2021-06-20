@@ -9,7 +9,7 @@
     </div>
     <div class="">
       <div class="NullAdd" v-if="isAddIsNull">
-        <section>
+        <section style="flex-direction: row">
           <div class="col-hf">
             <div class="content-container">
               <div class="center-el">
@@ -48,11 +48,15 @@
         </div>
         <section v-if="isShowMyAd">
           <div class="row">
-            <default-button style="width: 260px">+ Добавить объявление</default-button>
+            <nuxt-link no-prefetch class="nav-link" to="/partners/createadd">
+              <default-Button style="width: 230px; margin-bottom: 28px">
+                + Создать объявление
+              </default-button>
+            </nuxt-link>
           </div>
           <div class="row">
             <div v-for="item in myAdd" :key="item.id">
-              <card-edit :info="item"/>
+              <card-edit  style="margin-bottom: 28px" :info="item"/>
             </div>
 
           </div>
@@ -173,7 +177,7 @@ export default {
 
 section{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   padding-left: 10%;
   padding-right: 10%;
 }

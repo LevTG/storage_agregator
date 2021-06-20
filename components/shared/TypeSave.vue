@@ -1,7 +1,7 @@
 <template>
 <div>
   <div class="dropdown" @click="openFilter()" :class="{paddingbottomzero: !isEmpty}">
-    <span style="margin-right: 12px">Тип склада: </span> <span style="margin-right: 12px" v-if="isEmpty">любой</span>
+    <span style="margin-right: 12px">Тип хранения: </span> <span style="margin-right: 12px" v-if="isEmpty">любой</span>
     <div class="" v-for="item in arrCheckbox"  :key="item.name">
         <div class="tag"> {{item.title}} </div>
     </div>
@@ -16,20 +16,28 @@
       Выберите то, что вам подходит
     </div>
     <checkbox style="margin-left: 12px; margin-bottom: 12px" @CheckboxChange="CheckboxChange"
-      name = "cloud"
-      title = "Облачное хранение"
+      name = "warm"
+      title = "Теплый склад"
     />
     <checkbox style="margin-left: 12px; margin-bottom: 12px" @CheckboxChange="CheckboxChange"
-      name = "individual"
-      title = "Индивидуальное хранение"
+      name = "cold"
+      title = "Холодный склад"
     />
     <checkbox style="margin-left: 12px; margin-bottom: 12px" @CheckboxChange="CheckboxChange"
-      name = "responsibility"
-      title = "Ответственное хранение"
+      name = "sea"
+      title = "Морской контейнер"
     />
     <checkbox style="margin-left: 12px; margin-bottom: 12px" @CheckboxChange="CheckboxChange"
-      name = "private"
-      title = "Частные кладовки"
+      name = "box"
+      title = "Индивидуальный бокс (умный замок)"
+    />
+    <checkbox style="margin-left: 12px; margin-bottom: 12px" @CheckboxChange="CheckboxChange"
+      name = "zshk"
+      title = "Кладовки в ЖК"
+    />
+    <checkbox style="margin-left: 12px; margin-bottom: 12px" @CheckboxChange="CheckboxChange"
+      name = "free"
+      title = "Свободные помещения"
     />
 
   </div>

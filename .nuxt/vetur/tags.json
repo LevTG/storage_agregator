@@ -11,15 +11,6 @@
   "PartnersHowItWorkVar": {
     "description": "Auto imported from components/partners/HowItWorkVar.vue"
   },
-  "StoragesCardEdit": {
-    "description": "Auto imported from components/storages/CardEdit.vue"
-  },
-  "StoragesCardOrder": {
-    "description": "Auto imported from components/storages/CardOrder.vue"
-  },
-  "StoragesSearchResultItem": {
-    "description": "Auto imported from components/storages/SearchResultItem.vue"
-  },
   "SharedAccount": {
     "description": "Auto imported from components/shared/Account.vue"
   },
@@ -74,11 +65,23 @@
   "SharedTitleSmall": {
     "description": "Auto imported from components/shared/TitleSmall.vue"
   },
+  "SharedTypeSave": {
+    "description": "Auto imported from components/shared/TypeSave.vue"
+  },
   "SharedTypeStorageFilter": {
     "description": "Auto imported from components/shared/TypeStorageFilter.vue"
   },
   "SharedSectionlanding2": {
     "description": "Auto imported from components/shared/sectionlanding2.vue"
+  },
+  "StoragesCardEdit": {
+    "description": "Auto imported from components/storages/CardEdit.vue"
+  },
+  "StoragesCardOrder": {
+    "description": "Auto imported from components/storages/CardOrder.vue"
+  },
+  "StoragesSearchResultItem": {
+    "description": "Auto imported from components/storages/SearchResultItem.vue"
   },
   "SharedPicker": {
     "description": "Auto imported from components/shared/picker/index.js"
@@ -92,6 +95,9 @@
   "SharedPickerComponentsVuePickerOption": {
     "description": "Auto imported from components/shared/picker/components/VuePickerOption.vue"
   },
+  "SharedPickerHelpersOuterClick": {
+    "description": "Auto imported from components/shared/picker/helpers/outer-click.js"
+  },
   "SharedPickerMixinsAttrs": {
     "description": "Auto imported from components/shared/picker/mixins/attrs.js"
   },
@@ -100,8 +106,5 @@
   },
   "SharedPickerMixinsKeyControls": {
     "description": "Auto imported from components/shared/picker/mixins/key-controls.js"
-  },
-  "SharedPickerHelpersOuterClick": {
-    "description": "Auto imported from components/shared/picker/helpers/outer-click.js"
   }
 }

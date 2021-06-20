@@ -3,24 +3,6 @@
               <div class="file-drag-drop">
                     <form v-bind:ref="id">
                         <div class='file-load__area drop-files'>
-                            <div class="file-listing" v-if=' files != ""'>
-                                {{ files.name }}
-                            </div>
-                            <div class='file-load__area-background' v-else-if="dragAndDropCapable" >
-                                <div class='area-background__image-top'>
-                                    <inline-svg
-                                        class="area-background__icon"
-                                        :src="require('@/assets/icons/load-file.svg')"
-                                        width="60"
-                                        height="60"
-                                    />
-                                    <span class="area-background__text">Перетащите файл сюда</span>
-                                </div>
-                                <span class="area__text">или вы можете загузить файл вручную</span>
-                            </div>
-                            <div class='file-load__area-background' v-else>
-                              <span class="area__text">Вы можете загузить файл вручную</span>
-                            </div>
                             <div class="input__wrapper file-load__area-button">
                                 <input name="file" v-bind:id="id" type="file" ref="file" class="input input__file" v-on:focus='handleFileClear()' v-on:change='handleFileUpload()' multiple>
                                 <label v-bind:for="id" class="input__file-button">
@@ -67,7 +49,7 @@ export default {
   },
   computed: {
     buttonName () {
-      return (this.file === '') ? 'Выбрать файл' : 'Изменить файл'
+      return (this.file === '') ? '+ Добавить файл' : '+ Добавить файл'
     }
   },
   watch: {
@@ -200,7 +182,6 @@ export default {
   object-fit: cover;
   border-radius: 8px;
   filter: brightness(50%);
-
 }
 
 .load__img_scr:hover{
@@ -235,22 +216,12 @@ export default {
   margin-top: 1px;
 }
 .input__file-button {
-  display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 14px;
-    font-size: 13px;
-    line-height: 20px;
-    letter-spacing: .005em;
-    background: #30339B;
-    border-radius: 8px;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 25px;
-    color: #fff;
+  display: flex;
+    width: 520px;
+    height: 200px;
     cursor: pointer;
+    justify-content: center;
+    align-items: center;
 }
 div.file-listing{
     display: block;
@@ -279,7 +250,6 @@ div.file-listing{
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    padding:69px 51px 34px 51px;
     margin-bottom: 28px;
     border: 1px dashed gray;
     border-radius:  6px;

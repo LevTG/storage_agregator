@@ -32,7 +32,8 @@ export default {
     return {
         state: {
           name: '',
-          value: false
+          value: false,
+          title: ''
         }
     }
   },
@@ -45,6 +46,7 @@ export default {
   },
   beforeMount: function(){
       this.state.name = this.name
+      this.state.title = this.title
   }
 
 }

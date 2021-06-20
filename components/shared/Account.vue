@@ -91,6 +91,7 @@ export default {
   background: #FB4A71;
   width: 40px;
   height: 40px;
+  margin-left: 12px;
   border-radius: 20px;
 }
 

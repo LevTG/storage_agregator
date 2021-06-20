@@ -13,6 +13,7 @@
         <default-input @input="setMail($event)" style="width: 520px; margin-bottom: 12px" placeholder="Почта" />
         <default-input @input="setPhone($event)" style="width: 520px; margin-bottom: 12px" placeholder="Телефон" />
         <default-input @input="setCompanyName($event)" style="width: 520px; margin-bottom: 12px" placeholder="Компания" />
+        <default-area  @input="setCompanyDescription($event)" style="width: 520px; margin-bottom: 12px" placeholder="Описание компании" />
         <default-input @input="setCompanyUrl($event)" style="width: 520px; margin-bottom: 12px" placeholder="Ссылка на сайт компании" />
         <default-input @input="setCity($event)" style="width: 520px; margin-bottom: 12px" placeholder="Город*" />
         <adding-file id="aggregatoin"
@@ -34,6 +35,7 @@ import TitleBig from '@/components/shared/TitleBig'
 import DefaultButton from '@/components/shared/DefaultButton'
 import HowItWork from '@/components/partners/HowItWork'
 import DefaultInput from '@/components/shared/DefaultInput'
+import DefaultArea from '@/components/shared/DefaultArea'
 import AddingFile from '@/components/shared/AddingFile'
 import Api from '@/api/'
 import axios from 'axios'
@@ -46,7 +48,8 @@ export default {
     DefaultButton,
     HowItWork,
     DefaultInput,
-    AddingFile
+    AddingFile,
+    DefaultArea
   },
   data() {
     return {
@@ -62,7 +65,7 @@ export default {
     }
   },
   mounted () {
-    this.test()
+    //this.test()
   },
   methods:{
     setMail (event) {

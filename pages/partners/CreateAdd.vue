@@ -7,29 +7,73 @@
         </title-big>
         <div class="form" style="margin-top: 50px">
           <default-input @input="setAddress($event)" style="width: 520px; margin-bottom: 12px" placeholder="Адрес склада" />
-          <type-storage-filter style="margin-bottom: 12px" />
+          <default-input @input="setMetroStation($event)" style="width: 520px; margin-bottom: 12px" placeholder="Метро (пока не работает как надо)" />
+          <type-storage-filter @set="setStorageType($event)" style="margin-bottom: 12px" />
           <default-input @input="setSquare($event)" style="width: 300px; margin-bottom: 12px" placeholder="Размер склада кв.м" />
-          <VuePicker class="demo__picker" style="width: 300px; margin-bottom: 12px" v-model="selVal3" placeholder="Тип владельца">
-                  <VuePickerOption value="val-0">Любой</VuePickerOption>
-          </VuePicker>
-          <default-input style="width: 520px; margin-bottom: 12px" placeholder="Наименование владельца" />
-          <default-area  style="width: 300px; margin-bottom: 12px" placeholder="Описание" />
+          <type-save @set="setWarehouseType($event)" style="margin-bottom: 12px" />
+          <default-area  @input="setDescription($event)" style="width: 520px; margin-bottom: 12px" placeholder="Описание" />
           <default-input @input="setPrice($event)" style="width: 300px; margin-bottom: 50px" placeholder="Цена" />
           <title-small style="margin-bottom: 20px">
             Выберите дополнительные услуги
           </title-small>
-          <checkbox style="margin-bottom: 12px" @CheckboxChange="CheckboxChange"
-            name = "type"
-            title = "Круглосуточно"
-          />
-          <checkbox style=" margin-bottom: 12px" @CheckboxChange="CheckboxChange"
-            name = "type"
-            title = "Бесплатный вывоз вещей"
-          />
-          <checkbox style="margin-bottom: 50px" @CheckboxChange="CheckboxChange"
-            name = "type"
-            title = "Доступ 24/7"
-          />
+          <div class="uslugi">
+            <div class="column-ch">
+              <checkbox style="margin-bottom: 12px; width: 200px; width: 200px" @CheckboxChange="CheckboxChange"
+                name = "access_24h"
+                title = "Доступ 24/7"
+              />
+              <checkbox style=" margin-bottom: 12px; width: 200px" @CheckboxChange="CheckboxChange"
+                name = "video_surveillance"
+                title = "Видеонаблюдение"
+              />
+              <checkbox style="margin-bottom: 50px; width: 200px" @CheckboxChange="CheckboxChange"
+                name = "inventoty"
+                title = "Инвентарь для погрузки-разгрузки"
+              />
+            </div>
+            <div class="column-ch">
+              <checkbox style="margin-bottom: 12px; width: 200px" @CheckboxChange="CheckboxChange"
+                name = "shipping"
+                title = "Доставка, упаковка вещей"
+              />
+              <checkbox style=" margin-bottom: 12px; width: 200px" @CheckboxChange="CheckboxChange"
+                name = "any_rental_period"
+                title = "Любой срок аренды"
+              />
+              <checkbox style="margin-bottom: 50px; width: 200px" @CheckboxChange="CheckboxChange"
+                name = "mobile_app"
+                title = "Управление через мобильное приложение"
+              />
+            </div>
+            <div class="column-ch">
+              <checkbox style="margin-bottom: 12px; width: 200px" @CheckboxChange="CheckboxChange"
+                name = "clever_lock"
+                title = "Умный замок"
+              />
+              <checkbox style=" margin-bottom: 12px; width: 200px" @CheckboxChange="CheckboxChange"
+                name = "straight_way"
+                title = "Прямой подъезд к складу"
+              />
+              <checkbox style="margin-bottom: 50px; width: 200px" @CheckboxChange="CheckboxChange"
+                name = "ventilation"
+                title = "Вентиляция"
+              />
+            </div>
+            <div class="column-ch">
+              <checkbox style="margin-bottom: 12px; width: 200px" @CheckboxChange="CheckboxChange"
+                name = "online_contract"
+                title = "Онлайн договор"
+              />
+              <checkbox style=" margin-bottom: 12px; width: 200px" @CheckboxChange="CheckboxChange"
+                name = "inshurance"
+                title = "Страховка имущества"
+              />
+              <checkbox style="margin-bottom: 50px; width: 200px" @CheckboxChange="CheckboxChange"
+                name = "cleaning"
+                title = "Регулярная уборка"
+              />
+            </div>
+          </div>
           <adding-file id="aggregatoin"
             :isFileWasUploaded="isFileWasUploaded"
             @load-file="loadFileAggregation"
@@ -53,6 +97,7 @@ import DefaultInput from '@/components/shared/DefaultInput'
 import DefaultArea from '@/components/shared/DefaultArea'
 import AddingFile from '@/components/shared/AddingFile'
 import TypeStorageFilter from '@/components/shared/TypeStorageFilter'
+import TypeSave from '@/components/shared/TypeSave'
 import Api from '@/api'
 
 export default {
@@ -68,7 +113,8 @@ export default {
     VuePickerOption,
     Checkbox,
     AddingFile,
-    TypeStorageFilter
+    TypeStorageFilter,
+    TypeSave
   },
   data () {
     return{
@@ -76,12 +122,16 @@ export default {
 
       },
       selVal3: null,
-      isFileWasUploaded: false
+      isFileWasUploaded: false,
+      checkboxControler: {}
     }
   },
   methods: {
     setAddress (event) {
       this.storageinfo.address = event
+    },
+    setMetroStation (event) {
+      this.storageinfo.metro_station = event
     },
     setSquare (event) {
       this.storageinfo.square = event
@@ -91,6 +141,12 @@ export default {
     },
     setDescription (event) {
       this.storageinfo.description = event
+    },
+    setStorageType(event){
+      this.storageinfo.storage_type = event
+    },
+    setWarehouseType(event){
+      this.storageinfo.WarehouseType = event
     },
     loadFileAggregation (value) {
       this.storageinfo.images = value
@@ -107,8 +163,11 @@ export default {
         }
       )
     },
-    CheckboxChange(){
-
+    CheckboxChange(value) {
+      console.log(value)
+      this.checkboxControler[value.name] = value.value
+      this.storageinfo.addUslugi = this.checkboxControler
+      console.log(this.checkboxControler)
     },
     isFileWasUploadedStatusChanged (value) {
       this.isFileWasUploaded = false
@@ -123,6 +182,17 @@ section{
   display: flex;
   padding-left: 10%;
   padding-right: 10%;
+}
+
+.uslugi{
+  display: flex;
+  flex-direction: row;
+}
+
+.column-ch{
+  display: flex;
+  flex-direction: column;
+  margin-right: 50px;
 }
 
 .form{

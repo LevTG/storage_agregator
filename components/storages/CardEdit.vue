@@ -1,12 +1,13 @@
 <template>
   <div class="card">
     <div class="top-line">
-      <inline-svg
+      <inline-svg style="margin-left: auto; width: 100%"
         :src="require('@/assets/icons/x.svg')"
       />
     </div>
     <div class="main">
       <div class="img">
+        <img  class="logo":src="info.album.images[0].image" alt="logo" width="400">
       </div>
       <div class="rigth-part">
       <div class="middle-line">
@@ -17,7 +18,7 @@
             <span>Тип: </span> <span class="rigth-text">{{info.type}} </span>
           </div>
           <div class="line">
-            <span>Свободного места: </span> <span class="rigth-text">{{info.available}} </span>
+            <span>Свободного места: </span> <span class="rigth-text"> {{info.square}} кв. м </span>
           </div>
           <div class="line">
             <span>Владелец: </span> <span class="rigth-text">{{info.type}} </span>
@@ -26,7 +27,7 @@
             <span>Услуги: </span> <span class="rigth-text">{{info.type}} </span>
           </div>
           <div class="line">
-            <span>Цена: </span> <span class="rigth-text">{{info.price}} </span>
+            <span>Цена от: </span> <span class="rigth-text">{{info.price}} р </span>
           </div>
         </div>
       </div>
@@ -61,8 +62,10 @@
 <style scoped>
 .card{
   display: flex;
+  position: relative;
   flex-direction: column;
   padding: 28px;
+  width: 800px;
   padding-bottom: 40px;
   background: #FFFFFF;
   box-shadow: 6px 4px 16px rgba(0, 0, 0, 0.25);
@@ -77,6 +80,8 @@
 .rigth-part{
   display: flex;
   flex-direction: column;
+  margin-left: 25px;
+  width: 100%;
 }
 
 .middle-line{
@@ -86,8 +91,7 @@
   font-size: 29px;
   line-height: 140.62%;
   color: #000000;
-  margin-top: 25px;
-  margin-bottom: 50px;
+  margin-bottom: 25px;
 }
 
 .line{
@@ -107,9 +111,17 @@ line-height: 140.62%;
 color: #000000;
 }
 
+.logo{
+  height: 300px;
+  width: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
 
 .top-line{
   position: absolute;
+  left: 800px;
 }
 
 .rigth-text{
@@ -118,20 +130,19 @@ color: #000000;
 }
 
 .footer{
-  display: flex;
+
 }
 
 .img{
   border-radius: 8px;
   background: grey;
-  width: 45%;
-  min-height: 300px;
+  width: 300px;
+  height: 300px;
 }
 
 .middle-line{
   width: 100%;
   display: flex;
-  justify-content: center;
 }
 
 </style>
