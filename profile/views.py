@@ -1,5 +1,6 @@
 # from django.http import HttpResponse
 import json
+import uuid
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -58,7 +59,7 @@ class UserRegistrationView(CreateAPIView):
             company = company.save()
             image = req.data.get('logo', None)
             if image is not None:
-                form_data = {'image': image, 'name': 'company'}
+                form_data = {'image': image, 'category': 'c', 'name': '{}'.format(uuid.uuid4)}
                 image_serializer = ImageRegisterSerializer(data=form_data)
 
                 if not image_serializer.is_valid():

@@ -1,14 +1,16 @@
 from django.db import models
 import uuid
 
+from multiselectfield import MultiSelectField
+
 from images.models import ImageAlbum
 from company.models import Company
 
 WAREHOUSE_TYPE = (('warm', 'Теплый склад',), ('cold', 'Холодный склад'), ('sea', 'Морской контейнер'),
-                ('box', 'Индивидуальный бокс (умный замок)'), ('zshk', 'Кладовки в ЖК'),
-                ('free', 'Свободные помещения'))
+                  ('box', 'Индивидуальный бокс (умный замок)'), ('zshk', 'Кладовки в ЖК'),
+                  ('free', 'Свободные помещения'))
 
-STORAGE_TYPE = (('cloud', 'Облачное хранение'),('individual', 'Индивидуальное хранение'),
+STORAGE_TYPE = (('cloud', 'Облачное хранение'), ('individual', 'Индивидуальное хранение'),
                 ('responsibility', 'Ответственное хранение'), ('private', 'Частные кладовки'))
 
 
@@ -27,8 +29,8 @@ class Storage(models.Model):
     work_hours_start = models.TimeField(default='00:00:00')
     work_hours_end = models.TimeField(default='23:59:59')
 
-    warehouse_type = models.CharField(max_length=4, choices=WAREHOUSE_TYPE, default='warm')
-    storage_type = models.CharField(max_length=14, choices=STORAGE_TYPE, null=True, blank=True)
+    warehouse_type = MultiSelectField(choices=WAREHOUSE_TYPE, max_choices=len(WAREHOUSE_TYPE))
+    storage_type = MultiSelectField(choices=STORAGE_TYPE, max_choices=len(STORAGE_TYPE))
 
     video_surveillance = models.BooleanField(default=False)
     access_24h = models.BooleanField(default=False)
@@ -41,5 +43,5 @@ class Storage(models.Model):
     wrapping = models.BooleanField(default=False)
     straight_way = models.BooleanField(default=False)
     any_rental_period = models.BooleanField(default=False)
-    inventoty =  models.BooleanField(default=False)
+    inventory = models.BooleanField(default=False)
     inshurance = models.BooleanField(default=False)

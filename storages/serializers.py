@@ -1,7 +1,8 @@
 from rest_framework import serializers
+from rest_framework.fields import MultipleChoiceField
 
 from images.serializers import ImageAlbumSerializer
-from .models import Storage
+from .models import Storage, WAREHOUSE_TYPE, STORAGE_TYPE
 
 
 class StorageRegistrationSerializer(serializers.ModelSerializer):
@@ -40,6 +41,8 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
 
 class StorageSerializer(serializers.ModelSerializer):
     album = serializers.SerializerMethodField()
+    warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE, allow_blank=True)
+    storage_type = MultipleChoiceField(choices=STORAGE_TYPE, allow_blank=True)
 
     class Meta:
         model = Storage
@@ -65,7 +68,7 @@ class StorageSerializer(serializers.ModelSerializer):
             'wrapping',
             'straight_way',
             'any_rental_period',
-            'inventoty',
+            'inventory',
             'inshurance',
             'album'
         ]
@@ -100,7 +103,7 @@ class SingleStorageSerializer(serializers.ModelSerializer):
             'wrapping',
             'straight_way',
             'any_rental_period',
-            'inventoty',
+            'inventory',
             'inshurance'
         ]
 

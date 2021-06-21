@@ -19,6 +19,8 @@ class Application(models.Model):
 
     text = models.TextField(blank=True, null=True)
 
+    date_carry = models.DateField(blank=True, null=True)
+
     status = models.CharField(max_length=20, choices=APPLICATION_STATUS, default='on moderation')
     storage = models.ForeignKey(Storage, on_delete=models.CASCADE)
     recipient = models.ForeignKey(Profile, on_delete=models.CASCADE)

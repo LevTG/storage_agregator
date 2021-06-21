@@ -1,18 +1,21 @@
+import os
 import re
+import uuid
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.renderers import JSONRenderer
 
-from .models import Storage, WAREHOUSE_TYPE, STORAGE_TYPE
+from .models import Storage
+from .filters import StorageFilter
 from .serializers import StorageRegistrationSerializer, StorageSerializer
-from images.serializers import ImageSerializer, ImageRegisterSerializer
+from images.serializers import ImageRegisterSerializer
 from images.models import ImageAlbum
 
-from django.db.models import Q
+import requests
+
 
 image_re = re.compile('image\d+')
 
@@ -26,6 +29,8 @@ class StorageRegisterView(CreateAPIView):
     def post(self, req, **kwargs):
         data = req.data.copy()
         data['company_owner'] = data['company_id']
+        services = data.pop('services')
+        data.update(services)
         serializer = self.serializer_class(data=data)
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_200_OK)
@@ -36,10 +41,8 @@ class StorageRegisterView(CreateAPIView):
         try:
             for key, value in req.data.items():
                 if image_re.search(key):
-                    form_data = {}
-                    form_data['album'] = album.id
-                    form_data['image'] = value
-                    form_data['name'] = 'storage'
+                    form_data = {'album': album.id, 'image': value,
+                                 'name': '{}'.format(uuid.uuid4), 'category': 's'}
 
                     image_serializer = ImageRegisterSerializer(data=form_data)
 
@@ -56,36 +59,35 @@ class StorageRegisterView(CreateAPIView):
 
 
 class StorageView(RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, )
     serializer_class = StorageSerializer
     renderer_classes = [JSONRenderer]
     queryset = Storage.objects.all()
 
 
-class FilterStoragesView(APIView):
+class FilterStoragesView(ListAPIView):
     permission_classes = (AllowAny,)
     queryset = Storage.objects.all()
     serializer_class = StorageSerializer
     renderer_classes = [JSONRenderer]
+    ordering_fields = ('price', 'square')
+    filterset_class = StorageFilter
 
-    def get(self, req):
-        square_min = int(req.GET.get('square_min', 0))
-        square_max = int(req.GET.get('square_max', 10000))
-        price_min = int(req.GET.get('price_min', 0))
-        price_max = int(req.GET.get('price_max', 100000))
-        access = req.GET.get('access', ACCESS_TYPE)
-        work_hours_start = req.GET.get('work_hours_start', '00:00:00')
-        work_hours_end = req.GET.get('work_hours_end', '23:59:59')
-        storage_type = req.GET.get('surveillance', STORAGE_TYPE)
-        warehouse_type = req.GET.get('climate', WAREHOUSE_TYPE)
-        storages = self.queryset.filter(Q(square__gte=square_min) & Q(square__lte=square_max) &
-                                        Q(price__gte=price_min) & Q(price__lte=price_max) )
-                                        # Q(climate__in=climate) & Q(access__in=access))
-        # storages = self.queryset.filter(Q(square__gte=square_min) & Q(square__lte=square_max) &
-        #                                 Q(price__gte=price_min) & Q(price__lte=price_max) &
-        #                                 Q(access__in=access) & Q(climate__in=climate) &
-        #                                 Q(work_hours_start__gte=work_hours_start) & Q(work_hours_end__lte=work_hours_end) &
-        #                                 Q(surveillance__in=surveillance))
-        # storages = self.queryset.filter(climate__in=climate)
-        data = self.serializer_class(storages, many=True).data
-        return Response(data, status=status.HTTP_200_OK)
+
+class GetNearbyStorages(ListAPIView):
+    pass
+    # Send request to yandex_api
+    'https: // geocode - maps.yandex.ru / 1.x\
+    ? geocode = {0}\
+    & apikey = {1}\
+    & [sco = < string >]\
+    & [kind = < string >]\
+    & [rspn = < boolean >]\
+    & [ll = < number >, < number >]\
+    & [spn = < number >, < number >]\
+    & [bbox = < number >, < number > ~ < number >, < number >]\
+    & [format = json]\
+    & [results = < integer >]\
+    & [skip = < integer >]\
+    & [lang = < string >]\
+    & [callback = < string >]'.format('', os.environ.get("API_KEY"))

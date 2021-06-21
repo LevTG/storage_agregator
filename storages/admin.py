@@ -15,18 +15,19 @@ class StorageAdmin(admin.ModelAdmin):
                                     'work_hours_end',
                                     'storage_type',
                                     'warehouse_type')}),
-                ('Additions', {'fields': ('video_surveillance',
-                                            'access_24h',
-                                            'mobile_app',
-                                            'clever_lock',
-                                            'cleaning',
-                                            'online_contract',
-                                            'ventilation',
-                                            'shipping',
-                                            'wrapping',
-                                            'straight_way',
-                                            'any_rental_period',
-                                            'inventoty',
-                                            'inshurance')}))
-    list_filter = ['storage_type', 'warehouse_type']
+                 ('Additions', {'fields': ('video_surveillance',
+                                           'access_24h',
+                                           'mobile_app',
+                                           'clever_lock',
+                                           'cleaning',
+                                           'online_contract',
+                                           'ventilation',
+                                           'shipping',
+                                           'wrapping',
+                                           'straight_way',
+                                           'any_rental_period',
+                                           'inventory',
+                                           'inshurance')}),
+                 ('Images', {'fields': ('album',)}))
+    list_filters = ['storage_type', 'warehouse_type']
     search_fields = ['address', 'company_owner', 'description']

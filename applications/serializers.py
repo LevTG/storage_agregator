@@ -13,7 +13,8 @@ class ApplicationRegistrationSerializer(serializers.ModelSerializer):
             "phone_number",
             "text",
             'storage',
-            'recipient'
+            'recipient',
+            'date_carry'
         ]
 
 
@@ -28,5 +29,5 @@ class ApplicationSerializer(serializers.ModelSerializer):
             "text",
             "storage",
             'status',
-            'recipient'
+            'date_carry'
         ]

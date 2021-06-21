@@ -16,6 +16,7 @@ class CompanySerializer(serializers.ModelSerializer):
             "city",
             'description',
             'logo',
+            'company_url',
             'owner'
         ]
 
@@ -30,6 +31,7 @@ class SingleCompanySerializer(serializers.ModelSerializer):
             'description',
             "name",
             "city",
+            'company_url',
             'is_private'
         ]
 

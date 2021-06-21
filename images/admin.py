@@ -11,5 +11,6 @@ class ImageAlbumAdmin(admin.ModelAdmin):
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ('name', )
-    fields = ['name', 'image', 'album']
+    list_display = ('name', 'category')
+    fields = ['name', 'image', 'album', 'category']
+    list_filter = ['category']
