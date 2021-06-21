@@ -29,8 +29,8 @@ class Storage(models.Model):
     work_hours_start = models.TimeField(default='00:00:00')
     work_hours_end = models.TimeField(default='23:59:59')
 
-    warehouse_type = MultiSelectField(choices=WAREHOUSE_TYPE, max_choices=len(WAREHOUSE_TYPE))
-    storage_type = MultiSelectField(choices=STORAGE_TYPE, max_choices=len(STORAGE_TYPE))
+    warehouse_type = MultiSelectField(choices=WAREHOUSE_TYPE, max_choices=len(WAREHOUSE_TYPE), blank=True, null=True)
+    storage_type = MultiSelectField(choices=STORAGE_TYPE, max_choices=len(STORAGE_TYPE), blank=True, null=True)
 
     video_surveillance = models.BooleanField(default=False)
     access_24h = models.BooleanField(default=False)

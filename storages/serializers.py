@@ -6,6 +6,9 @@ from .models import Storage, WAREHOUSE_TYPE, STORAGE_TYPE
 
 
 class StorageRegistrationSerializer(serializers.ModelSerializer):
+    warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE)
+    storage_type = MultipleChoiceField(choices=STORAGE_TYPE)
+
     class Meta:
         model = Storage
         fields = [
@@ -41,8 +44,8 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
 
 class StorageSerializer(serializers.ModelSerializer):
     album = serializers.SerializerMethodField()
-    warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE, allow_blank=True)
-    storage_type = MultipleChoiceField(choices=STORAGE_TYPE, allow_blank=True)
+    warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE)
+    storage_type = MultipleChoiceField(choices=STORAGE_TYPE)
 
     class Meta:
         model = Storage
