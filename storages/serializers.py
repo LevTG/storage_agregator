@@ -6,8 +6,8 @@ from .models import Storage, WAREHOUSE_TYPE, STORAGE_TYPE
 
 
 class StorageRegistrationSerializer(serializers.ModelSerializer):
-    warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE)
-    storage_type = MultipleChoiceField(choices=STORAGE_TYPE)
+    warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE, allow_blank=True)
+    storage_type = MultipleChoiceField(choices=STORAGE_TYPE, allow_blank=True)
 
     class Meta:
         model = Storage
@@ -33,7 +33,7 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
             'wrapping',
             'straight_way',
             'any_rental_period',
-            'inventoty',
+            'inventory',
             'inshurance'
         ]
         extra_kwargs = {
@@ -82,6 +82,8 @@ class StorageSerializer(serializers.ModelSerializer):
 
 class SingleStorageSerializer(serializers.ModelSerializer):
     album = ImageAlbumSerializer()
+    warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE)
+    storage_type = MultipleChoiceField(choices=STORAGE_TYPE)
 
     class Meta:
         model = Storage

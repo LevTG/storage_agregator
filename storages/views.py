@@ -1,6 +1,8 @@
 import os
 import re
 import uuid
+import json
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
@@ -29,8 +31,12 @@ class StorageRegisterView(CreateAPIView):
     def post(self, req, **kwargs):
         data = req.data.copy()
         data['company_owner'] = data['company_id']
-        services = data.pop('services')
+        services = json.loads(data.pop('services')[0])
+        storage_data = {'storage_type': val for val in json.loads(data.pop('storage_type')[0])}
+        warehouse_data = {'warehouse_type': val for val in json.loads(data.pop('warehouse_type')[0])}
         data.update(services)
+        data.update(storage_data)
+        data.update(warehouse_data)
         serializer = self.serializer_class(data=data)
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_200_OK)
