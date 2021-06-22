@@ -14,10 +14,13 @@ from datetime import timedelta
 from pathlib import Path
 
 import os
+import sys
+
+from django.core.management.utils import get_random_secret_key
+import dj_database_url
 
 
-# SECRET_KEY = os.environ.get("SECRET_KEY")
-SECRET_KEY = '_f(7s07ds6a^z+%$iqs4^w4cu@o77u7+^3gh8*htxev+q(zh7j'
+SECRET_KEY = os.environ.get("SECRET_KEY", get_random_secret_key())
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,10 +31,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ['127.0.0.1', 'storage.pythonanywhere.com', 'findsklad-ur6c4.ondigitalocean.app', '10.244.31.112']
-
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", '127.0.0.1,localhost,storage.pythonanywhere.com').split(",")
 
 # Application definition
 
@@ -104,23 +106,34 @@ WSGI_APPLICATION = 'storage_aggregator.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        # 'OPTIONS': {
-                    # 'read_default_file': '/home/incredible/.my.cnf',
-                    # },
-        'OPTIONS': {
-                    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
-        'NAME': 'storage$default',
-        'USER': 'storage',
-        # 'PASSWORD': os.environ.get('BASE_PASSWORD'),
-        'PASSWORD': 'WYUf7nd5',
-        'HOST': 'storage.mysql.pythonanywhere-services.com',
-        'PORT': '3306',
+DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
+
+
+if len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
+    if os.getenv("DATABASE_URL", None) is None:
+        raise Exception("DATABASE_URL environment variable not defined")
+    DATABASES = {
+        "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
     }
-}
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         # 'OPTIONS': {
+#                     # 'read_default_file': '/home/incredible/.my.cnf',
+#                     # },
+#         'OPTIONS': {
+#                     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#         },
+#         'NAME': 'storage$default',
+#         'USER': 'storage',
+#         # 'PASSWORD': os.environ.get('BASE_PASSWORD'),
+#         'PASSWORD': 'WYUf7nd5',
+#         'HOST': 'storage.mysql.pythonanywhere-services.com',
+#         'PORT': '3306',
+#     }
+# }
 
 
 # Password validation
