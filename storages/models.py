@@ -16,8 +16,10 @@ STORAGE_TYPE = (('cloud', 'Облачное хранение'), ('individual', '
 
 class Storage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    address = models.TextField()
     company_owner = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    address = models.TextField()
+    metro = models.CharField(max_length=50, blank=True, null=True)
 
     description = models.TextField(blank=True, null=True)
 
@@ -45,3 +47,20 @@ class Storage(models.Model):
     any_rental_period = models.BooleanField(default=False)
     inventory = models.BooleanField(default=False)
     inshurance = models.BooleanField(default=False)
+
+    @property
+    def services(self):
+        return {
+            'access_24h' : self.access_24h,
+            'mobile_app' : self.mobile_app,
+            'clever_lock': self.clever_lock,
+            'cleaning': self.cleaning,
+            'online_contract': self.online_contract,
+            'ventilation': self.ventilation,
+            'shipping': self.shipping,
+            'wrapping': self.wrapping,
+            'straight_way': self.straight_way,
+            'any_rental_period': self.any_rental_period,
+            'inventory': self.inventory,
+            'inshurance': self.inshurance
+        }

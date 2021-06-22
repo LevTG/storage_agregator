@@ -5,6 +5,22 @@ from images.serializers import ImageAlbumSerializer
 from .models import Storage, WAREHOUSE_TYPE, STORAGE_TYPE
 
 
+class ServiceSerializer(serializers.Serializer):
+    video_surveillance = serializers.BooleanField(allow_null=True, required=False)
+    access_24h = serializers.BooleanField(allow_null=True, required=False)
+    mobile_app = serializers.BooleanField(allow_null=True, required=False)
+    clever_lock = serializers.BooleanField(allow_null=True, required=False)
+    cleaning = serializers.BooleanField(allow_null=True, required=False)
+    online_contract = serializers.BooleanField(allow_null=True, required=False)
+    ventilation = serializers.BooleanField(allow_null=True, required=False)
+    shipping = serializers.BooleanField(allow_null=True, required=False)
+    wrapping = serializers.BooleanField(allow_null=True, required=False)
+    straight_way = serializers.BooleanField(allow_null=True, required=False)
+    any_rental_period = serializers.BooleanField(allow_null=True, required=False)
+    inventory = serializers.BooleanField(allow_null=True, required=False)
+    inshurance = serializers.BooleanField(allow_null=True, required=False)
+
+
 class StorageRegistrationSerializer(serializers.ModelSerializer):
     warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE, allow_blank=True)
     storage_type = MultipleChoiceField(choices=STORAGE_TYPE, allow_blank=True)
@@ -20,9 +36,9 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
             'price',
             'work_hours_start',
             'work_hours_end',
-            'video_surveillance',
             'storage_type',
             'warehouse_type',
+            'video_surveillance',
             'access_24h',
             'mobile_app',
             'clever_lock',
@@ -46,6 +62,7 @@ class StorageSerializer(serializers.ModelSerializer):
     album = serializers.SerializerMethodField()
     warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE)
     storage_type = MultipleChoiceField(choices=STORAGE_TYPE)
+    services = ServiceSerializer()
 
     class Meta:
         model = Storage
@@ -58,32 +75,35 @@ class StorageSerializer(serializers.ModelSerializer):
             'price',
             'work_hours_start',
             'work_hours_end',
-            'video_surveillance',
-            'storage_type',
             'warehouse_type',
-            'access_24h',
-            'mobile_app',
-            'clever_lock',
-            'cleaning',
-            'online_contract',
-            'ventilation',
-            'shipping',
-            'wrapping',
-            'straight_way',
-            'any_rental_period',
-            'inventory',
-            'inshurance',
-            'album'
+            'storage_type',
+            'album',
+            'services'
         ]
 
     def get_album(self, obj):
         return ImageAlbumSerializer(obj.album, context=self.context).data
+
+    def create(self, validated_data):
+        validated_data.update(validated_data.pop('services', {}))
+        return super(StorageSerializer, self).create(validated_data)
+
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        if instance.company_owner.owner.username != user.username:
+            raise serializers.ValidationError({"authorize": "You dont have permission for this company."})
+        services = ServiceSerializer(data=validated_data.pop('services', {}), partial=True)
+        if services.is_valid():
+            for attr, value in services.validated_data.iteritems():
+                setattr(instance, attr, value)
+        return super(self).update(instance, validated_data)
 
 
 class SingleStorageSerializer(serializers.ModelSerializer):
     album = ImageAlbumSerializer()
     warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE)
     storage_type = MultipleChoiceField(choices=STORAGE_TYPE)
+    services = ServiceSerializer()
 
     class Meta:
         model = Storage
@@ -95,31 +115,8 @@ class SingleStorageSerializer(serializers.ModelSerializer):
             'price',
             'work_hours_start',
             'work_hours_end',
-            'video_surveillance',
             'storage_type',
             'warehouse_type',
-            'access_24h',
-            'mobile_app',
-            'clever_lock',
-            'cleaning',
-            'online_contract',
-            'ventilation',
-            'shipping',
-            'wrapping',
-            'straight_way',
-            'any_rental_period',
-            'inventory',
-            'inshurance'
+            'album',
+            'services'
         ]
-
-    def create(self, validated_data):
-        company = Storage.objects.create(**validated_data)
-        company.save()
-
-        return company
-
-    def update(self, instance, validated_data):
-        user = self.context['request'].user
-        if instance.company_owner.owner.username != user.username:
-            raise serializers.ValidationError({"authorize": "You dont have permission for this company."})
-        return super(self).update(instance, validated_data)
