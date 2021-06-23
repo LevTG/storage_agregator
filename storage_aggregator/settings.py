@@ -109,31 +109,29 @@ WSGI_APPLICATION = 'storage_aggregator.wsgi.application'
 DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
 
-if len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
-    if os.getenv("DATABASE_URL", None) is None:
-        raise Exception("DATABASE_URL environment variable not defined")
-    DATABASES = {
-        "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
-    }
-
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         # 'OPTIONS': {
-#                     # 'read_default_file': '/home/incredible/.my.cnf',
-#                     # },
-#         'OPTIONS': {
-#                     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-#         },
-#         'NAME': 'storage$default',
-#         'USER': 'storage',
-#         # 'PASSWORD': os.environ.get('BASE_PASSWORD'),
-#         'PASSWORD': 'WYUf7nd5',
-#         'HOST': 'storage.mysql.pythonanywhere-services.com',
-#         'PORT': '3306',
+# if len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
+#     if os.getenv("DATABASE_URL", None) is None:
+#         raise Exception("DATABASE_URL environment variable not defined")
+#     DATABASES = {
+#         "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
 #     }
-# }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        # 'OPTIONS': {
+                    # 'read_default_file': '/home/incredible/.my.cnf',
+                    # },
+        'OPTIONS': {
+                    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
+        'NAME': 'findsklad',
+        'USER': 'storage_manager',
+        'PASSWORD': os.environ.get('BASE_PASSWORD'),
+        'HOST': 'private-db-mysql-nyc3-98813-do-user-9408645-0.b.db.ondigitalocean.com',
+        'PORT': '25060',
+    }
+}
 
 
 # Password validation

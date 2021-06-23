@@ -17,7 +17,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from storage_aggregator import settings
+from storage_aggregator import local_settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,4 +29,4 @@ urlpatterns = [
     path('images/', include('images.urls'))
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(local_settings.MEDIA_URL, document_root=local_settings.MEDIA_ROOT)

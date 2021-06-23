@@ -8,8 +8,6 @@ import uuid
 import jwt
 from datetime import datetime, timedelta
 
-from storage_aggregator import settings
-
 
 class ProfileManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
