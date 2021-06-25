@@ -79,7 +79,7 @@ class UserRegistrationView(CreateAPIView):
 
 
 class FetchUserView(RetrieveAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
     queryset = User.objects.all()
     lookup_field = 'username'
     serializer_class = ProfileSerializer
