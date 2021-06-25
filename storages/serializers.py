@@ -21,9 +21,27 @@ class ServiceSerializer(serializers.Serializer):
     inshurance = serializers.BooleanField(allow_null=True, required=False)
 
 
+# По какой-то причине данные попадающие в serializer multichoiceField дополнительно оборачиваются листом. И все ломается
+# Для этого создала этот CustomField
+
+class CustomMultipleChoiceField(serializers.MultipleChoiceField):
+    def to_internal_value(self, data):
+        if isinstance(data, str) or not hasattr(data, '__iter__'):
+            self.fail('not_a_list', input_type=type(data).__name__)
+        if not self.allow_empty and len(data) == 0:
+            self.fail('empty')
+        # Вот отличающаяся строка
+        data = data[0]
+        #########################
+        return {
+            super(MultipleChoiceField, self).to_internal_value(item)
+            for item in data
+        }
+
+
 class StorageRegistrationSerializer(serializers.ModelSerializer):
-    warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE, allow_blank=True)
-    storage_type = MultipleChoiceField(choices=STORAGE_TYPE, allow_blank=True)
+    warehouse_type = CustomMultipleChoiceField(choices=WAREHOUSE_TYPE, allow_blank=True)
+    storage_type = CustomMultipleChoiceField(choices=STORAGE_TYPE, allow_blank=True)
 
     class Meta:
         model = Storage

@@ -7,6 +7,7 @@ from images.serializers import ImageSerializer
 
 class CompanySerializer(serializers.ModelSerializer):
     logo = ImageSerializer()
+    owner = serializers.CharField(source='owner.username')
 
     class Meta:
         model = Company
