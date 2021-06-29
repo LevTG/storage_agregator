@@ -1,18 +1,18 @@
 from rest_framework import filters
 from django_filters.rest_framework import FilterSet
 from django_filters import NumberFilter, MultipleChoiceFilter
-from .models import Storage
+from .models import Storage, STORAGE_TYPE, WAREHOUSE_TYPE
 
 
 class StorageFilter(FilterSet):
-    min_square = NumberFilter(name="square", lookup_expr='gte')
-    max_square = NumberFilter(name="square", lookup_expr='lte')
+    min_square = NumberFilter(field_name="square", lookup_expr='gte')
+    max_square = NumberFilter(field_name="square", lookup_expr='lte')
 
-    min_price = NumberFilter(name="price", lookup_expr='gte')
-    max_price = NumberFilter(name="price", lookup_expr='lte')
+    min_price = NumberFilter(field_name="price", lookup_expr='gte')
+    max_price = NumberFilter(field_name="price", lookup_expr='lte')
 
-    warehouse_type = MultipleChoiceFilter()
-    storage_type = MultipleChoiceFilter()
+    warehouse_type = MultipleChoiceFilter(choices=WAREHOUSE_TYPE)
+    storage_type = MultipleChoiceFilter(choices=STORAGE_TYPE)
 
     def __init__(self, *args,  **kwargs):
         super().__init__(*args, **kwargs)
