@@ -33,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", '127.0.0.1,localhost,storage.pythonanywhere.com').split(",")
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", '127.0.0.1,localhost,storage.pythonanywhere.com,159.89.186.245').split(",")
 
 # Application definition
 
@@ -125,6 +125,7 @@ DATABASES = {
                     # },
         'OPTIONS': {
                     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+                    'ssl': {'ca': '/home/backy/ca-certificate.pem'}
         },
         'NAME': 'findsklad',
         'USER': 'storage_manager',
