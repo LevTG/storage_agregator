@@ -11,8 +11,12 @@ class StorageFilter(FilterSet):
     min_price = NumberFilter(field_name="price", lookup_expr='gte')
     max_price = NumberFilter(field_name="price", lookup_expr='lte')
 
-    warehouse_type = MultipleChoiceFilter(choices=WAREHOUSE_TYPE)
-    storage_type = MultipleChoiceFilter(choices=STORAGE_TYPE)
+    warehouse_type = MultipleChoiceFilter(choices=WAREHOUSE_TYPE,
+                                          to_field_name='warehouse_type',
+                                          lookup_expr='in')
+    storage_type = MultipleChoiceFilter(choices=STORAGE_TYPE,
+                                        to_field_name='storage_type',
+                                        lookup_expr='in')
 
     def __init__(self, *args,  **kwargs):
         super().__init__(*args, **kwargs)
