@@ -5,6 +5,7 @@ from multiselectfield import MultiSelectField
 
 from images.models import ImageAlbum
 from company.models import Company
+from metro.models import Station
 
 WAREHOUSE_TYPE = (('warm', 'Теплый склад',), ('cold', 'Холодный склад'), ('sea', 'Морской контейнер'),
                   ('box', 'Индивидуальный бокс (умный замок)'), ('zshk', 'Кладовки в ЖК'),
@@ -19,7 +20,7 @@ class Storage(models.Model):
     company_owner = models.ForeignKey(Company, on_delete=models.CASCADE)
 
     address = models.TextField()
-    metro = models.CharField(max_length=50, blank=True, null=True)
+    metro = models.ManyToManyField(Station)
 
     description = models.TextField(blank=True, null=True)
 
@@ -51,8 +52,8 @@ class Storage(models.Model):
     @property
     def services(self):
         return {
-            'access_24h' : self.access_24h,
-            'mobile_app' : self.mobile_app,
+            'access_24h': self.access_24h,
+            'mobile_app': self.mobile_app,
             'clever_lock': self.clever_lock,
             'cleaning': self.cleaning,
             'online_contract': self.online_contract,
@@ -62,5 +63,6 @@ class Storage(models.Model):
             'straight_way': self.straight_way,
             'any_rental_period': self.any_rental_period,
             'inventory': self.inventory,
-            'inshurance': self.inshurance
+            'inshurance': self.inshurance,
+            'video_surveillance': self.video_surveillance
         }

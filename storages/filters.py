@@ -5,8 +5,11 @@ from .models import Storage
 
 
 class StorageFilter(FilterSet):
-    square = NumberFilter(name="square", lookup_expr='gte')
-    price = NumberFilter(name="price", lookup_expr='lte')
+    min_square = NumberFilter(name="square", lookup_expr='gte')
+    max_square = NumberFilter(name="square", lookup_expr='lte')
+
+    min_price = NumberFilter(name="price", lookup_expr='gte')
+    max_price = NumberFilter(name="price", lookup_expr='lte')
 
     warehouse_type = MultipleChoiceFilter()
     storage_type = MultipleChoiceFilter()

@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.fields import MultipleChoiceField
 
 from images.serializers import ImageAlbumSerializer
+from metro.serializers import StationLineSerializer
 from .models import Storage, WAREHOUSE_TYPE, STORAGE_TYPE
 
 
@@ -52,7 +53,6 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
             'description',
             'square',
             'price',
-            'metro',
             'work_hours_start',
             'work_hours_end',
             'storage_type',
@@ -82,6 +82,7 @@ class StorageSerializer(serializers.ModelSerializer):
     album = serializers.SerializerMethodField()
     warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE)
     storage_type = MultipleChoiceField(choices=STORAGE_TYPE)
+    metro = StationLineSerializer(many=True)
     services = ServiceSerializer()
 
     class Meta:
@@ -120,25 +121,25 @@ class StorageSerializer(serializers.ModelSerializer):
         return super(self).update(instance, validated_data)
 
 
-class SingleStorageSerializer(serializers.ModelSerializer):
-    album = ImageAlbumSerializer()
-    warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE)
-    storage_type = MultipleChoiceField(choices=STORAGE_TYPE)
-    services = ServiceSerializer()
-
-    class Meta:
-        model = Storage
-        fields = [
-            'address',
-            'company_owner',
-            'description',
-            'square',
-            'price',
-            'metro',
-            'work_hours_start',
-            'work_hours_end',
-            'storage_type',
-            'warehouse_type',
-            'album',
-            'services'
-        ]
+# class SingleStorageSerializer(serializers.ModelSerializer):
+#     album = ImageAlbumSerializer()
+#     warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE)
+#     storage_type = MultipleChoiceField(choices=STORAGE_TYPE)
+#     services = ServiceSerializer()
+#
+#     class Meta:
+#         model = Storage
+#         fields = [
+#             'address',
+#             'company_owner',
+#             'description',
+#             'square',
+#             'price',
+#             'metro',
+#             'work_hours_start',
+#             'work_hours_end',
+#             'storage_type',
+#             'warehouse_type',
+#             'album',
+#             'services'
+#         ]

@@ -1,0 +1,19 @@
+from django.db import models
+import uuid
+
+
+class Line(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    color = models.CharField(max_length=7)
+    name = models.CharField(max_length=30)
+
+
+class Station(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    line = models.ForeignKey(Line, on_delete=models.CASCADE)
+    name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.name

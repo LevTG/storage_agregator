@@ -15,6 +15,7 @@ from .filters import StorageFilter
 from .serializers import StorageRegistrationSerializer, StorageSerializer
 from images.serializers import ImageRegisterSerializer
 from images.models import ImageAlbum
+from metro.serializers import station_get_or_create
 
 
 import requests
@@ -31,6 +32,8 @@ class StorageRegisterView(CreateAPIView):
 
     def post(self, req, **kwargs):
         data = req.data.copy()
+        metro_data = json.loads(data.pop('metro')[0])
+
         data['company_owner'] = data['company_id']
 
         services = json.loads(data.pop('services')[0])
@@ -43,6 +46,12 @@ class StorageRegisterView(CreateAPIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_200_OK)
         storage = serializer.save()
+
+        for station_data in metro_data:
+            station = station_get_or_create(station_data)
+            storage.metro.add(station)
+        storage.save()
+
         album = ImageAlbum.objects.create()
         album.save()
         storage.album = album
