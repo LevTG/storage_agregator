@@ -30,5 +30,5 @@ class StorageAdmin(admin.ModelAdmin):
                                            'inshurance')}),
                  ('Images', {'fields': ('album',)}),
                  ('Metro', {'fields': ('metro',)}))
-    list_filters = ['storage_type', 'warehouse_type']
+    list_filter = ['storage_type', 'warehouse_type']
     search_fields = ['address', 'company_owner', 'description']
