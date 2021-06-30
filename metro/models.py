@@ -6,14 +6,14 @@ class Line(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     color = models.CharField(max_length=7)
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=50)
 
 
 class Station(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     line = models.ForeignKey(Line, on_delete=models.CASCADE)
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name
