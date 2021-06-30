@@ -12,6 +12,7 @@ django-multiselectfield==0.1.12
 django-mysql==3.11.1
 django-use-email-as-username==1.1.2
 djangorestframework==3.12.4
+djangorestframework-filters==1.0.0dev
 drf-jwt==1.19.1
 gunicorn==20.1.0
 idna==2.10
