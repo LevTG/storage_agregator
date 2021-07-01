@@ -16,7 +16,7 @@ class StorageFilter(filters.FilterSet):
     storage_type = filters.MultipleChoiceFilter(choices=STORAGE_TYPE,
                                                 lookup_expr='icontains')
 
-    metro = filters.CharFilter(field_name='metro__name', lookup_expr='in')
+    metro = filters.CharFilter(field_name='metro__name', lookup_expr='icontains')
 
     def __init__(self, *args,  **kwargs):
         super().__init__(*args, **kwargs)
