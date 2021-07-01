@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.renderers import JSONRenderer
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 
 from .models import Company
 from .serializers import SingleCompanySerializer, CompanySerializer
@@ -18,7 +18,7 @@ class CompanyRegisterView(CreateAPIView):
 
 
 class SingleCompanyView(RetrieveUpdateDestroyAPIView):
-    permission_classes = (AllowAny, )
+    permission_classes = (IsAuthenticatedOrReadOnly, )
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
     renderer_classes = [JSONRenderer]

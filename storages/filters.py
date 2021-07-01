@@ -26,6 +26,7 @@ class StorageFilter(filters.FilterSet):
         fields = ['address', 'description',
                   'work_hours_start',
                   'work_hours_end',
+                  'metro',
 
                   'video_surveillance',
                   'access_24h',

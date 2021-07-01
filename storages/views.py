@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.parsers import MultiPartParser
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.renderers import JSONRenderer
 
 from .models import Storage
@@ -76,7 +76,7 @@ class StorageRegisterView(CreateAPIView):
 
 
 class StorageView(RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticatedOrReadOnly, )
     serializer_class = StorageSerializer
     renderer_classes = [JSONRenderer]
     queryset = Storage.objects.all()
