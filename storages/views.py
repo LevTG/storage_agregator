@@ -12,7 +12,7 @@ from rest_framework.renderers import JSONRenderer
 
 from .models import Storage
 from .filters import StorageFilter
-from .serializers import StorageRegistrationSerializer, StorageSerializer
+from .serializers import StorageRegistrationSerializer, StorageSerializer, StorageUpdateSerializer
 from images.serializers import ImageRegisterSerializer
 from images.models import ImageAlbum
 from metro.serializers import station_get_or_create
@@ -80,6 +80,19 @@ class StorageView(RetrieveUpdateDestroyAPIView):
     serializer_class = StorageSerializer
     renderer_classes = [JSONRenderer]
     queryset = Storage.objects.all()
+
+    def get_serializer(self, *args, **kwargs):
+        serializer_class = self.serializer_class
+        if self.request.method == 'PUT':
+            serializer_class = StorageUpdateSerializer
+            kwargs['data'] = kwargs['data'].copy()
+            if 'warehouse_type' in kwargs['data'].keys():
+                kwargs['data']['warehouse_type'] = json.loads(kwargs['data']['warehouse_type'])
+            if 'storage_type' in kwargs['data'].keys():
+                kwargs['data']['storage_type'] = json.loads(kwargs['data']['storage_type'])
+            kwargs['partial'] = True
+        kwargs.setdefault('context', self.get_serializer_context())
+        return serializer_class(*args, **kwargs)
 
 
 class FilterStoragesView(ListAPIView):

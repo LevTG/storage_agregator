@@ -107,7 +107,6 @@ class StorageSerializer(serializers.ModelSerializer):
         return ImageAlbumSerializer(obj.album, context=self.context).data
 
     def create(self, validated_data):
-        validated_data.update(validated_data.pop('services', {}))
         return super(StorageSerializer, self).create(validated_data)
 
     def update(self, instance, validated_data):
@@ -115,11 +114,33 @@ class StorageSerializer(serializers.ModelSerializer):
         if instance.company_owner.owner.username != user.username:
             raise serializers.ValidationError({"authorize": "You dont have permission for this company."})
         services = ServiceSerializer(data=validated_data.pop('services', {}), partial=True)
+        validated_data['company_owner'] = validated_data.pop('company_id')
         if services.is_valid():
             for attr, value in services.validated_data.iteritems():
                 setattr(instance, attr, value)
         return super(self).update(instance, validated_data)
 
+
+class StorageUpdateSerializer(serializers.ModelSerializer):
+    warehouse_type = CustomMultipleChoiceField(choices=WAREHOUSE_TYPE, required=False)
+    storage_type = CustomMultipleChoiceField(choices=STORAGE_TYPE, required=False)
+    metro = StationLineSerializer(many=True, required=False)
+    services = ServiceSerializer(required=False)
+
+    class Meta:
+        model = Storage
+        fields = [
+            'address',
+            'description',
+            'square',
+            'price',
+            'metro',
+            'work_hours_start',
+            'work_hours_end',
+            'warehouse_type',
+            'storage_type',
+            'services'
+        ]
 
 # class SingleStorageSerializer(serializers.ModelSerializer):
 #     album = ImageAlbumSerializer()
