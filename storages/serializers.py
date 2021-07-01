@@ -79,11 +79,11 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
 
 
 class StorageSerializer(serializers.ModelSerializer):
-    album = serializers.SerializerMethodField()
-    warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE)
-    storage_type = MultipleChoiceField(choices=STORAGE_TYPE)
-    metro = StationLineSerializer(many=True)
-    services = ServiceSerializer()
+    album = serializers.SerializerMethodField(required=False)
+    warehouse_type = CustomMultipleChoiceField(choices=WAREHOUSE_TYPE, required=False)
+    storage_type = CustomMultipleChoiceField(choices=STORAGE_TYPE, required=False)
+    metro = StationLineSerializer(many=True, required=False)
+    services = ServiceSerializer(required=False)
 
     class Meta:
         model = Storage
