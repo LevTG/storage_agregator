@@ -90,6 +90,8 @@ class StorageView(RetrieveUpdateDestroyAPIView):
                 kwargs['data']['warehouse_type'] = json.loads(kwargs['data']['warehouse_type'])
             if 'storage_type' in kwargs['data'].keys():
                 kwargs['data']['storage_type'] = json.loads(kwargs['data']['storage_type'])
+            if 'metro' in kwargs['data'].keys():
+                kwargs['data']['metro'] = json.loads(kwargs['data']['metro'])
             kwargs['partial'] = True
         kwargs.setdefault('context', self.get_serializer_context())
         return serializer_class(*args, **kwargs)

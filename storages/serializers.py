@@ -57,6 +57,9 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
             'work_hours_end',
             'storage_type',
             'warehouse_type',
+            'city',
+            'longitude',
+            'latitude',
 
             'video_surveillance',
             'access_24h',
@@ -99,6 +102,9 @@ class StorageSerializer(serializers.ModelSerializer):
             'work_hours_end',
             'warehouse_type',
             'storage_type',
+            'city',
+            'longitude',
+            'latitude',
             'album',
             'services'
         ]
@@ -139,6 +145,9 @@ class StorageUpdateSerializer(serializers.ModelSerializer):
             'work_hours_end',
             'warehouse_type',
             'storage_type',
+            'city',
+            'longitude',
+            'latitude',
             'services'
         ]
 

@@ -27,6 +27,7 @@ class StorageFilter(filters.FilterSet):
                   'work_hours_start',
                   'work_hours_end',
                   'metro',
+                  'city',
 
                   'video_surveillance',
                   'access_24h',
