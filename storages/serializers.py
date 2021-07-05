@@ -148,6 +148,7 @@ class StorageUpdateSerializer(serializers.ModelSerializer):
             'city',
             'longitude',
             'latitude',
+            'status',
             'services'
         ]
 

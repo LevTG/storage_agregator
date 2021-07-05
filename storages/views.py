@@ -5,10 +5,12 @@ import json
 
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.renderers import JSONRenderer
+from rest_framework.pagination import PageNumberPagination
 
 from .models import Storage
 from .filters import StorageFilter
@@ -104,6 +106,17 @@ class FilterStoragesView(ListAPIView):
     renderer_classes = [JSONRenderer]
     ordering_fields = ('price', 'square')
     filterset_class = StorageFilter
+    pagination_class = PageNumberPagination
+
+
+class GetAllCities(ListAPIView):
+    permission_classes = (AllowAny, )
+    renderer_classes = [JSONRenderer]
+
+    def get(self, req, **kwargs):
+        cities = Storage.objects.values_list('city', flat=True).order_by('city')
+        data = {'city': cities}
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class GetNearbyStorages(ListAPIView):

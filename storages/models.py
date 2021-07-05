@@ -14,6 +14,8 @@ WAREHOUSE_TYPE = (('warm', 'Теплый склад',), ('cold', 'Холодны
 STORAGE_TYPE = (('cloud', 'Облачное хранение'), ('individual', 'Индивидуальное хранение'),
                 ('responsibility', 'Ответственное хранение'), ('private', 'Частные кладовки'))
 
+STORAGE_STATUS = (('a', 'accepted'), ('d', 'declined'), ('p', 'in process'), ('m', 'on moderation'))
+
 
 class Storage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -51,6 +53,8 @@ class Storage(models.Model):
     any_rental_period = models.BooleanField(default=False)
     inventory = models.BooleanField(default=False)
     inshurance = models.BooleanField(default=False)
+
+    status = models.CharField(max_length=20, choices=STORAGE_STATUS, default='on moderation')
 
     @property
     def services(self):

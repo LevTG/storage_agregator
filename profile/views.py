@@ -4,9 +4,10 @@ import uuid
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView
 
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework.pagination import PageNumberPagination
 from django.contrib.auth import get_user_model
 
 # from rest_framework_jwt.settings import api_settings
@@ -17,7 +18,10 @@ from rest_framework_jwt.views import VerifyJSONWebTokenView, RefreshJSONWebToken
 from .serializers import ProfileRegistrationSerializer, ProfileLoginSerializer, ProfileSerializer, ChangePasswordSerializer, ProfileUpdateSerializer
 from company.serializers import SingleCompanySerializer, CompanySerializer
 from applications.serializers import ApplicationSerializer
+from applications.models import Application, APPLICATION_STATUS
 from images.serializers import ImageRegisterSerializer
+from storages.serializers import StorageSerializer
+from storages.models import Storage
 
 
 User = get_user_model()
@@ -27,7 +31,7 @@ class UserRegistrationView(CreateAPIView):
     serializer_class = ProfileRegistrationSerializer
     permission_classes = (AllowAny,)
 
-    def post(self, req):
+    def post(self, req, **kwargs):
         # return Response(req.data['profile'])
         serializer = ProfileRegistrationSerializer(data=req.data)
         if not serializer.is_valid():
@@ -57,7 +61,7 @@ class UserRegistrationView(CreateAPIView):
                     user.delete()
                     return Response(company.errors, status=status.HTTP_200_OK)
             company = company.save()
-            image = req.data.get('logo', None)
+            image = req.data.get('logo', )
             if image is not None:
                 form_data = {'image': image, 'category': 'c', 'name': '{}'.format(uuid.uuid4)}
                 image_serializer = ImageRegisterSerializer(data=form_data)
@@ -128,7 +132,7 @@ class ChangePasswordView(UpdateAPIView):
 
 
 class RefreshTokenView(RefreshJSONWebTokenView):
-    def post(self, req):
+    def post(self, req, **kwargs):
         serializer = RefreshJSONWebTokenView.serializer_class(data=req.data)
         if serializer.is_valid():
             res = Response(serializer.data, status=status.HTTP_200_OK)
@@ -138,7 +142,7 @@ class RefreshTokenView(RefreshJSONWebTokenView):
 
 
 class VerifyTokenView(VerifyJSONWebTokenView):
-    def post(self, req):
+    def post(self, req, **kwargs):
         serializer = VerifyJSONWebTokenView.serializer_class(data=req.data)
         if serializer.is_valid():
             res = Response(serializer.data, status=status.HTTP_200_OK)
@@ -168,21 +172,32 @@ class VerifyTokenView(VerifyJSONWebTokenView):
 #             t, _ = BlacklistedToken.objects.get_or_create(token=token)
 #         return Response(status=status.HTTP_205_RESET_CONTENT)
 
+
 class GetAllApplicationsView(APIView):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, IsAdminUser)
+    serializer_class = ApplicationSerializer
 
     def get(self, req):
         user = req.user
-        applications = user.application_set
-        data = ApplicationSerializer(applications, many=True).data
+        if user.is_staff:
+            applications = Application.objects.filter(status='m')
+        else:
+            applications = user.application_set
+        data = self.serializer_class(applications, many=True).data
         return Response(data, status=status.HTTP_200_OK)
 
 
-class GetAllStoragesView(APIView):
-    permission_classes = (IsAuthenticated, )
+class GetAllStoragesView(ListAPIView):
+    permission_classes = (IsAuthenticated, IsAdminUser)
+    serializer_class = StorageSerializer
 
-    def get(self, req):
+    def get(self, req, **kwargs):
         user = req.user
-        applications = user.storages
-        data = ApplicationSerializer(applications, many=True).data
+        if user.is_staff:
+            storages = Storage.objects.filter(status='m')
+        else:
+            storages = user.storages
+        data = self.serializer_class(storages, many=True).data
         return Response(data, status=status.HTTP_200_OK)
+
+

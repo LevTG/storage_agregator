@@ -52,8 +52,8 @@ class ProfileLoginSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=255, read_only=True)
 
     def validate(self, data):
-        username = data.get("username", None)
-        password = data.get("password", None)
+        username = data.get("username", )
+        password = data.get("password", )
         user = authenticate(username=username, password=password)
 
         if user is None:
@@ -121,10 +121,10 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         if user.username != instance.username:
             raise serializers.ValidationError({"authorize": "You dont have permission for this user."})
 
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.last_name = validated_data.get('last_name', instance.last_name)
-        instance.email = validated_data.get('email', instance.email)
-        instance.username = validated_data.get('username', instance.username)
+        instance.first_name = validated_data.get('first_name', )
+        instance.last_name = validated_data.get('last_name', )
+        instance.email = validated_data.get('email', )
+        instance.username = validated_data.get('username', )
 
         instance.save()
 

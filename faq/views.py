@@ -16,7 +16,7 @@ def questions(req):
         serializer.save()
         return Response(status=status.HTTP_201_CREATED)
     elif req.method == 'GET':
-        count = req.GET.get('count')
+        count = req.GET.get('count', )
         if count is not None:
             questions_local = Faq.objects.all()[:int(count)]
         else:
