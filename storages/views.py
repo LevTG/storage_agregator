@@ -108,6 +108,15 @@ class FilterStoragesView(ListAPIView):
     filterset_class = StorageFilter
     pagination_class = PageNumberPagination
 
+    def get_count(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        return queryset.count()
+
+    def list(self, req, **kwargs):
+        response = super(FilterStoragesView, self).list(self, req)
+        response.data['count'] = self.get_count()
+        return response
+
 
 class GetAllCities(ListAPIView):
     permission_classes = (AllowAny, )

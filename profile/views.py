@@ -174,7 +174,7 @@ class VerifyTokenView(VerifyJSONWebTokenView):
 
 
 class GetAllApplicationsView(APIView):
-    permission_classes = (IsAuthenticated, IsAdminUser)
+    permission_classes = (IsAuthenticated, )
     serializer_class = ApplicationSerializer
 
     def get(self, req):
