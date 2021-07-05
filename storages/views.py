@@ -114,7 +114,7 @@ class GetAllCities(ListAPIView):
     renderer_classes = [JSONRenderer]
 
     def get(self, req, **kwargs):
-        cities = Storage.objects.values_list('city', flat=True).order_by('city')
+        cities = Storage.objects.values_list('city', flat=True).order_by('city').distinct()
         data = {'city': cities}
         return Response(data, status=status.HTTP_200_OK)
 
