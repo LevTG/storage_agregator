@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.fields import MultipleChoiceField
 
 from images.serializers import ImageAlbumSerializer
-from metro.serializers import StationLineSerializer
+from metro.serializers import StationLineSerializer, station_get_or_create
 from .models import Storage, WAREHOUSE_TYPE, STORAGE_TYPE
 
 
@@ -151,6 +151,26 @@ class StorageUpdateSerializer(serializers.ModelSerializer):
             'status',
             'services'
         ]
+
+    # def update_or_create_metro(self, stations):
+    #     metro_ids = []
+    #     for metro in stations:
+    #         station = station_get_or_create(metro)
+    #         metro_ids.append(station.id)
+    #     return metro_ids
+    #
+    # def create(self, validated_data):
+    #     metro = validated_data.pop('metro', [])
+    #     storage = Storage.objects.create(**validated_data)
+    #     storage.metro.set(self.update_or_create_metro(metro))
+    #     storage.save()
+    #     return storage
+    #
+    # def update(self, instance, validated_data):
+    #     metro = validated_data.pop('metro', [])
+    #     instance.metro.set(self.update_or_create_metro(metro))
+    #     instance.save()
+    #     return instance
 
 # class SingleStorageSerializer(serializers.ModelSerializer):
 #     album = ImageAlbumSerializer()

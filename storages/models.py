@@ -54,7 +54,7 @@ class Storage(models.Model):
     inventory = models.BooleanField(default=False)
     inshurance = models.BooleanField(default=False)
 
-    status = models.CharField(max_length=20, choices=STORAGE_STATUS, default='on moderation')
+    status = models.CharField(max_length=20, choices=STORAGE_STATUS, default='m')
 
     @property
     def services(self):
