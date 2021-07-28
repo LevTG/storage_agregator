@@ -1,12 +1,20 @@
 from django.db import models
 import uuid
+from colorfield.fields import ColorField
 
 
 class Line(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    color = models.CharField(max_length=7)
+    color = ColorField(default='#FF0000')
     name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def stations(self):
+        return self.station_set
 
 
 class Station(models.Model):
@@ -17,3 +25,7 @@ class Station(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def color(self):
+        return self.line.color
