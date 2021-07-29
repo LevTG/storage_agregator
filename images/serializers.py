@@ -20,6 +20,7 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = [
+            'id',
             'image'
         ]
 
@@ -30,6 +31,7 @@ class ImageAlbumRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageAlbum
         fields = [
+            'id',
             'images'
         ]
 
@@ -40,6 +42,7 @@ class ImageAlbumSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageAlbum
         fields = [
+            'id',
             'images'
         ]
 
