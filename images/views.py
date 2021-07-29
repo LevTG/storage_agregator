@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.renderers import JSONRenderer
 
+from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 
 from .models import ImageAlbum, Image
@@ -13,7 +14,7 @@ from .serializers import ImageSerializer, ImageRegisterSerializer, ImageAlbumSer
 from storages.views import image_re
 
 
-class ImageAlbumView(CreateAPIView):
+class ImageAlbumView(APIView):
     permission_classes = (IsAuthenticatedOrReadOnly, )
     serializer_class = ImageAlbum
 
@@ -38,6 +39,15 @@ class ImageAlbumView(CreateAPIView):
         except Exception as e:
             return Response(str(e.__class__) + ' ' + str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(album.id, status.HTTP_201_CREATED, headers={'Access-Control-Allow-Origin': '*'})
+
+    def get(self, req, *args, **kwargs):
+        album_id = kwargs['album_id']
+        albums = ImageAlbum.objects.filter(id=album_id)
+        if not albums.exists():
+            return Response('Error: Album with this id doesn\'t exist', status=status.HTTP_404_NOT_FOUND)
+        album = albums.first()
+        data = ImageAlbumSerializer(album).data
+        return Response(data, status.HTTP_200_OK, headers={'Access-Control-Allow-Origin': '*'})
 
 
 class ImageView(RetrieveUpdateDestroyAPIView):
