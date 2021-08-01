@@ -11,16 +11,12 @@ class Line(models.Model):
 
     def __str__(self):
         return self.name
-
-    @property
-    def stations(self):
-        return self.station_set
-
+    
 
 class Station(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    line = models.ForeignKey(Line, on_delete=models.CASCADE)
+    line = models.ForeignKey(Line, related_name='stations', on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
 
     def __str__(self):

@@ -3,9 +3,10 @@ import re
 import uuid
 import json
 
+from django.contrib.gis.measure import D
+
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
@@ -128,20 +129,22 @@ class GetAllCities(ListAPIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
-class GetNearbyStorages(ListAPIView):
-    pass
-    # Send request to yandex_api
-    'https: // geocode - maps.yandex.ru / 1.x\
-    ? geocode = {0}\
-    & apikey = {1}\
-    & [sco = < string >]\
-    & [kind = < string >]\
-    & [rspn = < boolean >]\
-    & [ll = < number >, < number >]\
-    & [spn = < number >, < number >]\
-    & [bbox = < number >, < number > ~ < number >, < number >]\
-    & [format = json]\
-    & [results = < integer >]\
-    & [skip = < integer >]\
-    & [lang = < string >]\
-    & [callback = < string >]'.format('', os.environ.get("API_KEY"))
+class GetAllStoragesMap(ListAPIView):
+    permission_classes = (AllowAny, )
+    renderer_classes = [JSONRenderer]
+
+    def get(self, req, **kwargs):
+        storages = Storage.objects.values('id', 'address', 'latitude', 'longitude', 'description').distinct()
+        return Response(storages, status=status.HTTP_200_OK)
+
+
+class GetNearbyStoragesMap(ListAPIView):
+    queryset = Storage.objects.all()
+    permission_classes = (AllowAny, )
+    renderer_classes = [JSONRenderer]
+
+
+    def get(self, req, **kwargs):
+       #  user_location =
+       # storages = self.queryset.filter(location__dwithin=(user_location, D(km=10)))
+        pass
