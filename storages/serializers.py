@@ -58,8 +58,6 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
             'storage_type',
             'warehouse_type',
             'city',
-            'longitude',
-            'latitude',
 
             'video_surveillance',
             'access_24h',
@@ -87,6 +85,8 @@ class StorageSerializer(serializers.ModelSerializer):
     storage_type = CustomMultipleChoiceField(choices=STORAGE_TYPE, required=False)
     metro = StationLineSerializer(many=True, required=False)
     services = ServiceSerializer(required=False)
+    longitude = serializers.FloatField(source='longitude')
+    latitude = serializers.FloatField(source='latitude')
 
     class Meta:
         model = Storage
@@ -103,8 +103,6 @@ class StorageSerializer(serializers.ModelSerializer):
             'warehouse_type',
             'storage_type',
             'city',
-            'longitude',
-            'latitude',
             'album',
             'services'
         ]
@@ -146,8 +144,6 @@ class StorageUpdateSerializer(serializers.ModelSerializer):
             'warehouse_type',
             'storage_type',
             'city',
-            'longitude',
-            'latitude',
             'status',
             'services'
         ]

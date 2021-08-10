@@ -25,8 +25,6 @@ class Storage(models.Model):
     address = models.TextField()
     metro = models.ManyToManyField(Station)
     city = models.CharField(max_length=50, blank=True, null=True)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
 
     location = PointField(null=True)
 
@@ -76,3 +74,11 @@ class Storage(models.Model):
             'inshurance': self.inshurance,
             'video_surveillance': self.video_surveillance
         }
+
+    @property
+    def longitude(self):
+        return self.location.x
+
+    @property
+    def latitude(self):
+        return self.location.y

@@ -56,6 +56,10 @@ class StorageRegisterView(CreateAPIView):
             storage.metro.add(station)
         storage.save()
 
+        if 'latitude' in data.keys() and 'longitude' in data.keys():
+            storage.location = Point(float(data['longitude']), float(data['latitude']))
+            storage.save()
+
         album = ImageAlbum.objects.create()
         album.save()
         storage.album = album
@@ -135,7 +139,7 @@ class GetAllStoragesMap(ListAPIView):
     renderer_classes = [JSONRenderer]
 
     def get(self, req, **kwargs):
-        storages = Storage.objects.values('id', 'address', 'latitude', 'longitude', 'location').distinct()
+        storages = Storage.objects.values('id', 'address', 'latitude', 'longitude').distinct()
         return Response(storages, status=status.HTTP_200_OK)
 
 
@@ -143,7 +147,6 @@ class GetNearbyStoragesMap(ListAPIView):
     queryset = Storage.objects.all()
     permission_classes = (AllowAny, )
     renderer_classes = [JSONRenderer]
-
 
     def get(self, req, **kwargs):
        #  user_location =
@@ -153,7 +156,8 @@ class GetNearbyStoragesMap(ListAPIView):
 
 class MoveLngLatToLocation(APIView):
     queryset = Storage.objects.all()
-    permission_classes = (AllowAny,)
+    permission_classes = (AllowAny, )
+
     def get(self, req, **kwargs):
         for storage in self.queryset.all():
             storage.location = Point(float(storage.longitude), float(storage.latitude))
