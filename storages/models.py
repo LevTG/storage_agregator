@@ -1,4 +1,4 @@
-# from django.contrib.gis.db.models import PointField
+from django.contrib.gis.db.models import PointField
 from django.db import models
 import uuid
 
@@ -28,7 +28,7 @@ class Storage(models.Model):
     latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
 
-    # location = PointField(null=True)
+    location = PointField(null=True)
 
     description = models.TextField(blank=True, null=True)
 

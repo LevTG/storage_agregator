@@ -4,9 +4,10 @@ import uuid
 import json
 
 from django.contrib.gis.measure import D
-
+from django.contrib.gis.geos import Point
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
@@ -134,7 +135,7 @@ class GetAllStoragesMap(ListAPIView):
     renderer_classes = [JSONRenderer]
 
     def get(self, req, **kwargs):
-        storages = Storage.objects.values('id', 'address', 'latitude', 'longitude', 'description').distinct()
+        storages = Storage.objects.values('id', 'address', 'latitude', 'longitude', 'location').distinct()
         return Response(storages, status=status.HTTP_200_OK)
 
 
@@ -148,3 +149,13 @@ class GetNearbyStoragesMap(ListAPIView):
        #  user_location =
        # storages = self.queryset.filter(location__dwithin=(user_location, D(km=10)))
         pass
+
+
+class MoveLngLatToLocation(APIView):
+    queryset = Storage.objects.all()
+    permission_classes = (AllowAny,)
+    def get(self, req, **kwargs):
+        for storage in self.queryset.all():
+            storage.location = Point(float(storage.longitude), float(storage.latitude))
+            storage.save()
+        return Response(status.HTTP_200_OK)

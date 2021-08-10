@@ -120,7 +120,7 @@ DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.contrib.gis.db.backends.mysql',
         # 'OPTIONS': {
                     # 'read_default_file': '/home/incredible/.my.cnf',
                     # },
