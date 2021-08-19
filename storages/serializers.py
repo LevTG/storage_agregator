@@ -85,8 +85,8 @@ class StorageSerializer(serializers.ModelSerializer):
     storage_type = CustomMultipleChoiceField(choices=STORAGE_TYPE, required=False)
     metro = StationLineSerializer(many=True, required=False)
     services = ServiceSerializer(required=False)
-    longitude = serializers.FloatField(source='longitude')
-    latitude = serializers.FloatField(source='latitude')
+    longitude = serializers.FloatField()
+    latitude = serializers.FloatField()
 
     class Meta:
         model = Storage
@@ -104,6 +104,8 @@ class StorageSerializer(serializers.ModelSerializer):
             'storage_type',
             'city',
             'album',
+            'latitude',
+            'longitude',
             'services'
         ]
 

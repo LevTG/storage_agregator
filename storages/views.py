@@ -2,7 +2,9 @@ import os
 import re
 import uuid
 import json
+import math
 
+from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.measure import D
 from django.contrib.gis.geos import Point
 from rest_framework import status
@@ -57,7 +59,7 @@ class StorageRegisterView(CreateAPIView):
         storage.save()
 
         if 'latitude' in data.keys() and 'longitude' in data.keys():
-            storage.location = Point(float(data['longitude']), float(data['latitude']))
+            storage.location = Point(float(data['longitude']), float(data['latitude']), srid=4326)
             storage.save()
 
         album = ImageAlbum.objects.create()
@@ -134,13 +136,39 @@ class GetAllCities(ListAPIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
+def calcDist(lat_A, long_A, lat_B, long_B):
+    distance = (sin(radians(lat_A)) *
+                sin(radians(lat_B)) +
+                cos(radians(lat_A)) *
+                cos(radians(lat_B)) *
+                cos(radians(long_A - long_B)))
+
+    distance = (degrees(acos(distance))) * 69.09
+
+    return distance
+
+
 class GetAllStoragesMap(ListAPIView):
     permission_classes = (AllowAny, )
     renderer_classes = [JSONRenderer]
 
     def get(self, req, **kwargs):
-        storages = Storage.objects.values('id', 'address', 'latitude', 'longitude').distinct()
+        location = Point(float(req.GET.get('longitude')), float(req.GET.get('latitude')), srid=4326)
+        storages = [{'id': storage.id, 'address': storage.address, 'latitude': storage.latitude, 'longitude': storage.longitude, 'distance': storage.distance} for storage in Storage.objects.all().annotate(distance=Distance('location', location, spheroid=True, unit='kilometre', radius=6371)).order_by('distance')]
         return Response(storages, status=status.HTTP_200_OK)
+
+
+def distance_to_decimal_degrees(distance, latitude):
+    """
+    Source of formulae information:
+        1. https://en.wikipedia.org/wiki/Decimal_degrees
+        2. http://www.movable-type.co.uk/scripts/latlong.html
+    :param distance: an instance of `from django.contrib.gis.measure.Distance`
+    :param latitude: y - coordinate of a point/location
+    """
+    lat_radians = latitude * (math.pi / 180)
+    # 1 longitudinal degree at the equator equal 111,319.5m equiv to 111.32km
+    return distance.m / (111_319.5 * math.cos(lat_radians))
 
 
 class GetNearbyStoragesMap(ListAPIView):
@@ -149,9 +177,11 @@ class GetNearbyStoragesMap(ListAPIView):
     renderer_classes = [JSONRenderer]
 
     def get(self, req, **kwargs):
-       #  user_location =
-       # storages = self.queryset.filter(location__dwithin=(user_location, D(km=10)))
-        pass
+       user_location = Point(float(req.GET.get('longitude')), float(req.GET.get('latitude')), srid=4326)
+       storages = [{'id': storage.id, 'address': storage.address, 'latitude': storage.latitude, 'longitude': storage.longitude} for storage in self.queryset.annotate(distance=Distance('location', user_location)).filter(distance__lte=distance_to_decimal_degrees(D(m=10000), user_location.y)).order_by('distance')]
+       return Response(storages, status=status.HTTP_200_OK)
+
+       return Rsponse(status=status.HTTP_200_OK)
 
 
 class MoveLngLatToLocation(APIView):
@@ -160,6 +190,6 @@ class MoveLngLatToLocation(APIView):
 
     def get(self, req, **kwargs):
         for storage in self.queryset.all():
-            storage.location = Point(float(storage.longitude), float(storage.latitude))
+            storage.location = Point(float(storage.longitude), float(storage.latitude), srid=4326)
             storage.save()
         return Response(status.HTTP_200_OK)
