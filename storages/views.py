@@ -118,9 +118,9 @@ class FilterStoragesView(ListAPIView):
         return queryset.count()
 
     def list(self, req, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        response = super(FilterStoragesView, self).list(self, req)
+        response.data['count'] = self.get_count()
+        return response
 
 
 class GetAllCities(ListAPIView):
