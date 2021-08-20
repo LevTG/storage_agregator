@@ -27,7 +27,10 @@ class ProfileRegistrationSerializer(serializers.ModelSerializer):
             "email",
             "password",
         ]
-        extra_kwargs = {"password": {"write_only": True}}
+        extra_kwargs = {"password": {"write_only": True},
+                        'first_name': {'required': False},
+                        'last_name': {'required': False},
+        }
 
     def create(self, profile_data):
         username = profile_data["username"]

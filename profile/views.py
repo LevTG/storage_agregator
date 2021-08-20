@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView
 
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.pagination import PageNumberPagination
 from django.contrib.auth import get_user_model
 
@@ -199,5 +199,60 @@ class GetAllStoragesView(ListAPIView):
             storages = user.storages
         data = self.serializer_class(storages, many=True).data
         return Response(data, status=status.HTTP_200_OK)
+
+
+# class ChangeProfileLogo(APIView):
+#     permission_classes = (IsAuthenticatedOrReadOnly, )
+#     serializer_class = CompanySerializer
+#     queryset = User.objects.all()
+#
+#     def get(self, req, **kwargs):
+#         try:
+#             username = self.kwargs['username']
+#             user = self.queryset.get(username=username)
+#             logo = user.logo
+#             data = ImageSerializer(logo).data
+#             return Response(data, status=status.HTTP_200_OK)
+#         except Exception as e:
+#             return Response(str(e.__class__) + ' ' + str(e), status=status.HTTP_404_NOT_FOUND)
+#
+#     def put(self, req, **kwargs):
+#         try:
+#             company_id = self.kwargs['id']
+#             company = self.queryset.get(id=company_id)
+#
+#             if company.logo is not None:
+#                 logo_id = company.logo_id
+#
+#                 old_logo = Image.objects.get(id=logo_id)
+#                 old_logo.delete()
+#
+#             new_logo = req.data['logo']
+#             image_serializer = ImageSerializer(new_logo)
+#
+#             if not image_serializer.is_valid():
+#                 return Response(image_serializer.errors, status=status.HTTP_200_OK)
+#             logo = image_serializer.save()
+#             company.logo = logo.id
+#             company.save()
+#
+#             return Response(self.serializer_class(company).data, status=status.HTTP_200_OK)
+#         except Exception as e:
+#             return Response(str(e.__class__) + ' ' + str(e), status=status.HTTP_404_NOT_FOUND)
+#
+#     def delete(self, req, **kwargs):
+#         try:
+#             company_id = self.kwargs['id']
+#             company = self.queryset.get(id=company_id)
+#
+#             logo_id = company.logo_id
+#
+#             old_logo = Image.objects.get(id=logo_id)
+#             old_logo.delete()
+#
+#             return Response(self.serializer_class(company).data, status=status.HTTP_200_OK)
+#         except Exception as e:
+#             return Response(str(e.__class__) + ' ' + str(e), status=status.HTTP_404_NOT_FOUND)
+
 
 

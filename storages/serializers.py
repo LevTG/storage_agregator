@@ -192,3 +192,17 @@ class StorageUpdateSerializer(serializers.ModelSerializer):
 #             'album',
 #             'services'
 #         ]
+
+
+class StorageCoordinatesSerializer(serializers.ModelSerializer):
+    latitude = serializers.FloatField(source='location.x')
+    longitude = serializers.FloatField(source='location.y')
+
+    class Meta:
+        model = Storage
+        fields = [
+            'id',
+            'address',
+            'latitude',
+            'longitude'
+        ]

@@ -18,13 +18,10 @@ from rest_framework.pagination import PageNumberPagination
 
 from .models import Storage
 from .filters import StorageFilter
-from .serializers import StorageRegistrationSerializer, StorageSerializer, StorageUpdateSerializer
+from .serializers import StorageRegistrationSerializer, StorageSerializer, StorageUpdateSerializer, StorageCoordinatesSerializer
 from images.serializers import ImageRegisterSerializer
 from images.models import ImageAlbum
 from metro.serializers import station_get_or_create
-
-
-import requests
 
 
 image_re = re.compile('image\d+')
@@ -121,9 +118,9 @@ class FilterStoragesView(ListAPIView):
         return queryset.count()
 
     def list(self, req, **kwargs):
-        response = super(FilterStoragesView, self).list(self, req)
-        response.data['count'] = self.get_count()
-        return response
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class GetAllCities(ListAPIView):
@@ -136,26 +133,17 @@ class GetAllCities(ListAPIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
-def calcDist(lat_A, long_A, lat_B, long_B):
-    distance = (sin(radians(lat_A)) *
-                sin(radians(lat_B)) +
-                cos(radians(lat_A)) *
-                cos(radians(lat_B)) *
-                cos(radians(long_A - long_B)))
-
-    distance = (degrees(acos(distance))) * 69.09
-
-    return distance
-
-
-class GetAllStoragesMap(ListAPIView):
-    permission_classes = (AllowAny, )
+class GetAllStoragesMapView(ListAPIView):
+    permission_classes = (AllowAny,)
+    queryset = Storage.objects.all()
+    serializer_class = StorageCoordinatesSerializer
     renderer_classes = [JSONRenderer]
+    filterset_class = StorageFilter
 
-    def get(self, req, **kwargs):
-        location = Point(float(req.GET.get('longitude')), float(req.GET.get('latitude')), srid=4326)
-        storages = [{'id': storage.id, 'address': storage.address, 'latitude': storage.latitude, 'longitude': storage.longitude, 'distance': storage.distance} for storage in Storage.objects.all().annotate(distance=Distance('location', location, spheroid=True, unit='kilometre', radius=6371)).order_by('distance')]
-        return Response(storages, status=status.HTTP_200_OK)
+    def list(self, req, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 def distance_to_decimal_degrees(distance, latitude):
@@ -175,13 +163,14 @@ class GetNearbyStoragesMap(ListAPIView):
     queryset = Storage.objects.all()
     permission_classes = (AllowAny, )
     renderer_classes = [JSONRenderer]
+    serializer_class = StorageCoordinatesSerializer
+    filterset_class = StorageFilter
 
     def get(self, req, **kwargs):
-       user_location = Point(float(req.GET.get('longitude')), float(req.GET.get('latitude')), srid=4326)
-       storages = [{'id': storage.id, 'address': storage.address, 'latitude': storage.latitude, 'longitude': storage.longitude} for storage in self.queryset.annotate(distance=Distance('location', user_location)).filter(distance__lte=distance_to_decimal_degrees(D(m=10000), user_location.y)).order_by('distance')]
-       return Response(storages, status=status.HTTP_200_OK)
-
-       return Rsponse(status=status.HTTP_200_OK)
+        user_location = Point(float(req.GET.get('longitude')), float(req.GET.get('latitude')), srid=4326)
+        queryset = self.filter_queryset(self.get_queryset()).annotate(distance=Distance('location', user_location)).filter(distance__lte=distance_to_decimal_degrees(D(m=10000), user_location.y)).order_by('distance')
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class MoveLngLatToLocation(APIView):
