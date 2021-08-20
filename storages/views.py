@@ -140,11 +140,6 @@ class GetAllStoragesMapView(ListAPIView):
     renderer_classes = [JSONRenderer]
     filterset_class = StorageFilter
 
-    def list(self, req, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
 
 def distance_to_decimal_degrees(distance, latitude):
     """
