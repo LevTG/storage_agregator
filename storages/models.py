@@ -1,6 +1,7 @@
 from django.contrib.gis.db.models import PointField
 from django.core.validators import RegexValidator
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 import uuid
 
 from multiselectfield import MultiSelectField
