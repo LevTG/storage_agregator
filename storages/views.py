@@ -56,7 +56,7 @@ class StorageRegisterView(CreateAPIView):
         storage.save()
 
         if 'latitude' in data.keys() and 'longitude' in data.keys():
-            storage.location = Point(float(data['longitude']), float(data['latitude']), srid=4326)
+            storage.location = Point(float(data['latitude']), float(data['longitude']), srid=4326)
             storage.save()
 
         album = ImageAlbum.objects.create()
@@ -140,6 +140,12 @@ class GetAllStoragesMapView(ListAPIView):
     renderer_classes = [JSONRenderer]
     filterset_class = StorageFilter
 
+    def get(self, req, **kwargs):
+        user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
+        queryset = self.filter_queryset(self.get_queryset()).annotate(distance=Distance('location', user_location)).order_by('distance')
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 def distance_to_decimal_degrees(distance, latitude):
     """
@@ -162,7 +168,7 @@ class GetNearbyStoragesMap(ListAPIView):
     filterset_class = StorageFilter
 
     def get(self, req, **kwargs):
-        user_location = Point(float(req.GET.get('longitude')), float(req.GET.get('latitude')), srid=4326)
+        user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
         queryset = self.filter_queryset(self.get_queryset()).annotate(distance=Distance('location', user_location)).filter(distance__lte=distance_to_decimal_degrees(D(m=10000), user_location.y)).order_by('distance')
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
@@ -174,6 +180,6 @@ class MoveLngLatToLocation(APIView):
 
     def get(self, req, **kwargs):
         for storage in self.queryset.all():
-            storage.location = Point(float(storage.longitude), float(storage.latitude), srid=4326)
+            storage.location = Point(float(storage.latitude), float(storage.longtude), srid=4326)
             storage.save()
         return Response(status.HTTP_200_OK)
