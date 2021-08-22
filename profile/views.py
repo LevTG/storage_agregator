@@ -32,7 +32,6 @@ class UserRegistrationView(CreateAPIView):
     permission_classes = (AllowAny,)
 
     def post(self, req, **kwargs):
-        # return Response(req.data['profile'])
         serializer = ProfileRegistrationSerializer(data=req.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_200_OK)
@@ -41,27 +40,20 @@ class UserRegistrationView(CreateAPIView):
             'username': user.username
         }
         try:
-            company_data = json.loads(req.data['company'])
-            if 'name' in company_data.keys():
-                company_data['owner'] = user.id
-                company = SingleCompanySerializer(data=company_data)
-                user.is_private = False
-                user.is_owner = True
-                if not company.is_valid():
-                    user.delete()
-                    return Response(company.errors, status=status.HTTP_200_OK)
-            else:
-                company_data['owner'] = user.id
-                company_data['name'] = user.username
-                company_data['is_private'] = True
-                company = SingleCompanySerializer(data=company_data)
-                user.is_owner = True
-                user.save()
-                if not company.is_valid():
-                    user.delete()
-                    return Response(company.errors, status=status.HTTP_200_OK)
+            company_data = {}
+            company_data['name'] = req.data.get('company_name', user.username)
+            company_data['owner'] = user.id
+            company = SingleCompanySerializer(data=company_data)
+
+            user.is_private = (company_data['name'] == user.username)
+            user.is_owner = (company_data['name'] == user.username)
+
+            if not company.is_valid():
+                user.delete()
+                return Response(company.errors, status=status.HTTP_200_OK)
             company = company.save()
-            image = req.data.get('logo', )
+
+            image = req.data.get('logo', None)
             if image is not None:
                 form_data = {'image': image, 'category': 'c', 'name': '{}'.format(uuid.uuid4)}
                 image_serializer = ImageRegisterSerializer(data=form_data)

@@ -38,7 +38,7 @@ class ProfileRegistrationSerializer(serializers.ModelSerializer):
         password = profile_data["password"]
         if email and Profile.objects.filter(email=email).exclude(username=username).exists():
             raise serializers.ValidationError(
-                {"username": "Username addresses must be unique."})
+                {"username": "Username must be unique."})
         user = Profile.objects.create_user(**profile_data)
         user.set_password(password)
         user.save()

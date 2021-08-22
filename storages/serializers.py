@@ -22,6 +22,12 @@ class ServiceSerializer(serializers.Serializer):
     inshurance = serializers.BooleanField(allow_null=True, required=False)
 
 
+class SocialSerializer(serializers.Serializer):
+    vk = serializers.CharField(allow_null=True, required=False)
+    ok = serializers.CharField(allow_null=True, required=False)
+    instagram=serializers.CharField(allow_null=True, required=False)
+
+
 # По какой-то причине данные попадающие в serializer multichoiceField дополнительно оборачиваются листом. И все ломается
 # Для этого создала этот CustomField
 
@@ -51,6 +57,9 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
             'address',
             'company_owner',
             'description',
+            'phone_number',
+            'email',
+
             'square',
             'price',
             'work_hours_start',
@@ -71,7 +80,12 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
             'straight_way',
             'any_rental_period',
             'inventory',
-            'inshurance'
+            'inshurance',
+
+            'vk',
+            'ok',
+            'instagram',
+            'facebook'
         ]
         extra_kwargs = {
             'company_owner': {'required': True},
@@ -85,6 +99,7 @@ class StorageSerializer(serializers.ModelSerializer):
     storage_type = CustomMultipleChoiceField(choices=STORAGE_TYPE, required=False)
     metro = StationLineSerializer(many=True, required=False)
     services = ServiceSerializer(required=False)
+    social = SocialSerializer(required=False)
     longitude = serializers.FloatField()
     latitude = serializers.FloatField()
 
@@ -106,7 +121,8 @@ class StorageSerializer(serializers.ModelSerializer):
             'album',
             'latitude',
             'longitude',
-            'services'
+            'services',
+            'social'
         ]
 
     def get_album(self, obj):
@@ -120,10 +136,18 @@ class StorageSerializer(serializers.ModelSerializer):
         if instance.company_owner.owner.username != user.username:
             raise serializers.ValidationError({"authorize": "You dont have permission for this company."})
         services = ServiceSerializer(data=validated_data.pop('services', {}), partial=True)
+        social = SocialSerializer(data=validated_data.pop('social', {}), partial=True)
+
         validated_data['company_owner'] = validated_data.pop('company_id')
+
         if services.is_valid():
             for attr, value in services.validated_data.iteritems():
                 setattr(instance, attr, value)
+
+        if social.is_valid():
+            for attr, value in social.validated_data.iteritems():
+                setattr(instance, attr, value)
+
         return super(self).update(instance, validated_data)
 
 
@@ -132,6 +156,7 @@ class StorageUpdateSerializer(serializers.ModelSerializer):
     storage_type = CustomMultipleChoiceField(choices=STORAGE_TYPE, required=False)
     metro = StationLineSerializer(many=True, required=False)
     services = ServiceSerializer(required=False)
+    social = SocialSerializer(required=False)
 
     class Meta:
         model = Storage
@@ -147,7 +172,8 @@ class StorageUpdateSerializer(serializers.ModelSerializer):
             'storage_type',
             'city',
             'status',
-            'services'
+            'services',
+            'social'
         ]
 
     # def update_or_create_metro(self, stations):

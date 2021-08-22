@@ -1,4 +1,5 @@
 from django.contrib.gis.db.models import PointField
+from django.core.validators import RegexValidator
 from django.db import models
 import uuid
 
@@ -25,6 +26,18 @@ class Storage(models.Model):
     address = models.TextField()
     metro = models.ManyToManyField(Station)
     city = models.CharField(max_length=50, blank=True, null=True)
+
+    # Society
+    email = models.EmailField(_('email address'), db_index=True, null=True)
+    phone_regex = RegexValidator(regex=r'^\+?\d{9,16}$',
+                                 message="Phone number must be entered in the format: '+999999999'. Up to 16 digits allowed.")
+    phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True, null=True)
+
+    # Social Network
+    vk = models.CharField(max_length=50, blank=True, null=True)
+    facebook = models.CharField(max_length=50, blank=True, null=True)
+    ok = models.CharField(max_length=50, blank=True, null=True)
+    instagram = models.CharField(max_length=50, blank=True, null=True)
 
     location = PointField(null=True)
 
@@ -73,6 +86,15 @@ class Storage(models.Model):
             'inventory': self.inventory,
             'inshurance': self.inshurance,
             'video_surveillance': self.video_surveillance
+        }
+
+    @property
+    def social(self):
+        return {
+            'vk': self.vk,
+            'facebook': self.facebook,
+            'ok': self.ok,
+            'instagram': self.instagram
         }
 
     @property
