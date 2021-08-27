@@ -3,7 +3,7 @@ from rest_framework.fields import MultipleChoiceField
 
 from images.serializers import ImageAlbumSerializer
 from metro.serializers import StationLineSerializer, station_get_or_create
-from .models import Storage, WAREHOUSE_TYPE, STORAGE_TYPE
+from .models import Storage, Manager, WAREHOUSE_TYPE, STORAGE_TYPE
 
 
 class ServiceSerializer(serializers.Serializer):
@@ -232,4 +232,24 @@ class StorageCoordinatesSerializer(serializers.ModelSerializer):
             'price',
             'latitude',
             'longitude'
+        ]
+
+
+class ManagerRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Manager
+        fields = [
+            'first_name',
+            'last_name',
+            'telegram_id'
+        ]
+
+
+class ManagerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Manager
+        fields = [
+            'first_name',
+            'last_name',
+            'telegram_id'
         ]

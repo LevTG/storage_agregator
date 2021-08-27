@@ -105,3 +105,11 @@ class Storage(models.Model):
     @property
     def latitude(self):
         return self.location.y
+
+
+class Manager(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    telegram_id = models.CharField(max_length=9)
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
+    storage = models.ForeignKey(Storage, related_name='managers', on_delete=models.CASCADE)

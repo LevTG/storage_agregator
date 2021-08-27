@@ -18,7 +18,7 @@ from rest_framework.pagination import PageNumberPagination
 
 from .models import Storage
 from .filters import StorageFilter
-from .serializers import StorageRegistrationSerializer, StorageSerializer, StorageUpdateSerializer, StorageCoordinatesSerializer
+from .serializers import *
 from images.serializers import ImageRegisterSerializer
 from images.models import ImageAlbum
 from metro.serializers import station_get_or_create
@@ -134,6 +134,60 @@ class GetAllCities(ListAPIView):
         cities = Storage.objects.values_list('city', flat=True).order_by('city').distinct()
         data = {'city': cities}
         return Response(data, status=status.HTTP_200_OK)
+
+
+class ManagerRegisterView(APIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ManagerRegistrationSerializer
+    renderer_classes = [JSONRenderer]
+    parser_classes = (MultiPartParser,)
+
+    def post(self, req, **kwargs):
+        storages = Storage.objects.filter(id=self.kwargs['pk'])
+        if not storages.exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        storage = storages.first()
+
+        manager_serializer = self.serializer_class(data=req.data)
+        if not manager_serializer.is_valid():
+            return Response(manager_serializer.errors, status=status.HTTP_200_OK)
+        manager = manager_serializer.save()
+
+        manager.storage = storage.id
+        manager.save()
+        return Response(status=status.HTTP_200_OK)
+
+    def get(self, req, **kwargs):
+        storage = Storage.objects.filter(id=self.kwargs['pk'])
+        if not storage.exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        managers = ManagerSerializer(data=storage.managers, many=True)
+        return Response(managers.data, status=status.HTTP_200_OK)
+
+
+class ManagerView(RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ManagerSerializer
+    renderer_classes = [JSONRenderer]
+    parser_classes = (MultiPartParser,)
+
+    def get(self, req, **kwargs):
+        managers = Manager.objects.filter(telegram_id=req.data['telegram_id'])
+        if not managers.exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        manager = managers.first()
+
+        manager_data = self.serializer_class(manager)
+        return Response(manager_data.data, status=status.HTTP_200_OK)
+
+    def delete(self, req, *args, **kwargs):
+        managers = Manager.objects.filter(telegram_id=req.data['telegram_id'])
+        if not managers.exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        manager = managers.first()
+        manager.delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 class GetAllStoragesMapView(ListAPIView):
