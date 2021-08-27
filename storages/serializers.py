@@ -229,6 +229,7 @@ class StorageCoordinatesSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'address',
+            'price',
             'latitude',
             'longitude'
         ]
