@@ -44,7 +44,8 @@ class Storage(models.Model):
 
     description = models.TextField(blank=True, null=True)
 
-    square = models.FloatField(max_length=20, blank=True, null=True)
+    max_square = models.FloatField(max_length=20, blank=True, null=True)
+    min_square = models.FloatField(max_length=20, blank=True, null=True)
     price = models.FloatField(max_length=20, blank=True, null=True)
 
     album = models.OneToOneField(ImageAlbum, related_name='model', on_delete=models.CASCADE, null=True, blank=True)

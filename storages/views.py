@@ -23,6 +23,9 @@ from images.serializers import ImageRegisterSerializer
 from images.models import ImageAlbum
 from metro.serializers import station_get_or_create
 
+#import os, sys
+#sys.path.append('/home/backy/tgbot')
+from tgbot.telegram_bot import confirm_user, new_notification
 
 image_re = re.compile('image\d+')
 
@@ -147,6 +150,9 @@ class ManagerRegisterView(APIView):
         if not storages.exists():
             return Response(status=status.HTTP_404_NOT_FOUND)
         storage = storages.first()
+
+        if not confirm_user(int(req.data.get('telegram_id')), storage.id):
+            return Response('Error: Something wrong, check your data and try again', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         manager_serializer = self.serializer_class(data=req.data)
         if not manager_serializer.is_valid():

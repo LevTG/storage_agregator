@@ -12,6 +12,11 @@ from .models import Application
 from storages.models import Storage
 
 
+#import os, sys
+#sys.path.append('/home/backy/tgbot')
+from tgbot.telegram_bot import new_notification, mailing
+
+
 class ApplicationRegistrationView(CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = ApplicationRegistrationSerializer
@@ -29,6 +34,9 @@ class ApplicationRegistrationView(CreateAPIView):
             if not serializer.is_valid():
                 return Response(serializer.errors, status.HTTP_200_OK)
             application = serializer.save()
+            
+            managers = storage.managers
+            mailing(managers, 'Вам поступила новая заявка')
             return Response(application.id, status=status.HTTP_201_CREATED)
         else:
             return Response("Storage with this id does\'t exist", status.HTTP_404_NOT_FOUND)

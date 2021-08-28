@@ -85,7 +85,7 @@ class LogoView(RetrieveUpdateDestroyAPIView):
                 old_logo.delete()
 
             new_logo = req.data['logo']
-            image_serializer = ImageSerializer(new_logo)
+            image_serializer = ImageSerializer(data={'logo': new_logo})
 
             if not image_serializer.is_valid():
                 return Response(image_serializer.errors, status=status.HTTP_200_OK)
