@@ -31,10 +31,9 @@ class StorageAdmin(admin.ModelAdmin):
                                            'inshurance')}),
                  ('Images', {'fields': ('album',)}),
                  ('Metro', {'fields': ('metro',)}),
-                 ('Status', {'fields': ('status',)}),
-                 ('Managers', {'fields': ('managers', )}))
+                 ('Status', {'fields': ('status',)}))
     list_filter = ['storage_type', 'warehouse_type']
-    search_fields = ['address', 'company_owner', 'description']
+    search_fields = ['address', 'company_owner__name', 'description']
 
 
 @admin.register(Manager)

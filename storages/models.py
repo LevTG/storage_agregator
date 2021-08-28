@@ -107,6 +107,13 @@ class Storage(models.Model):
     def latitude(self):
         return self.location.y
 
+    @property
+    def managers(self):
+        return self.managers
+
+    def __str__(self):
+        return self.address
+
 
 class Manager(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

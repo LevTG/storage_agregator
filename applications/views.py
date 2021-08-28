@@ -35,7 +35,7 @@ class ApplicationRegistrationView(CreateAPIView):
                 return Response(serializer.errors, status.HTTP_200_OK)
             application = serializer.save()
             
-            managers = storage.managers
+            managers = storage.managers.values_list('telegram_id', flat=True)
             mailing(managers, 'Вам поступила новая заявка')
             return Response(application.id, status=status.HTTP_201_CREATED)
         else:
