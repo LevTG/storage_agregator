@@ -1,3 +1,5 @@
+import uuid
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -9,7 +11,7 @@ from .models import Company
 from images.models import Image
 from .serializers import SingleCompanySerializer, CompanySerializer
 from storages.serializers import StorageSerializer
-from images.serializers import ImageSerializer
+from images.serializers import ImageSerializer, ImageRegisterSerializer
 
 
 class CompanyRegisterView(CreateAPIView):
@@ -85,12 +87,14 @@ class LogoView(RetrieveUpdateDestroyAPIView):
                 old_logo.delete()
 
             new_logo = req.data['logo']
-            image_serializer = ImageSerializer(data={'logo': new_logo})
+            image_serializer = ImageRegisterSerializer(data={'image': new_logo, 
+                                                     'name': '{}'.format(uuid.uuid4), 
+                                                     'category': 'c'})
 
             if not image_serializer.is_valid():
                 return Response(image_serializer.errors, status=status.HTTP_200_OK)
             logo = image_serializer.save()
-            company.logo = logo.id
+            company.logo = logo
             company.save()
 
             return Response(self.serializer_class(company).data, status=status.HTTP_200_OK)
