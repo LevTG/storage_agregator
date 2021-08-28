@@ -31,7 +31,8 @@ class StorageAdmin(admin.ModelAdmin):
                                            'inshurance')}),
                  ('Images', {'fields': ('album',)}),
                  ('Metro', {'fields': ('metro',)}),
-                 ('Status', {'fields': ('status',)}))
+                 ('Status', {'fields': ('status',)}),
+                 ('Managers', {'fields': ('managers', )}))
     list_filter = ['storage_type', 'warehouse_type']
     search_fields = ['address', 'company_owner', 'description']
 
@@ -41,4 +42,5 @@ class ManagerAdmin(admin.ModelAdmin):
     list_display = ('id', 'first_name', 'last_name')
     fieldsets = ((None, {'fields': ('first_name',
                                     'last_name',
-                                    'telegram_id')}),)
+                                    'telegram_id',
+                                    'storage')}),)
