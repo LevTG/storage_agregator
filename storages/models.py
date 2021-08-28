@@ -43,6 +43,7 @@ class Storage(models.Model):
     location = PointField(null=True)
 
     description = models.TextField(blank=True, null=True)
+    promo = models.TextField(blank=True, null=True)
 
     max_square = models.FloatField(max_length=20, blank=True, null=True)
     min_square = models.FloatField(max_length=20, blank=True, null=True)

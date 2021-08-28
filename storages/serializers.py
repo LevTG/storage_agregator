@@ -57,6 +57,7 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
             'address',
             'company_owner',
             'description',
+            'promo',
             'phone_number',
             'email',
 
@@ -111,6 +112,7 @@ class StorageSerializer(serializers.ModelSerializer):
             'address',
             'company_owner',
             'description',
+            'promo',
             'max_square',
             'min_square',
             'price',
@@ -165,6 +167,7 @@ class StorageUpdateSerializer(serializers.ModelSerializer):
         fields = [
             'address',
             'description',
+            'promo',
             'max_square',
             'min_square',
             'price',
