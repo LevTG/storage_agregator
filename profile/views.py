@@ -16,7 +16,7 @@ from django.contrib.auth import get_user_model
 # from rest_framework_jwt.utils import jwt_encode_payload as jwt_decode_handler
 from rest_framework_jwt.views import VerifyJSONWebTokenView, RefreshJSONWebTokenView
 from .serializers import ProfileRegistrationSerializer, ProfileLoginSerializer, ProfileSerializer, ChangePasswordSerializer, ProfileUpdateSerializer
-from company.serializers import SingleCompanySerializer, CompanySerializer
+from company.serializers import CompanyRegistrationSerializer, CompanySerializer
 from applications.serializers import ApplicationSerializer
 from applications.models import Application, APPLICATION_STATUS
 from images.serializers import ImageRegisterSerializer
@@ -43,7 +43,7 @@ class UserRegistrationView(CreateAPIView):
             company_data = {}
             company_data['name'] = req.data.get('company_name', user.username)
             company_data['owner'] = user.id
-            company = SingleCompanySerializer(data=company_data)
+            company = CompanyRegistrationSerializer(data=company_data)
 
             user.is_private = (company_data['name'] == user.username)
             user.is_owner = (company_data['name'] == user.username)

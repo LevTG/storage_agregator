@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.CompanyRegisterView.as_view()),
-    path('<uuid:id>/storages', views.GetAllStorages.as_view()),
-    path('<uuid:id>/logo', views.LogoView.as_view()),
-    path('<uuid:id>', views.SingleCompanyView.as_view()),
+    path('<uuid:pk>/storages', views.GetAllStorages.as_view()),
+    path('<uuid:pk>/logo', views.LogoView.as_view()),
+    path('<uuid:pk>', views.SingleCompanyView.as_view()),
 ]

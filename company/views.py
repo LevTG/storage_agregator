@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticate
 
 from .models import Company
 from images.models import Image
-from .serializers import SingleCompanySerializer, CompanySerializer
+from .serializers import CompanyRegistrationSerializer, CompanySerializer
 from storages.serializers import StorageSerializer
 from images.serializers import ImageSerializer, ImageRegisterSerializer
 
@@ -17,7 +17,7 @@ from images.serializers import ImageSerializer, ImageRegisterSerializer
 class CompanyRegisterView(CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Company.objects.all()
-    serializer_class = SingleCompanySerializer
+    serializer_class = CompanyRegistrationSerializer
     renderer_classes = [JSONRenderer]
 
 
@@ -29,7 +29,7 @@ class SingleCompanyView(RetrieveUpdateDestroyAPIView):
 
     def get(self, req, **kwargs):
         try:
-            company_id = self.kwargs['id']
+            company_id = self.kwargs['pk']
             company = self.queryset.get(id=company_id)
             data = self.serializer_class(company).data
             return Response(data, status=status.HTTP_200_OK)
@@ -45,7 +45,7 @@ class GetAllStorages(APIView):
 
     def get(self, req, **kwargs):
         try:
-            company_id = self.kwargs['id']
+            company_id = self.kwargs['pk']
             company = self.queryset.get(id=company_id)
             storages = company.storage_set
 
@@ -67,7 +67,7 @@ class LogoView(RetrieveUpdateDestroyAPIView):
 
     def get(self, req, **kwargs):
         try:
-            company_id = self.kwargs['id']
+            company_id = self.kwargs['pk']
             company = self.queryset.get(id=company_id)
             logo = company.logo
             data = ImageSerializer(logo).data
@@ -77,7 +77,7 @@ class LogoView(RetrieveUpdateDestroyAPIView):
 
     def put(self, req, **kwargs):
         try:
-            company_id = self.kwargs['id']
+            company_id = self.kwargs['pk']
             company = self.queryset.get(id=company_id)
 
             if company.logo is not None:
@@ -103,7 +103,7 @@ class LogoView(RetrieveUpdateDestroyAPIView):
 
     def delete(self, req, **kwargs):
         try:
-            company_id = self.kwargs['id']
+            company_id = self.kwargs['pk']
             company = self.queryset.get(id=company_id)
 
             logo_id = company.logo_id
