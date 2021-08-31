@@ -3,7 +3,7 @@ import uuid
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.renderers import JSONRenderer
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 
@@ -35,6 +35,16 @@ class SingleCompanyView(RetrieveUpdateDestroyAPIView):
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(str(e.__class__) + ' ' + str(e), status=status.HTTP_404_NOT_FOUND)
+
+
+class GetAllCompanies(ListAPIView):
+    permission_classes = (AllowAny,)
+    renderer_classes = [JSONRenderer]
+
+    def get(self, req, **kwargs):
+        companies = Company.objects.values_list('name', flat=True).order_by('city').distinct()
+        data = {'companies': companies}
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class GetAllStorages(APIView):

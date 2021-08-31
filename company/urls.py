@@ -7,4 +7,5 @@ urlpatterns = [
     path('<uuid:pk>/storages', views.GetAllStorages.as_view()),
     path('<uuid:pk>/logo', views.LogoView.as_view()),
     path('<uuid:pk>', views.SingleCompanyView.as_view()),
+    path('companies', views.GetAllCompanies.as_view())
 ]
