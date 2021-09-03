@@ -108,13 +108,13 @@ class StorageView(RetrieveUpdateDestroyAPIView):
         return serializer_class(*args, **kwargs)
 
     def put(self, req, *args, **kwargs):
-        data = kwargs['data'].copy()
+        data = req.data.copy()
         if 'metro' in data.keys():
             storages = Storage.objects.filter(pk=kwargs['pk'])
             if not storages.exists():
                 return Response('Error: Storage with this id doesn\'t exist', status=status.HTTP_404_NOT_FOUND)
             storage = storages.first()
-            metro_data = json.loads(kwargs['data']['metro'])
+            metro_data = json.loads(data['metro'])
 
             storage.metro.clear()
             for station in metro_data:
@@ -122,7 +122,7 @@ class StorageView(RetrieveUpdateDestroyAPIView):
                 storage.metro.add(new_station)
             storage.save()
 
-        return super(StorageView, self).put(self, req, *args, **kwargs)
+        return super().put(req, *args, **kwargs)
 
 
 class FilterStoragesView(ListAPIView):
