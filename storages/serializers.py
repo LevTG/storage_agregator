@@ -182,49 +182,6 @@ class StorageUpdateSerializer(serializers.ModelSerializer):
             'social'
         ]
 
-    # def update_or_create_metro(self, stations):
-    #     metro_ids = []
-    #     for metro in stations:
-    #         station = station_get_or_create(metro)
-    #         metro_ids.append(station.id)
-    #     return metro_ids
-    #
-    # def create(self, validated_data):
-    #     metro = validated_data.pop('metro', [])
-    #     storage = Storage.objects.create(**validated_data)
-    #     storage.metro.set(self.update_or_create_metro(metro))
-    #     storage.save()
-    #     return storage
-    #
-    # def update(self, instance, validated_data):
-    #     metro = validated_data.pop('metro', [])
-    #     instance.metro.set(self.update_or_create_metro(metro))
-    #     instance.save()
-    #     return instance
-
-# class SingleStorageSerializer(serializers.ModelSerializer):
-#     album = ImageAlbumSerializer()
-#     warehouse_type = MultipleChoiceField(choices=WAREHOUSE_TYPE)
-#     storage_type = MultipleChoiceField(choices=STORAGE_TYPE)
-#     services = ServiceSerializer()
-#
-#     class Meta:
-#         model = Storage
-#         fields = [
-#             'address',
-#             'company_owner',
-#             'description',
-#             'square',
-#             'price',
-#             'metro',
-#             'work_hours_start',
-#             'work_hours_end',
-#             'storage_type',
-#             'warehouse_type',
-#             'album',
-#             'services'
-#         ]
-
 
 class StorageCoordinatesSerializer(serializers.ModelSerializer):
     latitude = serializers.FloatField(source='location.x')

@@ -108,6 +108,13 @@ class StorageView(RetrieveUpdateDestroyAPIView):
         return serializer_class(*args, **kwargs)
 
     def put(self, req, *args, **kwargs):
+        storages = Storage.objects.filter(id=self.kwargs['pk'])
+        if not storages.exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        storage = storages.first()
+        if req.user != storage.company_owner.owner:
+            return Response('You have no permissions for this Storage', status=status.HTTP_403_FORBIDDEN)
+
         data = req.data.copy()
         if 'metro' in data.keys():
             storages = Storage.objects.filter(pk=kwargs['pk'])
@@ -166,6 +173,9 @@ class ManagerRegisterView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         storage = storages.first()
 
+        if req.user != storage.company_owner.owner:
+            return Response('You have no permissions for this Storage', status=status.HTTP_403_FORBIDDEN)
+
         if not confirm_user(int(req.data.get('telegram_id')), storage.id):
             return Response('Error: Something wrong, check your data and try again', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -203,6 +213,7 @@ class ManagerView(RetrieveUpdateDestroyAPIView):
         return Response(manager_data.data, status=status.HTTP_200_OK)
 
     def delete(self, req, *args, **kwargs):
+
         managers = Manager.objects.filter(telegram_id=req.data['telegram_id'])
         if not managers.exists():
             return Response(status=status.HTTP_404_NOT_FOUND)

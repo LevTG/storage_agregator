@@ -117,22 +117,6 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"username": "This username is already in use."})
         return value
 
-    def update(self, instance, validated_data):
-
-        user = self.context['request'].user
-
-        if user.username != instance.username:
-            raise serializers.ValidationError({"authorize": "You dont have permission for this user."})
-
-        instance.first_name = validated_data.get('first_name', )
-        instance.last_name = validated_data.get('last_name', )
-        instance.email = validated_data.get('email', )
-        instance.username = validated_data.get('username', )
-
-        instance.save()
-
-        return instance
-
 
 class ChangePasswordSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])

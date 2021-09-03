@@ -90,6 +90,9 @@ class LogoView(RetrieveUpdateDestroyAPIView):
             company_id = self.kwargs['pk']
             company = self.queryset.get(id=company_id)
 
+            if req.user != company.owner:
+                return Response('You have no permissions for this Company', status=status.HTTP_403_FORBIDDEN)
+
             if company.logo is not None:
                 logo_id = company.logo_id
 
@@ -115,6 +118,10 @@ class LogoView(RetrieveUpdateDestroyAPIView):
         try:
             company_id = self.kwargs['pk']
             company = self.queryset.get(id=company_id)
+
+            if req.user != company.owner:
+                return Response('You have no permissions for this Company', status=status.HTTP_403_FORBIDDEN)
+
 
             logo_id = company.logo_id
 
