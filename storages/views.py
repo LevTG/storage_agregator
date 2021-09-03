@@ -103,11 +103,26 @@ class StorageView(RetrieveUpdateDestroyAPIView):
                 kwargs['data']['warehouse_type'] = json.loads(kwargs['data']['warehouse_type'])
             if 'storage_type' in kwargs['data'].keys():
                 kwargs['data']['storage_type'] = json.loads(kwargs['data']['storage_type'])
-            if 'metro' in kwargs['data'].keys():
-                kwargs['data']['metro'] = json.loads(kwargs['data']['metro'])
             kwargs['partial'] = True
         kwargs.setdefault('context', self.get_serializer_context())
         return serializer_class(*args, **kwargs)
+
+    def put(self, req, *args, **kwargs):
+        data = kwargs['data'].copy()
+        if 'metro' in data.keys():
+            storages = Storage.objects.filter(pk=kwargs['pk'])
+            if not storages.exists():
+                return Response('Error: Storage with this id doesn\'t exist', status=status.HTTP_404_NOT_FOUND)
+            storage = storages.first()
+            metro_data = json.loads(kwargs['data']['metro'])
+
+            storage.metro.clear()
+            for station in metro_data:
+                new_station = station_get_or_create(station)
+                storage.metro.add(new_station)
+            storage.save()
+
+        return super(StorageView, self).put(self, req, *args, **kwargs)
 
 
 class FilterStoragesView(ListAPIView):
