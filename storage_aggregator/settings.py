@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     'company',
     'storages',
     'applications',
-    'metro'
+    'metro',
+    'feedback',
     # 'faq',
 ]
 
