@@ -22,6 +22,7 @@ from .serializers import *
 from images.serializers import ImageRegisterSerializer
 from images.models import ImageAlbum
 from metro.serializers import station_get_or_create
+from feedback.serializers import StorageFeedbackSerializer
 
 #import os, sys
 #sys.path.append('/home/backy/tgbot')
@@ -137,7 +138,6 @@ class FilterStoragesView(ListAPIView):
     queryset = Storage.objects.all()
     serializer_class = StorageSerializer
     renderer_classes = [JSONRenderer]
-    ordering_fields = ('price', 'square')
     filterset_class = StorageFilter
     pagination_class = PageNumberPagination
 
@@ -220,6 +220,21 @@ class ManagerView(RetrieveUpdateDestroyAPIView):
         manager = managers.first()
         manager.delete()
         return Response(status=status.HTTP_200_OK)
+
+
+class GetAllFeedbackView(ListAPIView):
+    permission_classes = (AllowAny, )
+    queryset = Storage.objects.all()
+    serializer_class = StorageFeedbackSerializer
+    renderer_classes = [JSONRenderer]
+
+    def get(self, req, **kwargs):
+        storage = Storage.objects.filter(id=self.kwargs['pk'])
+        if not storage.exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        queryset = storage.feedbacks
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class GetAllStoragesMapView(ListAPIView):
