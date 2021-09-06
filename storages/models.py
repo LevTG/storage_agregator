@@ -2,6 +2,7 @@ from django.contrib.gis.db.models import PointField
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.db.models import Avg
 import uuid
 
 from multiselectfield import MultiSelectField
@@ -111,6 +112,10 @@ class Storage(models.Model):
     @property
     def managers(self):
         return self.managers
+
+    @property
+    def average_rating(self):
+        return self.feedbacks.aggregate(Avg('rating')).get('rating__avg', 0.00)
 
     def __str__(self):
         return self.address
