@@ -42,7 +42,7 @@ class GetAllCompanies(ListAPIView):
     renderer_classes = [JSONRenderer]
 
     def get(self, req, **kwargs):
-        companies = Company.objects.values_list('name', flat=True).order_by('city').distinct()
+        companies = Company.objects.values_list('name', flat=True).order_by('name').distinct()
         data = {'companies': companies}
         return Response(data, status=status.HTTP_200_OK)
 

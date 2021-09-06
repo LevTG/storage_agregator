@@ -11,7 +11,7 @@ class StationAdmin(admin.ModelAdmin):
     list_display = ('name', 'line')
     list_filter = ['line']
     search_fields = ['name', 'line']
-    fields = ['name', 'line', 'line_color']
+    fields = ['name', 'line', 'code_name'] # 'line__color']
 
 
 
