@@ -17,6 +17,7 @@ class StorageFilter(filters.FilterSet):
                                                 lookup_expr='icontains')
 
     metro = filters.CharFilter(field_name='metro__code_name', lookup_expr='icontains')
+    company = filters.CharFilter(field_name='company_owner__name', lookup_expr='icontains')
 
     o = filters.OrderingFilter(
         fields=(

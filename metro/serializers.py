@@ -32,6 +32,6 @@ def station_get_or_create(data):
     if stations.exists():
         station = stations.first()
     else:
-        station_data = {'name': data['station'], 'line': line}
+        station_data = {'name': data['station'], 'line': line, 'code_name': data['station']+line.name}
         station = Station.objects.create(**station_data)
     return station

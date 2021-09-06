@@ -10,5 +10,6 @@ urlpatterns = [
     path('filter', views.FilterStoragesView.as_view()),
     path('cities', views.GetAllCities.as_view()),
     path('coordinates', views.GetAllStoragesMapView.as_view()),
-    path('nearby', views.GetNearbyStoragesMap.as_view())
+    path('nearby', views.GetNearbyStoragesMap.as_view()),
+    path('fix_url', views.MoveLngLatToLocation.as_view())
 ]

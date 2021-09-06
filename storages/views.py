@@ -21,6 +21,7 @@ from .filters import StorageFilter
 from .serializers import *
 from images.serializers import ImageRegisterSerializer
 from images.models import ImageAlbum
+from metro.models import Station
 from metro.serializers import station_get_or_create
 from feedback.serializers import StorageFeedbackSerializer
 
@@ -279,11 +280,15 @@ class GetNearbyStoragesMap(ListAPIView):
 
 
 class MoveLngLatToLocation(APIView):
-    queryset = Storage.objects.all()
+    queryset = Station.objects.all()
     permission_classes = (AllowAny, )
 
     def get(self, req, **kwargs):
-        for storage in self.queryset.all():
-            storage.location = Point(float(storage.latitude), float(storage.longtude), srid=4326)
-            storage.save()
+        for station in self.queryset.all():
+            station.code_name = station.line.name + station.name
+            station.save()
+
+        # for storage in self.queryset.all():
+        #     storage.location = Point(float(storage.latitude), float(storage.longtude), srid=4326)
+        #     storage.save()
         return Response(status.HTTP_200_OK)
