@@ -45,7 +45,7 @@ class StorageRegisterView(CreateAPIView):
         services = json.loads(data.pop('services')[0])
         data.update(services)
 
-        social = json.loads(data.pop('services')[0])
+        social = json.loads(data.pop('social')[0])
         data.update(social)
 
         data['storage_type'] = json.loads(data.pop('storage_type')[0])
