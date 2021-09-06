@@ -19,7 +19,7 @@ class Station(models.Model):
     line = models.ForeignKey(Line, related_name='stations', on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
 
-    code_name = models.CharField(max_length=100, default=line.name+name)
+    code_name = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.name
