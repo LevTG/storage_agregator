@@ -25,7 +25,8 @@ class ServiceSerializer(serializers.Serializer):
 class SocialSerializer(serializers.Serializer):
     vk = serializers.CharField(allow_null=True, required=False)
     ok = serializers.CharField(allow_null=True, required=False)
-    instagram=serializers.CharField(allow_null=True, required=False)
+    instagram = serializers.CharField(allow_null=True, required=False)
+    facebook = serializers.CharField(allow_null=True, required=False)
 
 
 # По какой-то причине данные попадающие в serializer multichoiceField дополнительно оборачиваются листом. И все ломается

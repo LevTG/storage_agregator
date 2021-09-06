@@ -34,7 +34,7 @@ class FeedbackRegistrationView(CreateAPIView):
             return Response("Storage with this id does\'t exist", status.HTTP_404_NOT_FOUND)
 
 
-class SingleApplicationView(RetrieveUpdateDestroyAPIView):
+class SingleFeedbackView(RetrieveUpdateDestroyAPIView):
     permission_classes = (AllowAny,)
     serializer_class = StorageFeedbackSerializer
     queryset = StorageFeedback.objects.all()

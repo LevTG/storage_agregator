@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     path('', views.StorageRegisterView.as_view()),
     path('<uuid:pk>', views.StorageView.as_view()),
+    path('<uuid:pk>/feedbacks', views.GetAllFeedbackView.as_view()),
     path('<uuid:pk>/managers', views.ManagerRegisterView.as_view()),
     path('<uuid:pk>/managers/<str:telegram_id>', views.ManagerView.as_view()),
     path('filter', views.FilterStoragesView.as_view()),
