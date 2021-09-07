@@ -160,8 +160,6 @@ class StorageUpdateSerializer(serializers.ModelSerializer):
     warehouse_type = CustomMultipleChoiceField(choices=WAREHOUSE_TYPE, required=False)
     storage_type = CustomMultipleChoiceField(choices=STORAGE_TYPE, required=False)
     metro = StationLineSerializer(many=True, required=False)
-    services = ServiceSerializer(required=False)
-    social = SocialSerializer(required=False)
 
     class Meta:
         model = Storage
@@ -179,8 +177,26 @@ class StorageUpdateSerializer(serializers.ModelSerializer):
             'storage_type',
             'city',
             'status',
-            'services',
-            'social'
+
+            'video_surveillance',
+            'access_24h',
+            'mobile_app',
+            'clever_lock',
+            'cleaning',
+            'online_contract',
+            'ventilation',
+            'shipping',
+            'wrapping',
+            'straight_way',
+            'any_rental_period',
+            'inventory',
+            'inshurance',
+
+            'vk',
+            'ok',
+            'instagram',
+            'facebook'
+
         ]
 
 
