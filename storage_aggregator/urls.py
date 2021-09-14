@@ -22,6 +22,7 @@ from storage_aggregator import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('profile/', include('profile.urls')),
+    path('feedback/', include('feedback.urls')),
     # path('faq/', include('faq.urls')),
     path('storage/', include('storages.urls')),
     path('company/', include('company.urls')),

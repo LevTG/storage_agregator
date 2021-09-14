@@ -33,7 +33,7 @@ class StorageAdmin(admin.ModelAdmin):
                  ('Metro', {'fields': ('metro',)}),
                  ('Status', {'fields': ('status',)}))
     list_filter = ['storage_type', 'warehouse_type']
-    search_fields = ['address', 'company_owner__name', 'description']
+    search_fields = ['id', 'address', 'company_owner__name', 'description']
 
 
 @admin.register(Manager)
