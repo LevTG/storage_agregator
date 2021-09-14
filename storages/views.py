@@ -32,6 +32,19 @@ from tgbot.telegram_bot import confirm_user, new_notification
 image_re = re.compile('image\d+')
 
 
+def distance_to_decimal_degrees(distance, latitude):
+    """
+    Source of formulae information:
+        1. https://en.wikipedia.org/wiki/Decimal_degrees
+        2. http://www.movable-type.co.uk/scripts/latlong.html
+    :param distance: an instance of `from django.contrib.gis.measure.Distance`
+    :param latitude: y - coordinate of a point/location
+    """
+    lat_radians = latitude * (math.pi / 180)
+    # 1 longitudinal degree at the equator equal 111,319.5m equiv to 111.32km
+    return distance.m / (111_319.5 * math.cos(lat_radians))
+
+
 class StorageRegisterView(CreateAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = StorageRegistrationSerializer
@@ -144,16 +157,30 @@ class FilterStoragesView(ListAPIView):
     serializer_class = StorageSerializer
     renderer_classes = [JSONRenderer]
     filterset_class = StorageFilter
+    ordering = 'price'
     pagination_class = PageNumberPagination
 
-    def get_count(self):
-        queryset = self.filter_queryset(self.get_queryset())
-        return queryset.count()
+    def list(self, req, *args, **kwargs):
+        user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
+        annotated_queryset = self.get_queryset()\
+                                 .annotate(distance=Distance('location', user_location))\
+                                 .filter(distance__lte=distance_to_decimal_degrees(D(m=10000), user_location.y))\
+                                 .order_by('distance')
 
-    def list(self, req, **kwargs):
-        response = super(FilterStoragesView, self).list(self, req)
-        response.data['count'] = self.get_count()
-        return response
+        queryset = self.filter_queryset(annotated_queryset)
+        count = queryset.count()
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            data = serializer.data
+            data['count'] = count
+            return self.get_paginated_response(data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        data = serializer.data
+        data['count'] = count
+        return Response(data)
 
 
 class GetAllCities(ListAPIView):
@@ -251,22 +278,11 @@ class GetAllStoragesMapView(ListAPIView):
 
     def get(self, req, **kwargs):
         user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
-        queryset = self.filter_queryset(self.get_queryset()).annotate(distance=Distance('location', user_location)).order_by('distance')
+        queryset = self.filter_queryset(self.get_queryset())\
+                       .annotate(distance=Distance('location', user_location))\
+                       .order_by('distance')
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
-
-def distance_to_decimal_degrees(distance, latitude):
-    """
-    Source of formulae information:
-        1. https://en.wikipedia.org/wiki/Decimal_degrees
-        2. http://www.movable-type.co.uk/scripts/latlong.html
-    :param distance: an instance of `from django.contrib.gis.measure.Distance`
-    :param latitude: y - coordinate of a point/location
-    """
-    lat_radians = latitude * (math.pi / 180)
-    # 1 longitudinal degree at the equator equal 111,319.5m equiv to 111.32km
-    return distance.m / (111_319.5 * math.cos(lat_radians))
 
 
 class GetNearbyStoragesMap(ListAPIView):
@@ -278,7 +294,10 @@ class GetNearbyStoragesMap(ListAPIView):
 
     def get(self, req, **kwargs):
         user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
-        queryset = self.filter_queryset(self.get_queryset()).annotate(distance=Distance('location', user_location)).filter(distance__lte=distance_to_decimal_degrees(D(m=10000), user_location.y)).order_by('distance')
+        queryset = self.filter_queryset(self.get_queryset())\
+                       .annotate(distance=Distance('location', user_location))\
+                       .filter(distance__lte=distance_to_decimal_degrees(D(m=10000), user_location.y))\
+                       .order_by('distance')
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
