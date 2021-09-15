@@ -4,6 +4,7 @@ from .models import Storage, STORAGE_TYPE, WAREHOUSE_TYPE
 
 
 class StorageFilter(filters.FilterSet):
+    pk = filters.CharFilter(method='id_filter')
     min_square = filters.NumberFilter(field_name="square", lookup_expr='gte')
     max_square = filters.NumberFilter(field_name="square", lookup_expr='lte')
 
@@ -16,7 +17,8 @@ class StorageFilter(filters.FilterSet):
     storage_type = filters.MultipleChoiceFilter(choices=STORAGE_TYPE,
                                                 lookup_expr='icontains')
 
-    metro = filters.CharFilter(field_name='metro__code_name', lookup_expr='icontains')
+    # metro = filters.CharFilter(field_name='metro__code_name', lookup_expr='icontains')
+    metro = filters.CharFilter(method='metro_filter')
     company = filters.CharFilter(field_name='company_owner__name', lookup_expr='icontains')
 
     ordering = filters.OrderingFilter(
@@ -29,6 +31,19 @@ class StorageFilter(filters.FilterSet):
 
     def __init__(self, *args,  **kwargs):
         super().__init__(*args, **kwargs)
+
+    def metro_filter(self, queryset, name, value):
+        name = 'metro__code_name__in'
+        values = [val for val in value.split(',') if val]
+        return queryset.filter(**{
+            name: values,
+        })
+
+    def id_filter(self, queryset, name, value):
+        name = 'id__in'
+        values = [val for val in value.split(',') if val]
+        #raise Exception(values)
+        return queryset.filter(**{name: values,})
 
     class Meta:
         model = Storage

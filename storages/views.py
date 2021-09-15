@@ -164,7 +164,7 @@ class FilterStoragesView(ListAPIView):
         user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
         annotated_queryset = self.get_queryset()\
                                  .annotate(distance=Distance('location', user_location))\
-                                 .filter(distance__lte=distance_to_decimal_degrees(D(m=10000), user_location.y))\
+                                 .filter(distance__lte=distance_to_decimal_degrees(D(m=30000), user_location.y))\
                                  .order_by('distance')
 
         queryset = self.filter_queryset(annotated_queryset)
@@ -174,7 +174,7 @@ class FilterStoragesView(ListAPIView):
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             data = serializer.data
-            data['count'] = count
+            #data['count'] = count
             return self.get_paginated_response(data)
 
         serializer = self.get_serializer(queryset, many=True)
