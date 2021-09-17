@@ -22,12 +22,12 @@ from storage_aggregator import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('profile/', include('profile.urls')),
-    path('feedback/', include('feedback.urls')),
     # path('faq/', include('faq.urls')),
     path('storage/', include('storages.urls')),
     path('company/', include('company.urls')),
     path('application/', include('applications.urls')),
-    path('images/', include('images.urls'))
+    path('images/', include('images.urls')),
+    path('comments/', include('comment.api.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -35,6 +35,13 @@ class StorageAdmin(admin.ModelAdmin):
     list_filter = ['storage_type', 'warehouse_type']
     search_fields = ['id', 'address', 'company_owner__name', 'description']
 
+    actions = ['approve_storages', 'decline_storages']
+
+    def approve_storages(self, request, queryset):
+        queryset.update(status='a')
+
+    def decline_storages(self, request, queryset):
+        queryset.update(status='d')
 
 @admin.register(Manager)
 class ManagerAdmin(admin.ModelAdmin):

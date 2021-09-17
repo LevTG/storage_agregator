@@ -52,12 +52,14 @@ INSTALLED_APPS = [
     'rest_framework_filters',
     'colorfield',
     'multiselectfield',
+    'comment',
     'images',
     'company',
     'storages',
     'applications',
     'metro',
     'feedback',
+
     # 'faq',
 ]
 
