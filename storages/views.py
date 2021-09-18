@@ -169,7 +169,6 @@ class FilterStoragesView(ListAPIView):
 
         queryset = self.filter_queryset(annotated_queryset)
         count = queryset.count()
-
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -281,6 +280,7 @@ class GetAllStoragesMapView(ListAPIView):
         queryset = self.filter_queryset(self.get_queryset())\
                        .annotate(distance=Distance('location', user_location))\
                        .order_by('distance')
+        #raise Exception(len(queryset))
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -294,10 +294,10 @@ class GetNearbyStoragesMap(ListAPIView):
 
     def get(self, req, **kwargs):
         user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
-        queryset = self.filter_queryset(self.get_queryset())\
-                       .annotate(distance=Distance('location', user_location))\
-                       .filter(distance__lte=distance_to_decimal_degrees(D(m=10000), user_location.y))\
-                       .order_by('distance')
+        queryset = self.filter_queryset(self.get_queryset())#\
+                       #.annotate(distance=Distance('location', user_location))\
+                       #.filter(distance__lte=distance_to_decimal_degrees(D(m=30000), user_location.y))\
+                       #.order_by('distance')
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 

@@ -32,7 +32,7 @@ class StorageAdmin(admin.ModelAdmin):
                  ('Images', {'fields': ('album',)}),
                  ('Metro', {'fields': ('metro',)}),
                  ('Status', {'fields': ('status',)}))
-    list_filter = ['storage_type', 'warehouse_type']
+    list_filter = ['storage_type', 'warehouse_type', 'status']
     search_fields = ['id', 'address', 'company_owner__name', 'description']
 
     actions = ['approve_storages', 'decline_storages']

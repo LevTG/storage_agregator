@@ -31,7 +31,7 @@ class StorageFeedback(models.Model):
 
     status = models.CharField(choices=FEEDBACK_STATUS, default='m', max_length=1)
 
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     comments = GenericRelation(Comment)
 
