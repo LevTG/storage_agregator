@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.fields import MultipleChoiceField
 
+from feedback.serializers import StorageFeedbackSerializer
 from images.serializers import ImageAlbumSerializer
 from metro.serializers import StationLineSerializer, station_get_or_create
 from .models import Storage, Manager, WAREHOUSE_TYPE, STORAGE_TYPE
@@ -51,6 +52,8 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
     warehouse_type = CustomMultipleChoiceField(choices=WAREHOUSE_TYPE, allow_blank=True)
     storage_type = CustomMultipleChoiceField(choices=STORAGE_TYPE, allow_blank=True)
 
+    feedbacks = StorageFeedbackSerializer(source='feedbacks')
+
     class Meta:
         model = Storage
         fields = [
@@ -61,6 +64,8 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
             'promo',
             'phone_number',
             'email',
+
+            'feedbacks',
 
             'max_square',
             'min_square',

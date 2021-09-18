@@ -4,5 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.FeedbackRegistrationView.as_view()),
-    path('<uuid:pk>', views.SingleFeedbackView.as_view()),
+    path('<uuid:pk>', views.FeedbackView.as_view()),
+    path('answer', views.AnswerRegistrationView.as_view()),
+    path('answer/<uuid:pk>', views.AnswerView.as_view()),
 ]

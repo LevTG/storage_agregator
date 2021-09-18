@@ -17,7 +17,6 @@ class StorageFilter(filters.FilterSet):
     storage_type = filters.MultipleChoiceFilter(choices=STORAGE_TYPE,
                                                 lookup_expr='icontains')
 
-    # metro = filters.CharFilter(field_name='metro__code_name', lookup_expr='icontains')
     metro = filters.CharFilter(method='metro_filter')
     company = filters.CharFilter(field_name='company_owner__name', lookup_expr='icontains')
 
@@ -42,7 +41,6 @@ class StorageFilter(filters.FilterSet):
     def id_filter(self, queryset, name, value):
         name = 'id__in'
         values = [val for val in value.split(',') if val]
-        #raise Exception(values)
         return queryset.filter(**{name: values,})
 
     class Meta:

@@ -7,6 +7,7 @@ import math
 from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.measure import D
 from django.contrib.gis.geos import Point
+from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -164,7 +165,7 @@ class FilterStoragesView(ListAPIView):
         user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
         annotated_queryset = self.get_queryset()\
                                  .annotate(distance=Distance('location', user_location))\
-                                 .filter(distance__lte=distance_to_decimal_degrees(D(m=30000), user_location.y))\
+                                 .filter(Q(distance__lte=distance_to_decimal_degrees(D(km=30), user_location.y)) & Q(status='a'))\
                                  .order_by('distance')
 
         queryset = self.filter_queryset(annotated_queryset)
@@ -279,8 +280,8 @@ class GetAllStoragesMapView(ListAPIView):
         user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
         queryset = self.filter_queryset(self.get_queryset())\
                        .annotate(distance=Distance('location', user_location))\
-                       .order_by('distance')
-        #raise Exception(len(queryset))
+                       .filter(Q(distance__lte=distance_to_decimal_degrees(D(km=30), user_location.y))&Q(status='a'))\
+            .order_by('distance')
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -296,9 +297,8 @@ class GetNearbyStoragesMap(ListAPIView):
         user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
         queryset = self.filter_queryset(self.get_queryset())\
                        .annotate(distance=Distance('location', user_location))\
-                       .filter(distance__lte=distance_to_decimal_degrees(D(km=30), user_location.y))\
+                       .filter(Q(distance__lte=distance_to_decimal_degrees(D(km=30), user_location.y))&Q(status='a'))\
                        .order_by('distance')
-        raise Exception(queryset.values_list('id'))
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 

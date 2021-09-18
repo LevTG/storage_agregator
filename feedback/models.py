@@ -1,14 +1,12 @@
 import uuid
 
 from django.db import models
-from django.urls import reverse
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import RegexValidator
-from django.contrib.contenttypes.fields import GenericRelation
 
 from storages.models import Storage
-from comment.models import Comment
+from profile.models import Profile
 
 
 FEEDBACK_STATUS = (('a', 'accepted'), ('d', 'declined'), ('m', 'on moderation'))
@@ -33,13 +31,23 @@ class StorageFeedback(models.Model):
 
     created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
-    comments = GenericRelation(Comment)
-
     class Meta:
         ordering = ['created_on']
 
-    def get_absolute_url(self):
-        return reverse('post_detail_url', kwargs={'slug': self.id})
-
     def __str__(self):
         return 'Comment {} by {}'.format(self.text, self.username)
+
+
+class Answer(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    feedback = models.ForeignKey(StorageFeedback, related_name='answer', on_delete=models.CASCADE)
+    text = models.TextField(null=True, blank=True)
+
+    status = models.CharField(choices=FEEDBACK_STATUS, default='m', max_length=1)
+
+    created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    class Meta:
+        ordering = ['created_on']
