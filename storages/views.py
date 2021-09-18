@@ -294,22 +294,22 @@ class GetNearbyStoragesMap(ListAPIView):
 
     def get(self, req, **kwargs):
         user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
-        queryset = self.filter_queryset(self.get_queryset())#\
-                       #.annotate(distance=Distance('location', user_location))\
-                       #.filter(distance__lte=distance_to_decimal_degrees(D(m=30000), user_location.y))\
-                       #.order_by('distance')
+        queryset = self.filter_queryset(self.get_queryset())\
+                       .annotate(distance=Distance('location', user_location))\
+                       .filter(distance__lte=distance_to_decimal_degrees(D(km=30), user_location.y))\
+                       .order_by('distance')
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
 
 class MoveLngLatToLocation(APIView):
-    queryset = Station.objects.all()
+    queryset = Storage.objects.all()
     permission_classes = (AllowAny, )
 
     def get(self, req, **kwargs):
-        for station in self.queryset.all():
-            station.code_name = station.line.name + station.name
-            station.save()
+        for storage in self.queryset.all():
+            storage.location.x, storage.location.y = storage.location.y, storage.location.x
+            storage.save()
 
         # for storage in self.queryset.all():
         #     storage.location = Point(float(storage.latitude), float(storage.longtude), srid=4326)
