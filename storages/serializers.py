@@ -52,8 +52,6 @@ class StorageRegistrationSerializer(serializers.ModelSerializer):
     warehouse_type = CustomMultipleChoiceField(choices=WAREHOUSE_TYPE, allow_blank=True)
     storage_type = CustomMultipleChoiceField(choices=STORAGE_TYPE, allow_blank=True)
 
-    feedbacks = StorageFeedbackSerializer(source='feedbacks', many=True, allow_null=True)
-
     class Meta:
         model = Storage
         fields = [
@@ -110,7 +108,8 @@ class StorageSerializer(serializers.ModelSerializer):
     social = SocialSerializer(required=False)
     longitude = serializers.FloatField()
     latitude = serializers.FloatField()
-
+    
+    feedbacks = StorageFeedbackSerializer(many=True)
     class Meta:
         model = Storage
         fields = [
@@ -132,7 +131,8 @@ class StorageSerializer(serializers.ModelSerializer):
             'latitude',
             'longitude',
             'services',
-            'social'
+            'social',
+            'feedbacks'
         ]
 
     def get_album(self, obj):
