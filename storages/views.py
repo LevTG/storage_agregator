@@ -76,9 +76,10 @@ class StorageRegisterView(CreateAPIView):
             station = station_get_or_create(station_data)
             storage.metro.add(station)
         storage.save()
-
+        
+        # Должно быть наоборот, но наоборот не работает :(
         if 'latitude' in data.keys() and 'longitude' in data.keys():
-            storage.location = Point(float(data['latitude']), float(data['longitude']), srid=4326)
+            storage.location = Point(float(data['longitude']), float(data['latitude']), srid=4326)
             storage.save()
 
         album = ImageAlbum.objects.create()
@@ -308,7 +309,7 @@ class MoveLngLatToLocation(APIView):
     permission_classes = (AllowAny, )
 
     def get(self, req, **kwargs):
-        for storage in self.queryset.exclude(id__in=['9eed2868-fca1-4e83-bd92-173f26cb0517', 'ce346dbe-8ba2-4f83-84a1-4880037c4b7a', '9ea20961-f740-4ebb-9a5a-cd3790b45a0d', '2fa15912-d7b9-4963-8d3a-fb94f8033ff0', '29671a71-13dd-475a-9eb8-399acf331f5a', 'c3df5541-1ce6-4dad-9693-abd61395c859', '4531cb0c-5f55-4ee0-83c3-2971fa9ff033', 'f04806ec-694a-4e1e-8da1-6b3f8263d330']):
+        for storage in self.queryset.filter(id__in=[val for val in req.GET.get('id').split(',') if val]):
             storage.location.x, storage.location.y = storage.location.y, storage.location.x
             storage.save()
 
