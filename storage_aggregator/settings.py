@@ -39,6 +39,7 @@ ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", '127.0.0.1,localhost,storage.p
 
 INSTALLED_APPS = [
     'profile',
+    'django.contrib.gis',
     'django.contrib.admin',
     'django.contrib.sessions',
     'django.contrib.auth',

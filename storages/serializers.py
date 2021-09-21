@@ -206,8 +206,8 @@ class StorageUpdateSerializer(serializers.ModelSerializer):
 
 
 class StorageCoordinatesSerializer(serializers.ModelSerializer):
-    latitude = serializers.FloatField(source='location.x')
-    longitude = serializers.FloatField(source='location.y')
+    latitude = serializers.FloatField()
+    longitude = serializers.FloatField()
 
     class Meta:
         model = Storage

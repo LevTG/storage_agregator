@@ -8,6 +8,7 @@ class StorageAdmin(admin.ModelAdmin):
     list_display = ('id', 'address', 'company_owner', 'description')
     fieldsets = ((None, {'fields': ('company_owner',
                                     'address',
+                                    'location',
                                     'description',
                                     'min_square',
                                     'max_square',
