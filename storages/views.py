@@ -194,6 +194,52 @@ class GetAllCities(ListAPIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
+class GetAllFeedbackView(ListAPIView):
+    permission_classes = (AllowAny, )
+    queryset = Storage.objects.all()
+    serializer_class = StorageFeedbackSerializer
+    renderer_classes = [JSONRenderer]
+
+    def get(self, req, **kwargs):
+        storage = Storage.objects.filter(id=self.kwargs['pk'])
+        if not storage.exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        queryset = storage.feedbacks
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class GetAllStoragesMapView(ListAPIView):
+    permission_classes = (AllowAny,)
+    queryset = Storage.objects.all()
+    serializer_class = StorageCoordinatesSerializer
+    renderer_classes = [JSONRenderer]
+    filterset_class = StorageFilter
+
+    def get(self, req, **kwargs):
+        user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class GetNearbyStoragesMap(ListAPIView):
+    queryset = Storage.objects.all()
+    permission_classes = (AllowAny, )
+    renderer_classes = [JSONRenderer]
+    serializer_class = StorageCoordinatesSerializer
+    filterset_class = StorageFilter
+
+    def get(self, req, **kwargs):
+        user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
+        queryset = self.filter_queryset(self.get_queryset())\
+                       .annotate(distance=Distance('location', user_location))\
+                       .filter(Q(distance__lte=distance_to_decimal_degrees(D(km=30), user_location.x))&Q(status='a'))\
+                       .order_by('distance')
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
 class ManagerRegisterView(APIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ManagerRegistrationSerializer
@@ -253,52 +299,6 @@ class ManagerView(RetrieveUpdateDestroyAPIView):
         manager = managers.first()
         manager.delete()
         return Response(status=status.HTTP_200_OK)
-
-
-class GetAllFeedbackView(ListAPIView):
-    permission_classes = (AllowAny, )
-    queryset = Storage.objects.all()
-    serializer_class = StorageFeedbackSerializer
-    renderer_classes = [JSONRenderer]
-
-    def get(self, req, **kwargs):
-        storage = Storage.objects.filter(id=self.kwargs['pk'])
-        if not storage.exists():
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        queryset = storage.feedbacks
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class GetAllStoragesMapView(ListAPIView):
-    permission_classes = (AllowAny,)
-    queryset = Storage.objects.all()
-    serializer_class = StorageCoordinatesSerializer
-    renderer_classes = [JSONRenderer]
-    filterset_class = StorageFilter
-
-    def get(self, req, **kwargs):
-        user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
-
-class GetNearbyStoragesMap(ListAPIView):
-    queryset = Storage.objects.all()
-    permission_classes = (AllowAny, )
-    renderer_classes = [JSONRenderer]
-    serializer_class = StorageCoordinatesSerializer
-    filterset_class = StorageFilter
-
-    def get(self, req, **kwargs):
-        user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
-        queryset = self.filter_queryset(self.get_queryset())\
-                       .annotate(distance=Distance('location', user_location))\
-                       .filter(Q(distance__lte=distance_to_decimal_degrees(D(km=30), user_location.x))&Q(status='a'))\
-                       .order_by('distance')
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
 
 
 class MoveLngLatToLocation(APIView):

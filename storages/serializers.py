@@ -110,6 +110,7 @@ class StorageSerializer(serializers.ModelSerializer):
     latitude = serializers.FloatField()
     
     feedbacks = StorageFeedbackSerializer(many=True)
+
     class Meta:
         model = Storage
         fields = [
