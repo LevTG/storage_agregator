@@ -198,6 +198,10 @@ class GetAllStoragesView(ListAPIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
+class To(Email):
+    """A to email address with an optional name."""
+
+
 class RestorePasswordView(APIView):
     permission_classes = (AllowAny, )
 
@@ -217,7 +221,7 @@ class RestorePasswordView(APIView):
             to_email = To(email)
             subject = "New password"
             content = Content("text/plain", "Here is your new password,\n {}".format(password))
-            mail = Mail(from_email, to_email, subject, content)
-            response = sg.client.mail.send.post(request_body=mail.get())
+            letter = Mail(from_email, to_email, subject, content)
+            response = sg.client.mail.send.post(request_body=letter.get())
             return Response('Status sent email'.format(response.status_code), status=status.HTTP_200_OK)
         return Response('Error: User not found', status=status.HTTP_404_NOT_FOUND)
