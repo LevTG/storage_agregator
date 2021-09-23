@@ -16,6 +16,7 @@ class ImageRegisterSerializer(serializers.ModelSerializer):
 
 class ImageSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(use_url=True)
+    #image = serializers.SerializerMethodField()
 
     class Meta:
         model = Image
@@ -23,6 +24,11 @@ class ImageSerializer(serializers.ModelSerializer):
             'id',
             'image'
         ]
+    
+#    def get_image(self, obj):
+#        request = self.context.get('request')
+#        photo_url = obj.image.url
+#        return request.build_absolute_uri(photo_url)
 
 
 class ImageAlbumRegisterSerializer(serializers.ModelSerializer):

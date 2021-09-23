@@ -78,6 +78,9 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'storage_aggregator.urls'
 
 
+
+#SECURE_SSL_REDIRECT = True
+#SECURE_PROXY_SSL_HEADER = ('X-Forwarded-Proto', 'https')
 # CORS
 # CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_ALLOW_ALL = True
@@ -222,11 +225,11 @@ JWT_AUTH = {
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '//static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # MEDIA
-MEDIA_URL = '//media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # STATIC_ROOT = '/home/storage/storage_aggregator/static/'
