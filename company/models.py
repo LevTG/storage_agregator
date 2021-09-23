@@ -18,5 +18,9 @@ class Company(models.Model):
     def applications(self):
         return self.storage_set.select_related('application_set')
 
+    @property
+    def storage_count(self):
+        return self.storage_set.count()
+
     def __str__(self):
         return self.name
