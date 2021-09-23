@@ -121,6 +121,8 @@ class StorageSerializer(serializers.ModelSerializer):
             'promo',
             'max_square',
             'min_square',
+            'rating',
+            'application_count',
             'price',
             'metro',
             'work_hours_start',

@@ -117,6 +117,10 @@ class Storage(models.Model):
     def average_rating(self):
         return self.feedbacks.aggregate(Avg('rating')).get('rating__avg', 0.00)
 
+    @property
+    def application_count(self):
+        return self.application_set.count()
+
     def __str__(self):
         return self.address
 
