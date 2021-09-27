@@ -4,7 +4,6 @@ import os
 import uuid
 
 import sendgrid
-from sendgrid.helpers.mail import *
 
 from rest_framework import status, generics
 from rest_framework.response import Response
@@ -12,7 +11,6 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView
 
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
-from rest_framework.pagination import PageNumberPagination
 from django.contrib.auth import get_user_model
 
 # from rest_framework_jwt.settings import api_settings
@@ -198,15 +196,10 @@ class GetAllStoragesView(ListAPIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
-class To(Email):
-    """A to email address with an optional name."""
-
-
 class RestorePasswordView(APIView):
     permission_classes = (AllowAny, )
 
     def post(self, req, **kwargs):
-        """User forgot password form view."""
         email = req.data.get('email')
         qs = User.objects.filter(email=email)
 
@@ -217,11 +210,26 @@ class RestorePasswordView(APIView):
             user.save(update_fields=['password'])
 
             sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
-            from_email = Email('administrator@findsklad.ru')
-            to_email = To(email)
-            subject = "New password"
-            content = Content("text/plain", "Here is your new password,\n {}".format(password))
-            letter = Mail(from_email, to_email, subject, content)
-            response = sg.client.mail.send.post(request_body=letter.get())
+
+            letter = {"personalizations": [{
+                            "to": [
+                                    {
+                                        "email": "example@email.com"
+                                    }
+                                ],
+                            "dynamic_template_data": {
+                                "subject": "New password",
+                            },
+                      }],
+                      "from": {
+                            "email": 'administrator@findsklad.ru'
+                      },
+                      "content": [
+                      {
+                          "type": "text/plain",
+                          "value": "Here is your new password,\n {}".format(password)
+                      }],
+            }
+            response = sg.client.mail.send.post(request_body=letter)
             return Response('Status sent email'.format(response.status_code), status=status.HTTP_200_OK)
         return Response('Error: User not found', status=status.HTTP_404_NOT_FOUND)
