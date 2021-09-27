@@ -80,7 +80,7 @@ ROOT_URLCONF = 'storage_aggregator.urls'
 
 
 #SECURE_SSL_REDIRECT = True
-#SECURE_PROXY_SSL_HEADER = ('X-Forwarded-Proto', 'https')
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # CORS
 # CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_ALLOW_ALL = True
