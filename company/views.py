@@ -11,6 +11,7 @@ from .models import Company
 from images.models import Image
 from .serializers import CompanyRegistrationSerializer, CompanySerializer
 from storages.serializers import StorageSerializer
+from storages.filters import StorageFilter
 from images.serializers import ImageSerializer, ImageRegisterSerializer
 
 
@@ -52,12 +53,13 @@ class GetAllStorages(APIView):
     renderer_classes = [JSONRenderer]
     queryset = Company.objects.all()
     serializer_class = StorageSerializer
+    filterset_class = StorageFilter
 
     def get(self, req, **kwargs):
         try:
             company_id = self.kwargs['pk']
             company = self.queryset.get(id=company_id)
-            storages = company.storage_set
+            storages = self.filter_queryset(company.storage_set)
 
             serializer_context = {
                 'request': req,
