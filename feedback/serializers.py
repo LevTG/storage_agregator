@@ -11,13 +11,10 @@ class AnswerRegistrationSerializer(serializers.ModelSerializer):
 
 
 class AnswerSerializer(serializers.ModelSerializer):
-    comments = serializers.SerializerMethodField()
-
     class Meta:
         model = StorageFeedback
         fields = [
             'id',
-            'user',
             "text",
             'created_on',
         ]
@@ -38,7 +35,7 @@ class StorageFeedbackRegistrationSerializer(serializers.ModelSerializer):
 
 
 class StorageFeedbackSerializer(serializers.ModelSerializer):
-    answer = AnswerSerializer(source='answer')
+    answer = AnswerSerializer()
 
     class Meta:
         model = StorageFeedback

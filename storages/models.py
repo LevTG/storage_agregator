@@ -114,7 +114,7 @@ class Storage(models.Model):
         return self.managers
 
     @property
-    def average_rating(self):
+    def rating(self):
         return self.feedbacks.aggregate(Avg('rating')).get('rating__avg', 0.00)
 
     @property
