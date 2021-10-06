@@ -230,7 +230,6 @@ class RestorePasswordView(APIView):
             }
             try:
                 response = sg.client.mail.send.post(request_body=letter)
-               # raise Exception('{} {} {}'.format(response.status_code, response.body, response.headers))
             except Exception as e:
                 raise Exception(e.body)
             return Response('Status sent email {}'.format(response.status_code), status=status.HTTP_200_OK)

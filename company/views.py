@@ -48,7 +48,7 @@ class GetAllCompanies(ListAPIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
-class GetAllStorages(APIView):
+class GetAllStorages(ListAPIView):
     permission_classes = (AllowAny, )
     renderer_classes = [JSONRenderer]
     queryset = Company.objects.all()
