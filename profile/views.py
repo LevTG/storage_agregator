@@ -214,13 +214,11 @@ class RestorePasswordView(APIView):
             letter = {"personalizations": [{
                             "to": [
                                     {
-                                        "email": "example@email.com"
+                                        "email": email
                                     }
                                 ],
-                            "dynamic_template_data": {
-                                "subject": "New password",
-                            },
                       }],
+                      "subject": "New password",
                       "from": {
                             "email": 'administrator@findsklad.ru'
                       },
@@ -230,6 +228,10 @@ class RestorePasswordView(APIView):
                           "value": "Here is your new password,\n {}".format(password)
                       }],
             }
-            response = sg.client.mail.send.post(request_body=letter)
-            return Response('Status sent email'.format(response.status_code), status=status.HTTP_200_OK)
+            try:
+                response = sg.client.mail.send.post(request_body=letter)
+               # raise Exception('{} {} {}'.format(response.status_code, response.body, response.headers))
+            except Exception as e:
+                raise Exception(e.body)
+            return Response('Status sent email {}'.format(response.status_code), status=status.HTTP_200_OK)
         return Response('Error: User not found', status=status.HTTP_404_NOT_FOUND)
