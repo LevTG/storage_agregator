@@ -159,15 +159,15 @@ class FilterStoragesView(ListAPIView):
     serializer_class = StorageSerializer
     renderer_classes = [JSONRenderer]
     filterset_class = StorageFilter
-    ordering = 'price'
+    ordering = 'distance'
     pagination_class = PageNumberPagination
 
     def list(self, req, *args, **kwargs):
         user_location = Point(float(req.GET.get('latitude')), float(req.GET.get('longitude')), srid=4326)
         annotated_queryset = self.get_queryset()\
                                  .annotate(distance=Distance('location', user_location))\
-                                 .filter(Q(distance__lte=distance_to_decimal_degrees(D(km=30), user_location.x)) & Q(status='a'))\
-                                 .order_by('distance')
+                                 .filter(Q(distance__lte=distance_to_decimal_degrees(D(km=30), user_location.x)) & Q(status='a'))#\
+                                 #.order_by('distance')
 
         queryset = self.filter_queryset(annotated_queryset)
         count = queryset.count()

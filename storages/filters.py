@@ -24,7 +24,8 @@ class StorageFilter(filters.FilterSet):
         fields=(
             ('address', 'address'),
             ('price', 'price'),
-            ('square', 'square')
+            ('square', 'square'),
+            ('distance', 'distance')
         ),
     )
 
