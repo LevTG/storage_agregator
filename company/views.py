@@ -11,7 +11,7 @@ from .models import Company
 from images.models import Image
 from .serializers import CompanyRegistrationSerializer, CompanySerializer
 from storages.serializers import StorageSerializer
-from storages.filters import StorageFilter
+from storages.filters import StorageCommonFilter
 from images.serializers import ImageSerializer, ImageRegisterSerializer
 
 
@@ -53,7 +53,7 @@ class GetAllStorages(ListAPIView):
     renderer_classes = [JSONRenderer]
     queryset = Company.objects.all()
     serializer_class = StorageSerializer
-    filterset_class = StorageFilter
+    filterset_class = StorageCommonFilter
 
     def get(self, req, **kwargs):
         try:

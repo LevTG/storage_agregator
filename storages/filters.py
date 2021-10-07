@@ -3,6 +3,11 @@ import rest_framework_filters as filters
 from .models import Storage, STORAGE_TYPE, WAREHOUSE_TYPE
 
 
+class DistanceOrderingFilter(filters.OrderingFilter):
+    def get_default_ordering(self, view):
+        return ('distance', )
+
+
 class StorageFilter(filters.FilterSet):
     pk = filters.CharFilter(method='id_filter')
     min_square = filters.NumberFilter(field_name="square", lookup_expr='gte')
@@ -20,7 +25,7 @@ class StorageFilter(filters.FilterSet):
     metro = filters.CharFilter(method='metro_filter')
     company = filters.CharFilter(field_name='company_owner__name', lookup_expr='icontains')
 
-    ordering = filters.OrderingFilter(
+    ordering = DistanceOrderingFilter(
         fields=(
             ('address', 'address'),
             ('price', 'price'),
@@ -68,3 +73,11 @@ class StorageFilter(filters.FilterSet):
                   ]
 
 
+class StorageCommonFilter(StorageFilter):
+    ordering = filters.OrderingFilter(
+        fields=(
+            ('address', 'address'),
+            ('price', 'price'),
+            ('square', 'square'),
+        ),
+    )
