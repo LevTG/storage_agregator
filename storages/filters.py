@@ -5,7 +5,8 @@ from .models import Storage, STORAGE_TYPE, WAREHOUSE_TYPE
 
 class DistanceOrderingFilter(filters.OrderingFilter):
     def get_default_ordering(self, view):
-        return ('distance', )
+        raise Exception('Im in distance filter')
+        return ('-distance', )
 
 
 class StorageFilter(filters.FilterSet):
@@ -31,7 +32,7 @@ class StorageFilter(filters.FilterSet):
             ('price', 'price'),
             ('square', 'square'),
             ('distance', 'distance')
-        ),
+        )
     )
 
     def __init__(self, *args,  **kwargs):

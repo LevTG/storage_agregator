@@ -159,7 +159,7 @@ class FilterStoragesView(ListAPIView):
     serializer_class = StorageSerializer
     renderer_classes = [JSONRenderer]
     filterset_class = StorageFilter
-    ordering = 'distance'
+    ordering = '-distance'
     pagination_class = PageNumberPagination
 
     def list(self, req, *args, **kwargs):
@@ -170,6 +170,9 @@ class FilterStoragesView(ListAPIView):
                                  #.order_by('distance')
 
         queryset = self.filter_queryset(annotated_queryset)
+        ordering = req.GET.get('ordering', None)
+        if ordering is None:
+            queryset = queryset.order_by('distance')
         count = queryset.count()
         page = self.paginate_queryset(queryset)
         if page is not None:
