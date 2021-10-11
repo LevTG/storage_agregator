@@ -62,3 +62,16 @@ class AnswerView(RetrieveUpdateDestroyAPIView):
     serializer_class = AnswerSerializer
     queryset = Answer.objects.all()
 
+
+class ReviewRegistrationView(CreateAPIView):
+    permission_classes = (AllowAny, )
+    serializer_class = ReviewRegistrationSerializer
+
+    def post(self, req, *args, **kwargs):
+        data = req.data.copy()
+        serializer = self.serializer_class(data=data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status.HTTP_200_OK)
+        review = serializer.save()
+        review.save()
+        return Response(review.id, status=status.HTTP_201_CREATED)
