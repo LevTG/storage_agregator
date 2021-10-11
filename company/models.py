@@ -4,6 +4,9 @@ import uuid
 from images.models import Image
 
 
+COMPANY_STATUS = (('a', 'accepted'), ('d', 'declined'), ('m', 'on moderation'))
+
+
 class Company(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50, blank=True, null=True)
@@ -14,6 +17,8 @@ class Company(models.Model):
     description = models.TextField(null=True, blank=True)
     is_private = models.BooleanField(default=False)
     logo = models.ForeignKey(Image, on_delete=models.CASCADE, blank=True, null=True)
+
+    status = models.CharField(max_length=20, choices=COMPANY_STATUS, default='m')
 
     def applications(self):
         return self.storage_set.select_related('application_set')

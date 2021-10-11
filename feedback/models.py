@@ -12,6 +12,17 @@ from profile.models import Profile
 FEEDBACK_STATUS = (('a', 'accepted'), ('d', 'declined'), ('m', 'on moderation'))
 
 
+class Review(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    phone_regex = RegexValidator(regex=r'^\+?\d{9,16}$',
+                                 message="Phone number must be entered in the format: '+999999999'. Up to 16 digits allowed.")
+    phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True, null=True)
+
+    email = models.EmailField(_('email address'), db_index=True, null=True)
+    text = models.TextField(null=True, blank=True)
+
+
 class StorageFeedback(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
@@ -24,7 +35,7 @@ class StorageFeedback(models.Model):
     rating = models.IntegerField(
         default=1, validators=[MinValueValidator(1), MaxValueValidator(10)]
     )
-    storage = models.ForeignKey(Storage, related_name='feedbacks', on_delete=models.CASCADE, null=True)
+    storage = models.ForeignKey(Storage, related_name='feedback_set', on_delete=models.CASCADE, null=True)
     text = models.TextField(null=True, blank=True)
 
     status = models.CharField(choices=FEEDBACK_STATUS, default='m', max_length=1)

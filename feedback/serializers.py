@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import StorageFeedback
+from .models import StorageFeedback, Review
 
 
 class AnswerRegistrationSerializer(serializers.ModelSerializer):
@@ -29,7 +29,6 @@ class StorageFeedbackRegistrationSerializer(serializers.ModelSerializer):
             "username",
             'email',
             'phone_number',
-            "text",
             'status'
         ]
 
@@ -51,3 +50,12 @@ class StorageFeedbackSerializer(serializers.ModelSerializer):
             'created_on',
         ]
 
+
+class ReviewRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = [
+            "text",
+            'email',
+            'phone_number',
+        ]

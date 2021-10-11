@@ -177,7 +177,7 @@ class GetAllApplicationsView(APIView):
         if user.is_staff:
             applications = Application.objects.filter(status='m')
         else:
-            applications = user.application_set
+            applications = user.application_set.filter(status='a')
         data = self.serializer_class(applications, many=True).data
         return Response(data, status=status.HTTP_200_OK)
 

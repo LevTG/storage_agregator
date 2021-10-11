@@ -19,7 +19,8 @@ class CompanySerializer(serializers.ModelSerializer):
             'logo',
             'company_url',
             'storage_count',
-            'owner'
+            'owner',
+            'status'
         ]
 
 

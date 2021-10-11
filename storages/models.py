@@ -121,6 +121,10 @@ class Storage(models.Model):
     def application_count(self):
         return self.application_set.count()
 
+    @property
+    def feedbacks(self):
+        return self.feedback_set.filter(status='a')
+
     def __str__(self):
         return self.address
 
