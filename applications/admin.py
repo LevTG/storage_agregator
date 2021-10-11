@@ -10,6 +10,8 @@ class ApplicationAdmin(admin.ModelAdmin):
     list_filter = [('status')]
     search_fields = ['text', 'storage']
 
+    actions = ['approve_applications', 'decline_applications']
+
     def approve_applications(self, request, queryset):
         queryset.update(status='a')
 

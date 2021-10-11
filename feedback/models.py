@@ -38,7 +38,7 @@ class StorageFeedback(models.Model):
     storage = models.ForeignKey(Storage, related_name='feedback_set', on_delete=models.CASCADE, null=True)
     text = models.TextField(null=True, blank=True)
 
-    status = models.CharField(choices=FEEDBACK_STATUS, default='m', max_length=1)
+    status = models.CharField(choices=FEEDBACK_STATUS, default='a', max_length=1)
 
     created_on = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 

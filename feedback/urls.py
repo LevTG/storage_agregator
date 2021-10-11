@@ -7,4 +7,5 @@ urlpatterns = [
     path('<uuid:pk>', views.FeedbackView.as_view()),
     path('answer', views.AnswerRegistrationView.as_view()),
     path('answer/<uuid:pk>', views.AnswerView.as_view()),
-]
+    path('review', views.ReviewView.as_view())
+    ]

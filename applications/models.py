@@ -21,6 +21,6 @@ class Application(models.Model):
 
     date_carry = models.DateField(blank=True, null=True)
 
-    status = models.CharField(max_length=20, choices=APPLICATION_STATUS, default='m')
+    status = models.CharField(max_length=20, choices=APPLICATION_STATUS, default='a')
     storage = models.ForeignKey(Storage, on_delete=models.CASCADE)
     recipient = models.ForeignKey(Profile, on_delete=models.CASCADE)

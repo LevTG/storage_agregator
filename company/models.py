@@ -18,7 +18,7 @@ class Company(models.Model):
     is_private = models.BooleanField(default=False)
     logo = models.ForeignKey(Image, on_delete=models.CASCADE, blank=True, null=True)
 
-    status = models.CharField(max_length=20, choices=COMPANY_STATUS, default='m')
+    status = models.CharField(max_length=20, choices=COMPANY_STATUS, default='a')
 
     def applications(self):
         return self.storage_set.select_related('application_set')
