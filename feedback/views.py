@@ -63,7 +63,7 @@ class AnswerView(RetrieveUpdateDestroyAPIView):
     queryset = Answer.objects.all()
 
 
-class ReviewRegistrationView(CreateAPIView):
+class ReviewRegisterView(CreateAPIView):
     permission_classes = (AllowAny, )
     serializer_class = ReviewRegistrationSerializer
 
