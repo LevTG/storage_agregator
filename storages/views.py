@@ -308,6 +308,26 @@ class MoveLngLatToLocation(APIView):
     queryset = Storage.objects.all()
     permission_classes = (AllowAny, )
 
+    def post(self, req, **kwargs):
+        storages = Storage.objects.filter(id=req.data['id'])
+        if storages.exists():
+            return Response('Founded')
+
+        data = req.data.copy()
+        data.pop('company_owner_id')
+        from company.models import Company
+        company = Company.objects.get(id=req.data['company_owner_id'])
+        data['company_owner'] = company
+        for key, val in data.items():
+            if key in ['access_24h', 'any_rental_period', 'cleaning', 'clever_lock', 'inshurance', 'inventory', 'mobile_app',
+                       'online_contract', 'shipping', 'straight_way', 'ventilation', 'video_surveillance', 'wrapping', 'storage_type',
+                        'warehouse_type']:
+                data[key] = bool(int(val))
+
+        Storage.objects.create(**data)
+        return Response('Ok')
+
+
     def get(self, req, **kwargs):
         for storage in self.queryset.filter(id__in=[val for val in req.GET.get('id').split(',') if val]):
             storage.location.x, storage.location.y = storage.location.y, storage.location.x
